@@ -131,8 +131,8 @@ export function CompleteToolView({
   };
 
   return (
-    <Card className="gap-0 flex border shadow-none border-t border-b-0 border-x-0 p-0 rounded-none flex-col h-full overflow-hidden bg-white dark:bg-zinc-950">
-      <CardHeader className="h-14 bg-zinc-50/80 dark:bg-zinc-900/80 backdrop-blur-sm border-b p-2 px-4 space-y-2">
+    <Card className="gap-0 flex border shadow-none border-t border-b-0 border-x-0 p-0 rounded-none flex-col h-full overflow-hidden bg-base-100">
+              <CardHeader className="h-14 bg-base-200/80 backdrop-blur-sm border-b p-2 px-4 space-y-2">
         <div className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="relative p-2 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/20">
@@ -192,7 +192,7 @@ export function CompleteToolView({
             {/* Summary Section */}
             {completeData.summary && (
               <div className="space-y-2">
-                <div className="bg-muted/50 rounded-lg p-4 border border-border">
+                <div className="bg-base-200/50 rounded-lg p-4 border border-base-300">
                   <Markdown className="text-sm prose prose-sm dark:prose-invert chat-markdown max-w-none [&>:first-child]:mt-0 prose-headings:mt-3">
                     {completeData.summary}
                   </Markdown>
@@ -217,7 +217,7 @@ export function CompleteToolView({
                       <button
                         key={index}
                         onClick={() => handleFileClick(attachment)}
-                        className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg border border-border/50 hover:bg-muted/50 transition-colors group cursor-pointer text-left"
+                        className="flex items-center gap-3 p-3 bg-base-200/30 rounded-lg border border-base-300/50 hover:bg-base-200/50 transition-colors group cursor-pointer text-left"
                       >
                         <div className="flex-shrink-0">
                           <div className={cn(
@@ -258,7 +258,7 @@ export function CompleteToolView({
                   {completeData.tasksCompleted.map((task, index) => (
                     <div
                       key={index}
-                      className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg border border-border/50"
+                      className="flex items-start gap-3 p-3 bg-base-200/30 rounded-lg border border-base-300/50"
                     >
                       <div className="mt-1 flex-shrink-0">
                         <CheckCircle className="h-4 w-4 text-emerald-500" />

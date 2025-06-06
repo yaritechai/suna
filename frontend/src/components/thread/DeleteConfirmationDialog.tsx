@@ -59,7 +59,7 @@ export function DeleteConfirmationDialog({
               onConfirm();
             }}
             disabled={isDeleting}
-            className="bg-destructive text-white hover:bg-destructive/90"
+            className="bg-error text-error-content hover:bg-error/90"
           >
             {isDeleting ? (
               <>

@@ -109,7 +109,7 @@ export function HeroVideoDialog({
               className={`relative flex size-20 scale-100 items-center justify-center rounded-full bg-gradient-to-t from-secondary to-white/10 shadow-md transition-all duration-200 ease-out group-hover:scale-[1.2]`}
             >
               <Play
-                className="size-8 scale-100 fill-white text-white transition-transform duration-200 ease-out group-hover:scale-105"
+                className="size-8 scale-100 fill-base-100 text-base-100 transition-transform duration-200 ease-out group-hover:scale-105"
                 style={{
                   filter:
                     'drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))',
@@ -126,7 +126,7 @@ export function HeroVideoDialog({
             animate={{ opacity: 1 }}
             onClick={() => setIsVideoOpen(false)}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/50 backdrop-blur-md"
           >
             <motion.div
               {...selectedAnimation}
@@ -134,12 +134,12 @@ export function HeroVideoDialog({
               className="relative mx-4 aspect-video w-full max-w-4xl md:mx-0"
             >
               <motion.button
-                className="absolute cursor-pointer hover:scale-[98%] transition-all duration-200 ease-out -top-16 right-0 rounded-full bg-neutral-900/50 p-2 text-xl text-white ring-1 backdrop-blur-md dark:bg-neutral-100/50 dark:text-black"
+                className="absolute cursor-pointer hover:scale-[98%] transition-all duration-200 ease-out -top-16 right-0 rounded-full bg-base-300/80 p-2 text-xl text-base-content ring-1 backdrop-blur-md"
                 onClick={() => setIsVideoOpen(false)}
               >
                 <XIcon className="size-5" />
               </motion.button>
-              <div className="relative isolate z-[1] size-full overflow-hidden rounded-2xl border-2 border-white">
+              <div className="relative isolate z-[1] size-full overflow-hidden rounded-2xl border-2 border-base-100">
                 <iframe
                   src={getVideoSrcWithAutoplay()}
                   className="size-full"

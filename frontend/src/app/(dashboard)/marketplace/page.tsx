@@ -178,7 +178,7 @@ export default function MarketplacePage() {
         {isLoading ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="bg-neutral-100 dark:bg-sidebar border border-border rounded-2xl overflow-hidden">
+              <div key={i} className="bg-base-100 border border-base-300 rounded-2xl overflow-hidden">
                 <Skeleton className="h-50" />
                 <div className="p-4 space-y-3">
                   <Skeleton className="h-5 rounded" />
@@ -207,7 +207,7 @@ export default function MarketplacePage() {
               return (
                 <div 
                   key={agent.agent_id} 
-                  className="bg-neutral-100 dark:bg-sidebar border border-border rounded-2xl overflow-hidden hover:bg-muted/50 transition-all duration-200 cursor-pointer group flex flex-col h-full"
+                  className="bg-base-100 border border-base-300 rounded-2xl overflow-hidden hover:bg-base-200 transition-all duration-200 cursor-pointer group flex flex-col h-full"
                 >
                   <div className={`h-50 flex items-center justify-center relative`} style={{ backgroundColor: color }}>
                     <div className="text-4xl">

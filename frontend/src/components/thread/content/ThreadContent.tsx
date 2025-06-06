@@ -13,7 +13,7 @@ import {
     getUserFriendlyToolName,
     safeJsonParse,
 } from '@/components/thread/utils';
-import { KortixLogo } from '@/components/sidebar/kortix-logo';
+import { YariLogo } from '@/components/sidebar/yari-logo';
 import { AgentLoader } from './loader';
 import { parseXmlToolCalls, isNewXmlFormat, extractToolNameFromStream } from '@/components/thread/tool-views/xml-parser';
 import { parseToolResult } from '@/components/thread/tool-views/tool-result-parser';
@@ -83,7 +83,7 @@ export function renderMarkdownContent(
     // If in debug mode, just display raw content in a pre tag
     if (debugMode) {
         return (
-            <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto p-2 border border-border rounded-md bg-muted/30 text-foreground">
+            <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto p-2 border border-base-300 rounded-md bg-base-100 text-base-content">
                 {content}
             </pre>
         );
@@ -134,13 +134,13 @@ export function renderMarkdownContent(
                     <div key={`tool-${match.index}-${index}`} className="my-1">
                         <button
                             onClick={() => handleToolClick(messageId, toolName)}
-                            className="inline-flex items-center gap-1.5 py-1 px-1 text-xs text-muted-foreground bg-muted hover:bg-muted/80 rounded-md transition-colors cursor-pointer border border-neutral-200 dark:border-neutral-700/50"
+                            className="inline-flex items-center gap-1.5 py-1 px-1 text-xs text-base-content/60 bg-base-100 hover:bg-base-200 rounded-md transition-colors cursor-pointer border border-base-300"
                         >
-                            <div className='border-2 bg-gradient-to-br from-neutral-200 to-neutral-300 dark:from-neutral-700 dark:to-neutral-800 flex items-center justify-center p-0.5 rounded-sm border-neutral-400/20 dark:border-neutral-600'>
-                                <IconComponent className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                            <div className='border-2 bg-gradient-to-br from-base-200 to-base-300 flex items-center justify-center p-0.5 rounded-sm border-base-300'>
+                                <IconComponent className="h-3.5 w-3.5 text-base-content/60 flex-shrink-0" />
                             </div>
-                            <span className="font-mono text-xs text-foreground">{getUserFriendlyToolName(toolName)}</span>
-                            {paramDisplay && <span className="ml-1 text-muted-foreground truncate max-w-[200px]" title={paramDisplay}>{paramDisplay}</span>}
+                            <span className="font-mono text-xs text-base-content">{getUserFriendlyToolName(toolName)}</span>
+                            {paramDisplay && <span className="ml-1 text-base-content/60 truncate max-w-[200px]" title={paramDisplay}>{paramDisplay}</span>}
                         </button>
                     </div>
                 );
@@ -215,13 +215,13 @@ export function renderMarkdownContent(
                 <div key={toolCallKey} className="my-1">
                     <button
                         onClick={() => handleToolClick(messageId, toolName)}
-                        className="inline-flex items-center gap-1.5 py-1 px-1 text-xs text-muted-foreground bg-muted hover:bg-muted/80 rounded-md transition-colors cursor-pointer border border-neutral-200 dark:border-neutral-700/50"
+                        className="inline-flex items-center gap-1.5 py-1 px-1 text-xs text-base-content/60 bg-base-100 hover:bg-base-200 rounded-md transition-colors cursor-pointer border border-base-300"
                     >
-                        <div className='border-2 bg-gradient-to-br from-neutral-200 to-neutral-300 dark:from-neutral-700 dark:to-neutral-800 flex items-center justify-center p-0.5 rounded-sm border-neutral-400/20 dark:border-neutral-600'>
-                            <IconComponent className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                        <div className='border-2 bg-gradient-to-br from-base-200 to-base-300 flex items-center justify-center p-0.5 rounded-sm border-base-300'>
+                            <IconComponent className="h-3.5 w-3.5 text-base-content/60 flex-shrink-0" />
                         </div>
-                        <span className="font-mono text-xs text-foreground">{getUserFriendlyToolName(toolName)}</span>
-                        {paramDisplay && <span className="ml-1 text-muted-foreground truncate max-w-[200px]" title={paramDisplay}>{paramDisplay}</span>}
+                        <span className="font-mono text-xs text-base-content">{getUserFriendlyToolName(toolName)}</span>
+                        {paramDisplay && <span className="ml-1 text-base-content/60 truncate max-w-[200px]" title={paramDisplay}>{paramDisplay}</span>}
                     </button>
                 </div>
             );
@@ -278,8 +278,8 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
     project,
     debugMode = false,
     isPreviewMode = false,
-    agentName = 'Suna',
-    agentAvatar = <KortixLogo size={16} />,
+    agentName = 'Yari',
+    agentAvatar = <YariLogo size={16} />,
     emptyStateComponent,
 }) => {
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -292,9 +292,7 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
     // React Query file preloader
     const { preloadFiles } = useFilePreloader();
 
-    const containerClassName = isPreviewMode 
-        ? "flex-1 overflow-y-auto scrollbar-thin scrollbar-track-secondary/0 scrollbar-thumb-primary/10 scrollbar-thumb-rounded-full hover:scrollbar-thumb-primary/10 px-6 py-4 pb-72"
-        : "flex-1 overflow-y-auto scrollbar-thin scrollbar-track-secondary/0 scrollbar-thumb-primary/10 scrollbar-thumb-rounded-full hover:scrollbar-thumb-primary/10 px-6 py-4 pb-72 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60";
+    const containerClassName = "flex-1 overflow-hidden scrollbar scrollbar-track-base-200 scrollbar-thumb-base-content/20 hover:scrollbar-thumb-primary/10 px-6 py-4 pb-72 bg-base-200";
 
     // In playback mode, we use visibleMessages instead of messages
     const displayMessages = readOnly && visibleMessages ? visibleMessages : messages;
@@ -353,7 +351,7 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                 // Render empty state outside scrollable container
                 <div className="flex-1 min-h-[60vh] flex items-center justify-center">
                     {emptyStateComponent || (
-                        <div className="text-center text-muted-foreground">
+                        <div className="text-center text-base-content/70">
                             {readOnly ? "No messages to display." : "Send a message to start."}
                         </div>
                     )}
@@ -473,8 +471,8 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                                         if (debugMode) {
                                             return (
                                                 <div key={group.key} className="flex justify-end">
-                                                    <div className="flex max-w-[85%] rounded-xl bg-primary/10 px-4 py-3 break-words overflow-hidden">
-                                                        <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto min-w-0 flex-1">
+                                                    <div className="flex max-w-[85%] rounded-xl bg-primary/95 backdrop-blur-xl border border-primary/30 px-4 py-3 break-words overflow-hidden">
+                                                        <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto min-w-0 flex-1 text-primary-content">
                                                             {message.content}
                                                         </pre>
                                                     </div>
@@ -495,11 +493,16 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                                         const cleanContent = messageContent.replace(/\[Uploaded File: .*?\]/g, '').trim();
 
                                         return (
-                                            <div key={group.key} className="flex justify-end">
-                                                <div className="flex max-w-[85%] rounded-xl bg-primary/10 px-4 py-3 break-words overflow-hidden">
-                                                    <div className="space-y-3 min-w-0 flex-1">
+                                            <div key={group.key} className="flex justify-end mb-6">
+                                                <div className="flex max-w-[85%] rounded-2xl bg-primary/95 backdrop-blur-xl px-6 py-4 shadow-2xl shadow-primary/20
+                                                       border border-primary/30
+                                                       break-words overflow-hidden
+                                                       relative group hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-primary-content/5 to-primary-content/10 
+                                                                   opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                                                    <div className="space-y-3 min-w-0 flex-1 relative z-10 text-primary-content">
                                                         {cleanContent && (
-                                                            <Markdown className="text-sm prose prose-sm dark:prose-invert chat-markdown max-w-none [&>:first-child]:mt-0 prose-headings:mt-3 break-words overflow-wrap-anywhere">{cleanContent}</Markdown>
+                                                            <Markdown className="text-sm prose prose-sm max-w-none [&>:first-child]:mt-0 prose-headings:mt-3 break-words overflow-wrap-anywhere prose-headings:text-primary-content prose-p:text-primary-content prose-strong:text-primary-content prose-em:text-primary-content prose-code:bg-primary-content/10 prose-code:text-primary-content prose-pre:bg-primary-content/10 prose-pre:text-primary-content prose-a:text-primary-content/90 prose-blockquote:text-primary-content/80 prose-li:text-primary-content">{cleanContent}</Markdown>
                                                         )}
 
                                                         {/* Use the helper function to render user attachments */}
@@ -511,18 +514,14 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                                     } else if (group.type === 'assistant_group') {
                                         return (
                                             <div key={group.key} ref={groupIndex === groupedMessages.length - 1 ? latestMessageRef : null}>
-                                                <div className="flex flex-col gap-2">
-                                                    {/* Logo positioned above the message content - ONLY ONCE PER GROUP */}
-                                                    <div className="flex items-center">
-                                                        <div className="rounded-md flex items-center justify-center">
-                                                            {agentAvatar}
-                                                        </div>
-                                                        <p className='ml-2 text-sm text-muted-foreground'>{agentName ? agentName : 'Suna'}</p>
-                                                    </div>
-                                                    
+                                                <div className="flex flex-col gap-4 mb-6">
                                                     {/* Message content - ALL messages in the group */}
-                                                    <div className="flex max-w-[90%] rounded-lg text-sm break-words overflow-hidden">
-                                                        <div className="space-y-2 min-w-0 flex-1">
+                                                    <div className="flex max-w-[90%] rounded-2xl text-sm break-words overflow-hidden">
+                                                        <div className="bg-base-100 backdrop-blur-md 
+                                                                       rounded-2xl px-6 py-4 shadow-lg 
+                                                                       min-w-0 flex-1
+                                                                       hover:bg-base-100/90
+                                                                       hover:shadow-xl transition-all duration-300">
                                                             {(() => {
                                                                 // In debug mode, just show raw messages content
                                                                 if (debugMode) {
@@ -530,18 +529,18 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                                                                         const msgKey = message.message_id || `raw-msg-${msgIndex}`;
                                                                         return (
                                                                             <div key={msgKey} className="mb-4">
-                                                                                <div className="text-xs font-medium text-muted-foreground mb-1">
+                                                                                <div className="text-xs font-medium text-base-content/70 mb-1">
                                                                                     Type: {message.type} | ID: {message.message_id || 'no-id'}
                                                                                 </div>
-                                                                                <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto p-2 border border-border rounded-md bg-muted/30">
+                                                                                <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto p-2 border border-base-300 rounded-md bg-base-200/30">
                                                                                     {message.content}
                                                                                 </pre>
                                                                                 {message.metadata && message.metadata !== '{}' && (
                                                                                     <div className="mt-2">
-                                                                                        <div className="text-xs font-medium text-muted-foreground mb-1">
+                                                                                        <div className="text-xs font-medium text-base-content/70 mb-1">
                                                                                             Metadata:
                                                                                         </div>
-                                                                                        <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto p-2 border border-border rounded-md bg-muted/30">
+                                                                                        <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto p-2 border border-base-300 rounded-md bg-base-200/30">
                                                                                             {message.metadata}
                                                                                         </pre>
                                                                                     </div>
@@ -603,7 +602,7 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                                                                         // In debug mode, show raw streaming content
                                                                         if (debugMode && streamingTextContent) {
                                                                             return (
-                                                                                <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto p-2 border border-border rounded-md bg-muted/30">
+                                                                                <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto p-2 border border-base-300 rounded-md bg-base-200/30">
                                                                                     {streamingTextContent}
                                                                                 </pre>
                                                                             );
@@ -682,9 +681,9 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                                                                                             const paramDisplay = extractPrimaryParam(toolName, streamingToolCall.arguments || '');
                                                                                             return (
                                                                                                 <button
-                                                                                                    className="animate-shimmer inline-flex items-center gap-1.5 py-1 px-1 text-xs font-medium text-primary bg-muted hover:bg-muted/80 rounded-md transition-colors cursor-pointer border border-primary/20"
+                                                                                                    className="animate-shimmer inline-flex items-center gap-1.5 py-1 px-1 text-xs font-medium text-primary bg-base-100 hover:bg-base-200 rounded-md transition-colors cursor-pointer border border-primary/20"
                                                                                                 >
-                                                                                                    <div className='border-2 bg-gradient-to-br from-neutral-200 to-neutral-300 dark:from-neutral-700 dark:to-neutral-800 flex items-center justify-center p-0.5 rounded-sm border-neutral-400/20 dark:border-neutral-600'>
+                                                                                                    <div className='border-2 bg-gradient-to-br from-base-200 to-base-300 flex items-center justify-center p-0.5 rounded-sm border-base-300'>
                                                                                                         <CircleDashed className="h-3.5 w-3.5 text-primary flex-shrink-0 animate-spin animation-duration-2000" />
                                                                                                     </div>
                                                                                                     <span className="font-mono text-xs text-primary">{toolName}</span>
@@ -734,7 +733,7 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                                                                             <>
                                                                                 {/* In debug mode, show raw streaming content */}
                                                                                 {debugMode && streamingText ? (
-                                                                                    <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto p-2 border border-border rounded-md bg-muted/30">
+                                                                                    <pre className="text-xs font-mono whitespace-pre-wrap overflow-x-auto p-2 border border-base-300 rounded-md bg-base-200/30">
                                                                                         {streamingText}
                                                                                     </pre>
                                                                                 ) : (
@@ -784,7 +783,7 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                                                 <div className="rounded-md flex items-center justify-center">
                                                     {agentAvatar}
                                                 </div>
-                                                <p className='ml-2 text-sm text-muted-foreground'>{agentName}</p>
+                                                <p className='ml-2 text-sm text-base-content/70'>{agentName}</p>
                                             </div>
                                             
                                             {/* Loader content */}
@@ -804,7 +803,7 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                                             <div className="rounded-md flex items-center justify-center">
                                                 {agentAvatar}
                                             </div>
-                                            <p className='ml-2 text-sm text-muted-foreground'>{agentName}</p>
+                                            <p className='ml-2 text-sm text-base-content/70'>{agentName}</p>
                                         </div>
                                         
                                         {/* Tool call content */}
@@ -829,7 +828,7 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                                             <div className="rounded-md flex items-center justify-center">
                                                 {agentAvatar}
                                             </div>
-                                            <p className='ml-2 text-sm text-muted-foreground'>{agentName}</p>
+                                            <p className='ml-2 text-sm text-base-content/70'>{agentName}</p>
                                         </div>
                                         
                                         {/* Streaming indicator content */}

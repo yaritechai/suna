@@ -34,7 +34,7 @@ const INITIAL_COMPONENTS: Partial<Components> = {
       return (
         <span
           className={cn(
-            'bg-primary-foreground dark:bg-zinc-800 dark:border dark:border-zinc-700 rounded-sm px-1 font-mono text-sm',
+            'bg-base-200 border border-base-300 rounded-sm px-1 font-mono text-sm',
             className,
           )}
           {...props}
@@ -47,7 +47,7 @@ const INITIAL_COMPONENTS: Partial<Components> = {
     const language = extractLanguage(className);
 
     return (
-      <CodeBlock className="rounded-md overflow-hidden my-4 border border-zinc-200 dark:border-zinc-800 max-w-full min-w-0 w-full">
+      <CodeBlock className="rounded-md overflow-hidden my-4 border border-base-300 max-w-full min-w-0 w-full">
         <CodeBlockCode
           code={children as string}
           language={language}
@@ -104,7 +104,7 @@ const INITIAL_COMPONENTS: Partial<Components> = {
   blockquote: function Blockquote({ children, ...props }: any) {
     return (
       <blockquote
-        className="border-l-4 border-muted pl-4 italic my-2 dark:text-zinc-400 dark:border-zinc-600"
+        className="border-l-4 border-base-300 pl-4 italic my-2 text-base-content/70"
         {...props}
       >
         {children}
@@ -115,7 +115,7 @@ const INITIAL_COMPONENTS: Partial<Components> = {
     return (
       <a
         href={href}
-        className="text-primary hover:underline dark:text-blue-400"
+        className="text-primary hover:underline"
         target="_blank"
         rel="noopener noreferrer"
         {...props}
@@ -134,7 +134,7 @@ const INITIAL_COMPONENTS: Partial<Components> = {
   th: function TableHeader({ children, ...props }: any) {
     return (
       <th
-        className="border border-slate-300 dark:border-zinc-700 px-3 py-2 text-left font-semibold bg-slate-100 dark:bg-zinc-800"
+        className="border border-base-300 px-3 py-2 text-left font-semibold bg-base-200"
         {...props}
       >
         {children}
@@ -144,7 +144,7 @@ const INITIAL_COMPONENTS: Partial<Components> = {
   td: function TableCell({ children, ...props }: any) {
     return (
       <td
-        className="border border-slate-300 dark:border-zinc-700 px-3 py-2"
+        className="border border-base-300 px-3 py-2"
         {...props}
       >
         {children}

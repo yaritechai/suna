@@ -21,6 +21,7 @@ import { ShareModal } from "@/components/sidebar/share-modal"
 import { useQueryClient } from "@tanstack/react-query";
 import { projectKeys } from "@/hooks/react-query/sidebar/keys";
 import { threadKeys } from "@/hooks/react-query/threads/keys";
+import { ThemeSelector } from "@/components/ui/theme-selector";
 
 interface ThreadSiteHeaderProps {
   threadId: string;
@@ -49,10 +50,10 @@ export function SiteHeader({
   const inputRef = useRef<HTMLInputElement>(null)
   const [showShareModal, setShowShareModal] = useState(false);
   const queryClient = useQueryClient();
-
-  const isMobile = useIsMobile() || isMobileView
   const { setOpenMobile } = useSidebar()
   const updateProjectMutation = useUpdateProject()
+
+  const isMobile = useIsMobile() || isMobileView
 
   const openShareModal = () => {
     setShowShareModal(true)
@@ -121,7 +122,7 @@ export function SiteHeader({
   return (
     <>
       <header className={cn(
-        "bg-background sticky top-0 flex h-14 shrink-0 items-center gap-2 z-20 w-full",
+        "bg-base-200 sticky top-0 flex h-14 shrink-0 items-center gap-2 z-20 w-full",
         isMobile && "px-2"
       )}>
         {isMobile && (
@@ -187,19 +188,24 @@ export function SiteHeader({
           )}
 
           {isMobile ? (
-            // Mobile view - only show the side panel toggle
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onToggleSidePanel}
-              className="h-9 w-9 cursor-pointer"
-              aria-label="Toggle computer panel"
-            >
-              <PanelRightOpen className="h-4 w-4" />
-            </Button>
+            // Mobile view - show theme selector and side panel toggle
+            <>
+              <ThemeSelector variant="minimal" size="sm" showLabel={false} className="mr-1" />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onToggleSidePanel}
+                className="h-9 w-9 cursor-pointer"
+                aria-label="Toggle computer panel"
+              >
+                <PanelRightOpen className="h-4 w-4" />
+              </Button>
+            </>
           ) : (
             // Desktop view - show all buttons with tooltips
             <TooltipProvider>
+              <ThemeSelector variant="minimal" size="sm" showLabel={false} className="mr-1" />
+              
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button

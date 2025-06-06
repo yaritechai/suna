@@ -36,12 +36,12 @@ export const AgentsList = ({
       {agents.map((agent) => (
         <Card 
           key={agent.agent_id} 
-          className="group transition-all duration-200 border-border/50 hover:border-border flex-row"
+          className="group transition-all duration-200 border-base-300/50 hover:border-base-300 flex-row"
         >
           <CardHeader className="flex-1 pb-4">
             <div className="space-y-3 flex flex-col justify-between h-full">
               <div className="flex items-start justify-between gap-3">
-                <CardTitle className="text-xl font-semibold text-foreground leading-tight flex items-center gap-2 group-hover:text-primary transition-colors">
+                <CardTitle className="text-xl font-semibold text-base-content leading-tight flex items-center gap-2 group-hover:text-primary transition-colors">
                   <span className="line-clamp-2">{agent.name}</span>
                   {agent.is_default && (
                     <Badge variant="secondary" className="text-xs font-medium shrink-0">
@@ -58,7 +58,7 @@ export const AgentsList = ({
                     onClick={() => onEditAgent(agent.agent_id)}
                     title="Edit agent"
                   >
-                    <Settings className="h-4 w-4 text-muted-foreground" />
+                    <Settings className="h-4 w-4 text-base-content/60" />
                   </Button>
                   {!agent.is_default && (
                     <AlertDialog>
@@ -76,7 +76,7 @@ export const AgentsList = ({
                       <AlertDialogContent className="max-w-md">
                         <AlertDialogHeader>
                           <AlertDialogTitle className="text-xl">Delete Agent</AlertDialogTitle>
-                          <AlertDialogDescription className="text-muted-foreground">
+                          <AlertDialogDescription className="text-base-content/70">
                             Are you sure you want to delete &quot;{agent.name}&quot;? This action cannot be undone.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
@@ -96,7 +96,7 @@ export const AgentsList = ({
                 </div>
               </div>
               {agent.description && (
-                <CardDescription className="text-sm text-muted-foreground line-clamp-2">
+                <CardDescription className="text-sm text-base-content/70 line-clamp-2">
                   {agent.description}
                 </CardDescription>
               )}

@@ -142,8 +142,8 @@ export function FileOperationToolView({
       return (
         <div className="flex items-center justify-center h-full p-12">
           <div className="text-center">
-            <FileIcon className="h-12 w-12 mx-auto mb-4 text-zinc-400" />
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">No content to preview</p>
+            <FileIcon className="h-12 w-12 mx-auto mb-4 text-base-content/60" />
+            <p className="text-sm text-base-content/70">No content to preview</p>
           </div>
         </div>
       );
@@ -217,8 +217,8 @@ export function FileOperationToolView({
       return (
         <div className="flex items-center justify-center h-full p-12">
           <div className="text-center">
-            <FileIcon className="h-12 w-12 mx-auto mb-4 text-zinc-400" />
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">No source code to display</p>
+            <FileIcon className="h-12 w-12 mx-auto mb-4 text-base-content/60" />
+            <p className="text-sm text-base-content/70">No source code to display</p>
           </div>
         </div>
       );
@@ -269,122 +269,119 @@ export function FileOperationToolView({
   };
 
   return (
-    <Card className="flex border shadow-none border-t border-b-0 border-x-0 p-0 rounded-none flex-col h-full overflow-hidden bg-white dark:bg-zinc-950">
-      <Tabs defaultValue={'preview'} className="w-full h-full">
-        <CardHeader className="h-14 bg-zinc-50/80 dark:bg-zinc-900/80 backdrop-blur-sm border-b p-2 px-4 space-y-2 mb-0">
-          <div className="flex flex-row items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className={cn("relative p-2 rounded-lg border", config.gradientBg, config.borderColor)}>
-                <Icon className={cn("h-5 w-5", config.color)} />
-              </div>
-              <div>
-                <CardTitle className="text-base font-medium text-zinc-900 dark:text-zinc-100">
-                  {toolTitle}
-                </CardTitle>
-              </div>
-            </div>
-            <div className='flex items-center gap-2'>
-              {isHtml && htmlPreviewUrl && !isStreaming && (
-                <Button variant="outline" size="sm" className="h-8 text-xs bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800" asChild>
-                  <a href={htmlPreviewUrl} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
-                    Open in Browser
-                  </a>
-                </Button>
-              )}
-              <TabsList className="-mr-2 h-7 bg-zinc-100/70 dark:bg-zinc-800/70 rounded-lg">
-                <TabsTrigger value="code" className="rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-900 data-[state=active]:text-primary">
-                  <Code className="h-4 w-4" />
-                  Source
-                </TabsTrigger>
-                <TabsTrigger value="preview" className="rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-900 data-[state=active]:text-primary">
-                  <Eye className="h-4 w-4" />
-                  Preview
-                </TabsTrigger>
-              </TabsList>
-            </div>
+    <Card className="flex border shadow-none border-t border-b-0 border-x-0 p-0 rounded-none flex-col h-full overflow-hidden bg-base-100">
+      <div className="sticky top-0 z-20 flex items-center justify-between p-3 bg-base-100 border-b border-base-300">
+        <div className="flex items-center gap-2">
+          <div className="p-2 bg-primary/10 rounded-full">
+            <Icon className="h-4 w-4 text-primary" />
           </div>
-        </CardHeader>
-
-        <CardContent className="p-0 -my-2 h-full flex-1 overflow-hidden relative">
-          <TabsContent value="code" className="flex-1 h-full mt-0 p-0 overflow-hidden">
-            <ScrollArea className="h-screen w-full min-h-0">
-              {isStreaming && !fileContent ? (
-                <LoadingState
-                  icon={Icon}
-                  iconColor={config.color}
-                  bgColor={config.bgColor}
-                  title={config.progressMessage}
-                  filePath={processedFilePath || 'Processing file...'}
-                  subtitle="Please wait while the file is being processed"
-                  showProgress={false}
-                />
-              ) : operation === 'delete' ? (
-                <div className="flex flex-col items-center justify-center h-full py-12 px-6">
-                  <div className={cn("w-20 h-20 rounded-full flex items-center justify-center mb-6", config.bgColor)}>
-                    <Icon className={cn("h-10 w-10", config.color)} />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-6 text-zinc-900 dark:text-zinc-100">
-                    Delete Operation
-                  </h3>
-                  <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 w-full max-w-md text-center">
-                    <code className="text-sm font-mono text-zinc-700 dark:text-zinc-300 break-all">
-                      {processedFilePath || 'Unknown file path'}
-                    </code>
-                  </div>
-                </div>
-              ) : (
-                renderSourceCode()
-              )}
-            </ScrollArea>
-          </TabsContent>
-
-          <TabsContent value="preview" className="w-full flex-1 h-full mt-0 p-0 overflow-hidden">
-            <ScrollArea className="h-full w-full min-h-0">
-              {isStreaming && !fileContent ? (
-                <LoadingState
-                  icon={Icon}
-                  iconColor={config.color}
-                  bgColor={config.bgColor}
-                  title={config.progressMessage}
-                  filePath={processedFilePath || 'Processing file...'}
-                  subtitle="Please wait while the file is being processed"
-                  showProgress={false}
-                />
-              ) : operation === 'delete' ? (
-                renderDeleteOperation()
-              ) : (
-                renderFilePreview()
-              )}
-              {isStreaming && fileContent && (
-                <div className="sticky bottom-4 right-4 float-right mr-4 mb-4">
-                  <Badge className="bg-blue-500/90 text-white border-none shadow-lg animate-pulse">
-                    <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                    Streaming...
-                  </Badge>
-                </div>
-              )}
-            </ScrollArea>
-          </TabsContent>
-        </CardContent>
-
-        <div className="px-4 py-2 h-10 bg-gradient-to-r from-zinc-50/90 to-zinc-100/90 dark:from-zinc-900/90 dark:to-zinc-800/90 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-800 flex justify-between items-center gap-4">
-          <div className="h-full flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-            <Badge variant="outline" className="py-0.5 h-6">
-              <FileIcon className="h-3 w-3" />
-              {hasHighlighting ? language.toUpperCase() : fileExtension.toUpperCase() || 'TEXT'}
-            </Badge>
-          </div>
-
-          <div className="text-xs text-zinc-500 dark:text-zinc-400">
-            {toolTimestamp && !isStreaming
-              ? formatTimestamp(toolTimestamp)
-              : assistantTimestamp
-                ? formatTimestamp(assistantTimestamp)
-                : ''}
+          <div>
+            <h3 className="font-medium text-base-content">{toolTitle}</h3>
+            {filePath && (
+              <p className="text-xs text-base-content/60 font-mono">{filePath}</p>
+            )}
           </div>
         </div>
-      </Tabs>
+        <div className="flex items-center gap-2">
+          {isHtml && htmlPreviewUrl && !isStreaming && (
+            <Button variant="outline" size="sm" className="h-8 text-xs bg-base-100 hover:bg-base-200" asChild>
+              <a href={htmlPreviewUrl} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
+                Open in Browser
+              </a>
+            </Button>
+          )}
+          <TabsList className="-mr-2 h-7 bg-zinc-100/70 dark:bg-zinc-800/70 rounded-lg">
+            <TabsTrigger value="code" className="rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-900 data-[state=active]:text-primary">
+              <Code className="h-4 w-4" />
+              Source
+            </TabsTrigger>
+            <TabsTrigger value="preview" className="rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-900 data-[state=active]:text-primary">
+              <Eye className="h-4 w-4" />
+              Preview
+            </TabsTrigger>
+          </TabsList>
+        </div>
+      </div>
+
+      <CardContent className="p-0 -my-2 h-full flex-1 overflow-hidden relative">
+        <TabsContent value="code" className="flex-1 h-full mt-0 p-0 overflow-hidden">
+          <ScrollArea className="h-screen w-full min-h-0">
+            {isStreaming && !fileContent ? (
+              <LoadingState
+                icon={Icon}
+                iconColor={config.color}
+                bgColor={config.bgColor}
+                title={config.progressMessage}
+                filePath={processedFilePath || 'Processing file...'}
+                subtitle="Please wait while the file is being processed"
+                showProgress={false}
+              />
+            ) : operation === 'delete' ? (
+              <div className="flex flex-col items-center justify-center h-full py-12 px-6">
+                <div className={cn("w-20 h-20 rounded-full flex items-center justify-center mb-6", config.bgColor)}>
+                  <Icon className={cn("h-10 w-10", config.color)} />
+                </div>
+                <h3 className="text-xl font-semibold mb-6 text-zinc-900 dark:text-zinc-100">
+                  Delete Operation
+                </h3>
+                <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 w-full max-w-md text-center">
+                  <code className="text-sm font-mono text-zinc-700 dark:text-zinc-300 break-all">
+                    {processedFilePath || 'Unknown file path'}
+                  </code>
+                </div>
+              </div>
+            ) : (
+              renderSourceCode()
+            )}
+          </ScrollArea>
+        </TabsContent>
+
+        <TabsContent value="preview" className="w-full flex-1 h-full mt-0 p-0 overflow-hidden">
+          <ScrollArea className="h-full w-full min-h-0">
+            {isStreaming && !fileContent ? (
+              <LoadingState
+                icon={Icon}
+                iconColor={config.color}
+                bgColor={config.bgColor}
+                title={config.progressMessage}
+                filePath={processedFilePath || 'Processing file...'}
+                subtitle="Please wait while the file is being processed"
+                showProgress={false}
+              />
+            ) : operation === 'delete' ? (
+              renderDeleteOperation()
+            ) : (
+              renderFilePreview()
+            )}
+            {isStreaming && fileContent && (
+              <div className="sticky bottom-4 right-4 float-right mr-4 mb-4">
+                <Badge className="bg-info/90 text-info-content border-none shadow-lg animate-pulse">
+                  <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                  Streaming...
+                </Badge>
+              </div>
+            )}
+          </ScrollArea>
+        </TabsContent>
+      </CardContent>
+
+                <div className="px-4 py-2 h-10 bg-base-200/20 border-t border-base-300 flex justify-between items-center gap-4">
+        <div className="h-full flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+          <Badge variant="outline" className="py-0.5 h-6">
+            <FileIcon className="h-3 w-3" />
+            {hasHighlighting ? language.toUpperCase() : fileExtension.toUpperCase() || 'TEXT'}
+          </Badge>
+        </div>
+
+        <div className="text-xs text-zinc-500 dark:text-zinc-400">
+          {toolTimestamp && !isStreaming
+            ? formatTimestamp(toolTimestamp)
+            : assistantTimestamp
+              ? formatTimestamp(assistantTimestamp)
+              : ''}
+        </div>
+      </div>
     </Card>
   );
 }

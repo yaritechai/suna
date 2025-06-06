@@ -417,7 +417,7 @@ export const PlaybackControls = ({
   // Header with playback controls
   const renderHeader = useCallback(
     () => (
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 relative z-[50]">
+      <div className="border-b bg-base-100/95 backdrop-blur supports-[backdrop-filter]:bg-base-100/60 relative z-[50]">
         <div className="flex h-14 items-center gap-4 px-4">
           <div className="flex-1">
             <div className="flex items-center gap-2">
@@ -433,7 +433,7 @@ export const PlaybackControls = ({
                 </Link>
               </div>
               <h1>
-                <span className="font-medium text-foreground">
+                <span className="font-medium text-base-content">
                   {projectName}
                 </span>
               </h1>
@@ -500,7 +500,7 @@ export const PlaybackControls = ({
       <>
         {messages.length > 0 && (
           <div
-            className={`fixed bottom-4 z-10 transform bg-background/90 backdrop-blur rounded-full border shadow-md px-3 py-1.5 transition-all duration-200 ${controlsPositionClass}`}
+            className={`fixed bottom-4 z-10 transform bg-base-100/90 backdrop-blur rounded-full border shadow-md px-3 py-1.5 transition-all duration-200 ${controlsPositionClass}`}
           >
             <div className="flex items-center gap-2">
               <Button
@@ -516,7 +516,7 @@ export const PlaybackControls = ({
                 )}
               </Button>
 
-              <div className="flex items-center text-xs text-muted-foreground">
+              <div className="flex items-center text-xs text-base-content/70">
                 <span>
                   {Math.min(
                     currentMessageIndex + (isStreamingText ? 0 : 1),
@@ -582,7 +582,7 @@ export const PlaybackControls = ({
               </p>
               <Button
                 onClick={togglePlayback}
-                className="flex items-center mx-auto bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border-white/20"
+                className="flex items-center mx-auto bg-base-100/10 hover:bg-base-100/20 backdrop-blur-sm text-base-100 border-base-100/20"
                 size="lg"
                 variant="outline"
               >

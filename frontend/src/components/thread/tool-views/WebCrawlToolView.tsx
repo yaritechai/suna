@@ -136,8 +136,8 @@ export function WebCrawlToolView({
   const contentStats = webpageContent?.text ? getContentStats(webpageContent.text) : null;
 
   return (
-    <Card className="gap-0 flex border shadow-none border-t border-b-0 border-x-0 p-0 rounded-none flex-col h-full overflow-hidden bg-white dark:bg-zinc-950">
-      <CardHeader className="h-14 bg-zinc-50/80 dark:bg-zinc-900/80 backdrop-blur-sm border-b p-2 px-4 space-y-2">
+    <Card className="gap-0 flex border shadow-none border-t border-b-0 border-x-0 p-0 rounded-none flex-col h-full overflow-hidden bg-base-100">
+      <CardHeader className="h-14 bg-base-200/80 backdrop-blur-sm border-b p-2 px-4 space-y-2">
         <div className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="relative p-2 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/20">
@@ -145,7 +145,7 @@ export function WebCrawlToolView({
             </div>
             
             <div>
-              <CardTitle className="text-base font-medium text-zinc-900 dark:text-zinc-100">
+              <CardTitle className="text-base font-medium text-base-content">
                 {toolTitle}
               </CardTitle>
             </div>
@@ -178,14 +178,14 @@ export function WebCrawlToolView({
               <div className="w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/20">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
-              <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-2">
+              <h3 className="text-lg font-medium text-base-content mb-2">
                 Crawling Webpage
               </h3>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
+              <p className="text-sm text-base-content/70 mb-6">
                 Fetching content from <span className="font-mono text-xs break-all">{domain}</span>
               </p>
               <Progress value={progress} className="w-full h-1" />
-              <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-2">{progress}% complete</p>
+              <p className="text-xs text-base-content/50 mt-2">{progress}% complete</p>
             </div>
           </div>
         ) : url ? (
@@ -194,12 +194,12 @@ export function WebCrawlToolView({
             <div className="p-4 py-0 my-4">
               {/* Target URL Section */}
               <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
-                  <Globe className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
+                <div className="flex items-center gap-2 text-sm font-medium text-base-content">
+                  <Globe className="w-4 h-4 text-base-content/60" />
                   Source URL
                 </div>
                 <div className="group relative">
-                  <div className="flex items-center gap-3 p-4 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors rounded-xl border border-zinc-200 dark:border-zinc-800">
+                  <div className="flex items-center gap-3 p-4 bg-base-200 hover:bg-base-300 transition-colors rounded-xl border border-base-300">
                     {favicon && (
                       <img 
                         src={favicon} 
@@ -211,8 +211,8 @@ export function WebCrawlToolView({
                       />
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="font-mono text-sm text-zinc-900 dark:text-zinc-100 truncate">{truncateString(url, 70)}</p>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{domain}</p>
+                      <p className="font-mono text-sm text-base-content truncate">{truncateString(url, 70)}</p>
+                      <p className="text-xs text-base-content/70 mt-1">{domain}</p>
                     </div>
                     <Button 
                       variant="ghost" 
@@ -231,8 +231,8 @@ export function WebCrawlToolView({
               {/* Content Section */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
-                    <BookOpen className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
+                  <div className="flex items-center gap-2 text-sm font-medium text-base-content">
+                    <BookOpen className="w-4 h-4 text-base-content/60" />
                     Extracted Content
                   </div>
                   {contentStats && (
@@ -248,19 +248,19 @@ export function WebCrawlToolView({
                 </div>
 
                 {webpageContent?.text ? (
-                  <div className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-200 hover:shadow-sm">
+                  <div className="group relative bg-base-100 border border-base-300 rounded-xl overflow-hidden hover:border-primary transition-all duration-200 hover:shadow-sm">
                     {/* Content Header */}
-                    <div className="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-800/50 border-b border-zinc-200 dark:border-zinc-700">
+                    <div className="flex items-center justify-between p-3 bg-base-200/50 border-b border-base-300">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/10 flex items-center justify-center border border-blue-500/20">
                           <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                          <p className="text-sm font-medium text-base-content">
                             Page Content
                           </p>
                           {contentStats && (
-                            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                            <p className="text-xs text-base-content/70">
                               {contentStats.lineCount} lines
                             </p>
                           )}
@@ -297,7 +297,7 @@ export function WebCrawlToolView({
 
                     {/* Content Body */}
                     <div className="p-4 max-h-96 overflow-auto">
-                      <pre className="text-xs font-mono text-zinc-800 dark:text-zinc-300 whitespace-pre-wrap leading-relaxed">
+                      <pre className="text-xs font-mono text-base-content whitespace-pre-wrap leading-relaxed">
                         {webpageContent.text}
                       </pre>
                     </div>
@@ -307,10 +307,10 @@ export function WebCrawlToolView({
                     <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-gradient-to-b from-zinc-100 to-zinc-50 shadow-inner dark:from-zinc-800/40 dark:to-zinc-900/60 mx-auto">
                       <FileText className="h-8 w-8 text-zinc-400 dark:text-zinc-600" />
                     </div>
-                    <h3 className="text-lg font-medium mb-2 text-zinc-900 dark:text-zinc-100">
+                    <h3 className="text-lg font-medium mb-2 text-base-content">
                       No Content Extracted
                     </h3>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto">
+                    <p className="text-sm text-base-content/70 max-w-sm mx-auto">
                       The webpage might be restricted, empty, or require JavaScript to load content
                     </p>
                   </div>
@@ -321,12 +321,12 @@ export function WebCrawlToolView({
         ) : (
           <div className="flex flex-col items-center justify-center h-full py-12 px-6 bg-gradient-to-b from-white to-zinc-50 dark:from-zinc-950 dark:to-zinc-900">
             <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 bg-gradient-to-b from-zinc-100 to-zinc-50 shadow-inner dark:from-zinc-800/40 dark:to-zinc-900/60">
-              <Globe className="h-10 w-10 text-zinc-400 dark:text-zinc-600" />
+              <Globe className="h-10 w-10 text-base-content/50" />
             </div>
-            <h3 className="text-xl font-semibold mb-2 text-zinc-900 dark:text-zinc-100">
+            <h3 className="text-xl font-semibold mb-2 text-base-content">
               No URL Detected
             </h3>
-            <p className="text-zinc-500 dark:text-zinc-400 text-center max-w-sm">
+            <p className="text-base-content/70 text-center max-w-sm">
               Unable to extract a valid URL from the crawling request
             </p>
           </div>
@@ -335,7 +335,7 @@ export function WebCrawlToolView({
       
       {/* Footer */}
       <div className="px-4 py-2 h-10 bg-gradient-to-r from-zinc-50/90 to-zinc-100/90 dark:from-zinc-900/90 dark:to-zinc-800/90 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-800 flex justify-between items-center gap-4">
-        <div className="h-full flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+        <div className="h-full flex items-center gap-2 text-sm text-base-content/70">
           {!isStreaming && webpageContent?.text && (
             <Badge className="h-6 py-0.5">
               <div className="w-2 h-2 rounded-full bg-green-500 mr-1.5" />
@@ -344,7 +344,7 @@ export function WebCrawlToolView({
           )}
         </div>
         
-        <div className="text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="text-xs text-base-content/70">
           {toolTimestamp && !isStreaming
             ? formatTimestamp(toolTimestamp)
             : assistantTimestamp

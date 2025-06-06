@@ -45,7 +45,7 @@ export function AgentSelector({
     ? agents.find(agent => agent.agent_id === selectedAgentId)
     : null;
 
-  const displayName = currentAgent?.name || defaultAgent?.name || 'Suna';
+  const displayName = currentAgent?.name || defaultAgent?.name || 'Yari';
   const agentAvatar = currentAgent?.avatar;
   const isUsingSuna = !currentAgent && !defaultAgent;
 
@@ -73,7 +73,7 @@ export function AgentSelector({
     if (variant === 'heading') {
       return (
         <div className={cn("flex items-center", className)}>
-          <span className="tracking-tight text-4xl font-semibold leading-tight text-muted-foreground">
+          <span className="tracking-tight text-4xl font-semibold leading-tight text-base-content/60">
             Loading...
           </span>
         </div>
@@ -82,9 +82,9 @@ export function AgentSelector({
     
     return (
       <div className={cn("flex items-center gap-2", className)}>
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg border bg-background">
-          <Bot className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">Loading agents...</span>
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-base-300 bg-base-100">
+          <Bot className="h-4 w-4 text-base-content/60" />
+          <span className="text-sm text-base-content/60">Loading agents...</span>
         </div>
       </div>
     );
@@ -100,36 +100,36 @@ export function AgentSelector({
                 variant="ghost"
                 className="flex items-center gap-1 px-2 py-1 h-auto hover:bg-transparent hover:text-primary transition-colors group"
               >
-                <span className="underline decoration-dashed underline-offset-6 decoration-muted-foreground/50 tracking-tight text-4xl font-semibold leading-tight text-primary">
+                <span className="underline decoration-dashed underline-offset-6 decoration-base-content/30 tracking-tight text-4xl font-semibold leading-tight text-primary">
                   {displayName}
-                  <span className="text-muted-foreground ml-2">
+                  <span className="text-base-content/60 ml-2">
                     {agentAvatar && agentAvatar}
                   </span>
                 </span>
                 <div className="flex items-center opacity-60 group-hover:opacity-100 transition-opacity">
-                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                  <Edit className="h-4 w-4 text-muted-foreground ml-1" />
+                  <ChevronDown className="h-5 w-5 text-base-content/60" />
+                  <Edit className="h-4 w-4 text-base-content/60 ml-1" />
                 </div>
               </Button>
             </DropdownMenuTrigger>
             
-            <DropdownMenuContent align="start" className="w-[320px]">
+            <DropdownMenuContent align="start" className="w-[320px] bg-base-100 border-base-300">
               <div className="px-3 py-2">
-                <p className="text-sm font-medium">Select an agent</p>
-                <p className="text-xs text-muted-foreground">You can create your own agent</p>
+                <p className="text-sm font-medium text-base-content">Select an agent</p>
+                <p className="text-xs text-base-content/70">You can create your own agent</p>
               </div>
 
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="bg-base-300" />
               
               <DropdownMenuItem
                 onClick={() => handleClearSelection()}
-                className="flex flex-col items-start gap-1 p-3 cursor-pointer"
+                className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-base-200"
               >
                 <div className="flex items-center gap-2 w-full">
-                  <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                  <User className="h-4 w-4 text-base-content/60 flex-shrink-0" />
                   <div className="flex items-center gap-1 flex-1 min-w-0">
-                    <span className="font-medium truncate">Suna</span>
-                    <Badge variant="outline" className="text-xs px-1 py-0 flex-shrink-0">
+                    <span className="font-medium truncate text-base-content">Yari</span>
+                    <Badge variant="outline" className="text-xs px-1 py-0 flex-shrink-0 border-base-300 text-base-content/70">
                       Default
                     </Badge>
                   </div>
@@ -137,7 +137,7 @@ export function AgentSelector({
                     <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
                   )}
                 </div>
-                <span className="text-xs text-muted-foreground pl-6 line-clamp-2">
+                <span className="text-xs text-base-content/60 pl-6 line-clamp-2">
                   Your personal AI employee
                 </span>
               </DropdownMenuItem>
@@ -147,14 +147,14 @@ export function AgentSelector({
                     <DropdownMenuItem
                       key={agent.agent_id}
                       onClick={() => handleAgentSelect(agent.agent_id)}
-                      className="flex flex-col items-start gap-1 p-3 cursor-pointer"
+                      className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-base-200"
                     >
                       <div className="flex items-center gap-2 w-full">
                         {agent.avatar}
                         <div className="flex items-center gap-1 flex-1 min-w-0">
-                          <span className="font-medium truncate">{agent.name}</span>
+                          <span className="font-medium truncate text-base-content">{agent.name}</span>
                           {agent.is_default && (
-                            <Badge variant="secondary" className="text-xs px-1 py-0 flex-shrink-0">
+                            <Badge variant="secondary" className="text-xs px-1 py-0 flex-shrink-0 bg-secondary text-secondary-content">
                               <Star className="h-2.5 w-2.5 mr-0.5 fill-current" />
                               System
                             </Badge>
@@ -165,7 +165,7 @@ export function AgentSelector({
                         )}
                       </div>
                       {agent.description && (
-                        <span className="text-xs text-muted-foreground pl-6 line-clamp-2">
+                        <span className="text-xs text-base-content/60 pl-6 line-clamp-2">
                           {agent.description}
                         </span>
                       )}
@@ -174,9 +174,9 @@ export function AgentSelector({
                 </>
               ) : null}
 
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="bg-base-300" />
               
-              <DropdownMenuItem onClick={handleCreateAgent} className="cursor-pointer">
+              <DropdownMenuItem onClick={handleCreateAgent} className="cursor-pointer hover:bg-base-200 text-base-content">
                 Agent Playground
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -193,56 +193,56 @@ export function AgentSelector({
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="flex items-center gap-2 px-3 py-2 h-auto min-w-[200px] justify-between"
+              className="flex items-center gap-2 px-3 py-2 h-auto min-w-[200px] justify-between border-base-300 bg-base-100 hover:bg-base-200"
             >
               <div className="flex items-center gap-2">
                 {isUsingSuna ? (
-                  <User className="h-4 w-4 text-muted-foreground" />
+                  <User className="h-4 w-4 text-base-content/60" />
                 ) : (
-                  <Bot className="h-4 w-4 text-muted-foreground" />
+                  <Bot className="h-4 w-4 text-base-content/60" />
                 )}
                 <div className="flex flex-col items-start">
                   <div className="flex items-center gap-1">
-                    <span className="text-sm font-medium">
+                    <span className="text-sm font-medium text-base-content">
                       {displayName}
                     </span>
                     {isUsingSuna && (
-                      <Badge variant="outline" className="text-xs px-1 py-0">
+                      <Badge variant="outline" className="text-xs px-1 py-0 border-base-300 text-base-content/70">
                         Default
                       </Badge>
                     )}
                     {currentAgent?.is_default && (
-                      <Badge variant="secondary" className="text-xs px-1 py-0">
+                      <Badge variant="secondary" className="text-xs px-1 py-0 bg-secondary text-secondary-content">
                         <Star className="h-2.5 w-2.5 mr-0.5 fill-current" />
                         System
                       </Badge>
                     )}
                   </div>
                   {currentAgent?.description ? (
-                    <span className="text-xs text-muted-foreground line-clamp-1 max-w-[150px]">
+                    <span className="text-xs text-base-content/60 line-clamp-1 max-w-[150px]">
                       {currentAgent.description}
                     </span>
                   ) : isUsingSuna ? (
-                    <span className="text-xs text-muted-foreground line-clamp-1 max-w-[150px]">
+                    <span className="text-xs text-base-content/60 line-clamp-1 max-w-[150px]">
                       Your personal AI employee
                     </span>
                   ) : null}
                 </div>
               </div>
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              <ChevronDown className="h-4 w-4 text-base-content/60" />
             </Button>
           </DropdownMenuTrigger>
           
-          <DropdownMenuContent align="start" className="w-[280px]">
+          <DropdownMenuContent align="start" className="w-[280px] bg-base-100 border-base-300">
             <DropdownMenuItem
               onClick={() => handleClearSelection()}
-              className="flex flex-col items-start gap-1 p-3 cursor-pointer"
+              className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-base-200"
             >
               <div className="flex items-center gap-2 w-full">
-                <User className="h-4 w-4 text-muted-foreground" />
+                <User className="h-4 w-4 text-base-content/60" />
                 <div className="flex items-center gap-1 flex-1">
-                  <span className="font-medium">Suna</span>
-                  <Badge variant="outline" className="text-xs px-1 py-0">
+                  <span className="font-medium text-base-content">Yari</span>
+                  <Badge variant="outline" className="text-xs px-1 py-0 border-base-300 text-base-content/70">
                     Default
                   </Badge>
                 </div>
@@ -250,7 +250,7 @@ export function AgentSelector({
                   <div className="h-2 w-2 rounded-full bg-primary" />
                 )}
               </div>
-              <span className="text-xs text-muted-foreground pl-6 line-clamp-2">
+              <span className="text-xs text-base-content/60 pl-6 line-clamp-2">
                 Your personal AI employee
               </span>
             </DropdownMenuItem>
@@ -260,14 +260,14 @@ export function AgentSelector({
                   <DropdownMenuItem
                     key={agent.agent_id}
                     onClick={() => handleAgentSelect(agent.agent_id)}
-                    className="flex flex-col items-start gap-1 p-3 cursor-pointer"
+                    className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-base-200"
                   >
                     <div className="flex items-center gap-2 w-full">
-                      <Bot className="h-4 w-4 text-muted-foreground" />
+                      <Bot className="h-4 w-4 text-base-content/60" />
                       <div className="flex items-center gap-1 flex-1">
-                        <span className="font-medium">{agent.name}</span>
+                        <span className="font-medium text-base-content">{agent.name}</span>
                         {agent.is_default && (
-                          <Badge variant="secondary" className="text-xs px-1 py-0">
+                          <Badge variant="secondary" className="text-xs px-1 py-0 bg-secondary text-secondary-content">
                             <Star className="h-2.5 w-2.5 mr-0.5 fill-current" />
                             System
                           </Badge>
@@ -278,7 +278,7 @@ export function AgentSelector({
                       )}
                     </div>
                     {agent.description && (
-                      <span className="text-xs text-muted-foreground pl-6 line-clamp-2">
+                      <span className="text-xs text-base-content/60 pl-6 line-clamp-2">
                         {agent.description}
                       </span>
                     )}
@@ -287,14 +287,14 @@ export function AgentSelector({
               </>
             ) : null}
             
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-base-300" />
             
-            <DropdownMenuItem onClick={handleCreateAgent} className="cursor-pointer">
+            <DropdownMenuItem onClick={handleCreateAgent} className="cursor-pointer hover:bg-base-200 text-base-content">
               <Plus className="h-4 w-4" />
               Create New Agent
             </DropdownMenuItem>
             
-            <DropdownMenuItem onClick={handleManageAgents} className="cursor-pointer">
+            <DropdownMenuItem onClick={handleManageAgents} className="cursor-pointer hover:bg-base-200 text-base-content">
               <Bot className="h-4 w-4" />
               Manage All Agents
             </DropdownMenuItem>

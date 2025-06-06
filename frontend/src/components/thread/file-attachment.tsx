@@ -443,7 +443,7 @@ export function FileAttachment({
 
                     {/* Loading state */}
                     {fileContentLoading && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-background/50">
+                        <div className="absolute inset-0 flex items-center justify-center bg-base-200/50">
                             <Loader2 className="h-6 w-6 text-primary animate-spin" />
                         </div>
                     )}
@@ -501,7 +501,7 @@ export function FileAttachment({
         >
             <div className="relative min-w-[54px] w-[54px] h-full aspect-square flex-shrink-0 bg-black/5 dark:bg-white/5">
                 <div className="flex items-center justify-center h-full w-full">
-                    <IconComponent className="h-5 w-5 text-black/60 dark:text-white/60" />
+                    <IconComponent className="h-5 w-5 text-base-content/60" />
                 </div>
             </div>
 
@@ -510,9 +510,9 @@ export function FileAttachment({
                     {filename}
                 </div>
                 <div className="text-xs text-muted-foreground flex items-center gap-1 truncate">
-                    <span className="text-black/60 dark:text-white/60 truncate">{typeLabel}</span>
-                    <span className="text-black/40 dark:text-white/40 flex-shrink-0">·</span>
-                    <span className="text-black/60 dark:text-white/60 flex-shrink-0">{fileSize}</span>
+                    <span className="text-base-content/60 truncate">{typeLabel}</span>
+                    <span className="text-base-content/40 flex-shrink-0">·</span>
+                    <span className="text-base-content/60 flex-shrink-0">{fileSize}</span>
                 </div>
             </div>
         </button>

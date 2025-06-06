@@ -326,7 +326,7 @@ export const AgentPreview = ({ agent }: AgentPreviewProps) => {
 
 
   return (
-    <div className="h-full flex flex-col bg-muted dark:bg-muted/30">
+    <div className="h-full flex flex-col bg-base-200 dark:bg-base-200/30">
       <div className="flex-shrink-0 flex items-center gap-3 p-8">
         <div 
           className="h-10 w-10 flex items-center justify-center rounded-lg text-lg"
@@ -353,8 +353,8 @@ export const AgentPreview = ({ agent }: AgentPreviewProps) => {
             agentName={agent.name}
             agentAvatar={avatar}
             emptyStateComponent={
-              <div className="flex flex-col items-center text-center text-muted-foreground/80">
-                <div className="flex w-20 aspect-square items-center justify-center rounded-2xl bg-muted-foreground/10 p-4 mb-4">
+                      <div className="flex flex-col items-center text-center text-base-content/60">
+          <div className="flex w-20 aspect-square items-center justify-center rounded-2xl bg-base-content/10 p-4 mb-4">
                   <div className="text-4xl">{avatar}</div>
                 </div>
                 <p className='w-[60%] text-2xl'>Start conversation with your new agent <span className='text-primary/80 font-semibold'>{agent.name}</span></p>
@@ -378,7 +378,7 @@ export const AgentPreview = ({ agent }: AgentPreviewProps) => {
             onStopAgent={handleStopAgent}
             agentName={agent.name}
             hideAttachments={false}
-            bgColor='bg-muted-foreground/10'
+                          bgColor='bg-base-content/10'
           />
         </div>
       </div>

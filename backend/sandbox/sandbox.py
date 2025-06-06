@@ -4,13 +4,15 @@ from dotenv import load_dotenv
 from utils.logger import logger
 from utils.config import config
 from utils.config import Configuration
+import asyncio
+import time
 
 load_dotenv()
 
 logger.debug("Initializing Daytona sandbox configuration")
 daytona_config = DaytonaConfig(
     api_key=config.DAYTONA_API_KEY,
-    server_url=config.DAYTONA_SERVER_URL,
+    api_url=config.DAYTONA_SERVER_URL,  # Use api_url instead of deprecated server_url
     target=config.DAYTONA_TARGET
 )
 
@@ -19,8 +21,8 @@ if daytona_config.api_key:
 else:
     logger.warning("No Daytona API key found in environment variables")
 
-if daytona_config.server_url:
-    logger.debug(f"Daytona server URL set to: {daytona_config.server_url}")
+if daytona_config.api_url:
+    logger.debug(f"Daytona server URL set to: {daytona_config.api_url}")
 else:
     logger.warning("No Daytona server URL found in environment variables")
 
@@ -38,30 +40,77 @@ async def get_or_start_sandbox(sandbox_id: str):
     logger.info(f"Getting or starting sandbox with ID: {sandbox_id}")
     
     try:
-        sandbox = daytona.get_current_sandbox(sandbox_id)
+        # Try to get the current sandbox
+        try:
+            sandbox = daytona.get_current_sandbox(sandbox_id)
+            logger.debug(f"Found existing sandbox {sandbox_id}")
+        except Exception as get_error:
+            logger.error(f"Failed to get sandbox {sandbox_id}: {str(get_error)}")
+            # If we can't get the sandbox, it might not exist or be accessible
+            raise Exception(f"Sandbox {sandbox_id} not found or not accessible")
         
         # Check if sandbox needs to be started
-        if sandbox.instance.state == WorkspaceState.ARCHIVED or sandbox.instance.state == WorkspaceState.STOPPED:
-            logger.info(f"Sandbox is in {sandbox.instance.state} state. Starting...")
+        current_state = sandbox.instance.state
+        logger.debug(f"Sandbox {sandbox_id} current state: {current_state}")
+        
+        if current_state in [WorkspaceState.ARCHIVED, WorkspaceState.STOPPED]:
+            logger.info(f"Sandbox is in {current_state} state. Starting...")
             try:
                 daytona.start(sandbox)
-                # Wait a moment for the sandbox to initialize
-                # sleep(5)
-                # Refresh sandbox state after starting
-                sandbox = daytona.get_current_sandbox(sandbox_id)
+                logger.info(f"Started sandbox {sandbox_id}, waiting for initialization...")
+                
+                # Wait for the sandbox to be ready
+                max_wait_time = 30  # Maximum wait time in seconds
+                wait_interval = 2   # Check every 2 seconds
+                elapsed_time = 0
+                
+                while elapsed_time < max_wait_time:
+                    await asyncio.sleep(wait_interval)
+                    elapsed_time += wait_interval
+                    
+                    try:
+                        # Refresh sandbox state
+                        sandbox = daytona.get_current_sandbox(sandbox_id)
+                        if sandbox.instance.state == WorkspaceState.STARTED:
+                            logger.info(f"Sandbox {sandbox_id} is now started after {elapsed_time}s")
+                            break
+                    except Exception as state_check_error:
+                        logger.warning(f"Error checking sandbox state during startup: {state_check_error}")
+                        continue
+                
+                if elapsed_time >= max_wait_time:
+                    logger.warning(f"Sandbox {sandbox_id} startup timeout after {max_wait_time}s")
                 
                 # Start supervisord in a session when restarting
-                start_supervisord_session(sandbox)
-            except Exception as e:
-                logger.error(f"Error starting sandbox: {e}")
-                raise e
+                try:
+                    start_supervisord_session(sandbox)
+                except Exception as supervisord_error:
+                    logger.warning(f"Failed to start supervisord session: {supervisord_error}")
+                    # Continue anyway, supervisord failure shouldn't block the sandbox
+                    
+            except Exception as start_error:
+                logger.error(f"Error starting sandbox {sandbox_id}: {start_error}")
+                raise Exception(f"Failed to start sandbox: {str(start_error)}")
+        
+        elif current_state == WorkspaceState.STARTED:
+            logger.info(f"Sandbox {sandbox_id} is already running")
+        else:
+            logger.warning(f"Sandbox {sandbox_id} is in unexpected state: {current_state}")
         
         logger.info(f"Sandbox {sandbox_id} is ready")
         return sandbox
         
     except Exception as e:
-        logger.error(f"Error retrieving or starting sandbox: {str(e)}")
-        raise e
+        error_msg = f"Failed to get or start sandbox {sandbox_id}: {str(e)}"
+        logger.error(error_msg)
+        
+        # Check for specific error types to provide better error messages
+        if "not found" in str(e).lower():
+            raise Exception(f"Sandbox {sandbox_id} does not exist")
+        elif "connection" in str(e).lower():
+            raise Exception(f"Unable to connect to Daytona service: {str(e)}")
+        else:
+            raise Exception(error_msg)
 
 def start_supervisord_session(sandbox: Sandbox):
     """Start supervisord in a session."""
@@ -109,9 +158,9 @@ def create_sandbox(password: str, project_id: str = None):
             "CHROME_CDP": ""
         },
         resources={
-            "cpu": 2,
-            "memory": 4,
-            "disk": 5,
+            "cpu": 1,
+            "memory": 2,  # Reduced from 4GB to 2GB to prevent quota issues
+            "disk": 3,    # Reduced disk space as well
         }
     )
     

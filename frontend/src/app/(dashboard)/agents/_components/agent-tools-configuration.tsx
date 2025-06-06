@@ -45,14 +45,14 @@ export const AgentToolsConfiguration = ({ tools, onToolsChange }: AgentToolsConf
     <Card className='px-0 bg-transparent border-none shadow-none'>
       <CardHeader className='px-0'>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">
-            {getSelectedToolsCount()} selected
-          </span>
+                  <span className="text-sm text-base-content/70">
+          {getSelectedToolsCount()} selected
+        </span>
         </div>
       </CardHeader>
       <CardContent className="space-y-4 px-0">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-base-content/60" />
           <Input
             placeholder="Search tools..."
             value={searchQuery}
@@ -65,7 +65,7 @@ export const AgentToolsConfiguration = ({ tools, onToolsChange }: AgentToolsConf
           {getFilteredTools().map(([toolName, toolInfo]) => (
             <div 
               key={toolName} 
-              className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg border hover:border-border/80 transition-colors"
+              className="flex items-center gap-3 p-3 bg-base-200/50 rounded-lg border hover:border-border/80 transition-colors"
             >
               <div className={`w-10 h-10 rounded-lg ${toolInfo.color} flex items-center justify-center flex-shrink-0`}>
                 <span className="text-lg">{toolInfo.icon}</span>
@@ -81,7 +81,7 @@ export const AgentToolsConfiguration = ({ tools, onToolsChange }: AgentToolsConf
                     className="flex-shrink-0"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-xs text-base-content/70 leading-relaxed">
                   {toolInfo.description}
                 </p>
               </div>
@@ -93,7 +93,7 @@ export const AgentToolsConfiguration = ({ tools, onToolsChange }: AgentToolsConf
           <div className="text-center py-8">
             <div className="text-4xl mb-3">🔍</div>
             <h3 className="text-sm font-medium mb-1">No tools found</h3>
-            <p className="text-xs text-muted-foreground">Try adjusting your search criteria</p>
+            <p className="text-xs text-base-content/70">Try adjusting your search criteria</p>
           </div>
         )}
       </CardContent>

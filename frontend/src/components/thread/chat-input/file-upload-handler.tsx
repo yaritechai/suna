@@ -232,33 +232,6 @@ export const FileUploadHandler = forwardRef<
 
     return (
       <>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                onClick={handleFileUpload}
-                variant="ghost"
-                size="default"
-                className="h-7 rounded-md text-muted-foreground"
-                disabled={
-                  loading || (disabled && !isAgentRunning) || isUploading
-                }
-              >
-                {isUploading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Paperclip className="h-4 w-4" />
-                )}
-                <span className="text-sm sm:block hidden">Attachments</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="top">
-              <p>Attach files</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
         <input
           type="file"
           ref={ref}

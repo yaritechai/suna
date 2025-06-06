@@ -194,10 +194,10 @@ export default function AgentsPage() {
       <div className="space-y-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            <h1 className="text-2xl font-semibold tracking-tight text-base-content">
               Your Agents
             </h1>
-            <p className="text-md text-muted-foreground max-w-2xl">
+            <p className="text-md text-base-content/70 max-w-2xl">
               Create and manage your AI agents with custom instructions and tools
             </p>
           </div>

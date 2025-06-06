@@ -317,7 +317,7 @@ export const MCPConfiguration: React.FC<MCPConfigurationProps> = ({
 
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-base-content/60" />
             <Input
               placeholder="Search MCP servers..."
               value={searchQuery}
@@ -334,7 +334,7 @@ export const MCPConfiguration: React.FC<MCPConfigurationProps> = ({
                   <div className="space-y-1">
                     <Button
                       size="sm"
-                      className={cn("w-full justify-start shadow-none bg-transparent text-primary hover:bg-muted hover:text-primary", selectedCategory === null && "bg-primary/5 text-foreground")}
+                      className={cn("w-full justify-start shadow-none bg-transparent text-primary hover:bg-base-200 hover:text-primary", selectedCategory === null && "bg-primary/5 text-base-content")}
                       onClick={() => setSelectedCategory(null)}
                     >
                       <span className="mr-2">🌐</span>
@@ -346,7 +346,7 @@ export const MCPConfiguration: React.FC<MCPConfigurationProps> = ({
                         <Button
                           key={category}
                           size="sm"
-                          className={cn("w-full justify-start shadow-none bg-transparent text-primary hover:bg-muted hover:text-primary", selectedCategory === category && "bg-primary/5 text-foreground")}
+                          className={cn("w-full justify-start shadow-none bg-transparent text-primary hover:bg-base-200 hover:text-primary", selectedCategory === category && "bg-primary/5 text-base-content")}
                           onClick={() => setSelectedCategory(category)}
                         >
                           <span className="mr-2">{categoryIcons[category] || "🧩"}</span>
@@ -382,7 +382,7 @@ export const MCPConfiguration: React.FC<MCPConfigurationProps> = ({
                             {searchResults.servers.map((server) => (
                               <Card
                                 key={server.qualifiedName}
-                                className="p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+                                className="p-4 cursor-pointer hover:bg-base-200/50 transition-colors"
                                 onClick={() => handleAddMCP(server)}
                               >
                                 <div className="flex items-start gap-3">
@@ -405,17 +405,17 @@ export const MCPConfiguration: React.FC<MCPConfigurationProps> = ({
                                         </Badge>
                                       )}
                                     </div>
-                                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                    <p className="text-xs text-base-content/70 mt-1 line-clamp-2">
                                       {server.description}
                                     </p>
-                                    <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                                    <div className="flex items-center gap-4 mt-2 text-xs text-base-content/70">
                                       <span>Used {server.useCount} times</span>
                                       {server.homepage && (
                                         <ExternalLink className="h-3 w-3" />
                                       )}
                                     </div>
                                   </div>
-                                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                                  <ChevronRight className="h-4 w-4 text-base-content/60" />
                                 </div>
                               </Card>
                             ))}

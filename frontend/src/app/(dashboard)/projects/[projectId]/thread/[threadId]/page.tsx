@@ -462,7 +462,7 @@ export default function ThreadPage({
   // SEO title update
   useEffect(() => {
     if (projectName) {
-      document.title = `${projectName} | Kortix Suna`;
+      document.title = `${projectName} | Yari`;
 
       const metaDescription = document.querySelector(
         'meta[name="description"]',
@@ -470,13 +470,13 @@ export default function ThreadPage({
       if (metaDescription) {
         metaDescription.setAttribute(
           'content',
-          `${projectName} - Interactive agent conversation powered by Kortix Suna`,
+          `${projectName} - Interactive agent conversation powered by Yari`,
         );
       }
 
       const ogTitle = document.querySelector('meta[property="og:title"]');
       if (ogTitle) {
-        ogTitle.setAttribute('content', `${projectName} | Kortix Suna`);
+        ogTitle.setAttribute('content', `${projectName} | Yari`);
       }
 
       const ogDescription = document.querySelector(
@@ -498,7 +498,7 @@ export default function ThreadPage({
 
   useEffect(() => {
     if (initialLoadCompleted && subscriptionData) {
-      const hasSeenUpgradeDialog = localStorage.getItem('suna_upgrade_dialog_displayed');
+      const hasSeenUpgradeDialog = localStorage.getItem('yari_upgrade_dialog_displayed');
       const isFreeTier = subscriptionStatus === 'no_subscription';
       if (!hasSeenUpgradeDialog && isFreeTier && !isLocalMode()) {
         setShowUpgradeDialog(true);
@@ -508,7 +508,7 @@ export default function ThreadPage({
 
   const handleDismissUpgradeDialog = () => {
     setShowUpgradeDialog(false);
-    localStorage.setItem('suna_upgrade_dialog_displayed', 'true');
+    localStorage.setItem('yari_upgrade_dialog_displayed', 'true');
   };
 
   useEffect(() => {
@@ -619,7 +619,7 @@ export default function ThreadPage({
 
         <div
           className={cn(
-            "fixed bottom-0 z-10 bg-gradient-to-t from-background via-background/90 to-transparent px-4 pt-8 transition-all duration-200 ease-in-out",
+            "fixed bottom-0 z-10 bg-gradient-to-t from-base-100 via-base-100/90 to-transparent px-4 pt-8 transition-all duration-200 ease-in-out",
             leftSidebarState === 'expanded' ? 'left-[72px] lg:left-[256px]' : 'left-[72px]',
             isSidePanelOpen ? 'right-[90%] sm:right-[450px] md:right-[500px] lg:right-[550px] xl:right-[650px]' : 'right-0',
             isMobile ? 'left-0 right-0' : ''
@@ -632,7 +632,7 @@ export default function ThreadPage({
               value={newMessage}
               onChange={setNewMessage}
               onSubmit={handleSubmitMessage}
-              placeholder={`Ask ${agent ? agent.name : 'Suna'} anything...`}
+              placeholder={`Ask ${agent ? agent.name : 'Yari'} anything...`}
               loading={isSending}
               disabled={isSending || agentStatus === 'running' || agentStatus === 'connecting'}
               isAgentRunning={agentStatus === 'running' || agentStatus === 'connecting'}

@@ -20,12 +20,12 @@ export function CreateTeamDialog({
 }: CreateTeamDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] border-subtle dark:border-white/10 bg-white dark:bg-gray-900 rounded-2xl shadow-custom">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-gray-900 dark:text-white">
+          <DialogTitle className="text-base-content">
             Create a new team
           </DialogTitle>
-          <DialogDescription className="text-gray-600 dark:text-gray-300">
+          <DialogDescription className="text-base-content/70">
             Create a team to collaborate with others.
           </DialogDescription>
         </DialogHeader>

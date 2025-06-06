@@ -195,7 +195,7 @@ export const CreateAgentDialog = ({ isOpen, onOpenChange, onAgentCreated }: Crea
               </div>
             </div>
 
-            <div className="border-l w-[60%] bg-muted/30 flex flex-col min-h-0">
+            <div className="border-l w-[60%] bg-base-200/30 flex flex-col min-h-0">
               <Tabs defaultValue="tools" className="flex flex-col h-full">
                 <TabsList className="w-full justify-start rounded-none border-b h-10">
                   <TabsTrigger 
@@ -213,16 +213,16 @@ export const CreateAgentDialog = ({ isOpen, onOpenChange, onAgentCreated }: Crea
                 </TabsList>
 
                 <TabsContent value="tools" className="flex-1 flex flex-col m-0 min-h-0">
-                  <div className="px-6 py-4 border-b bg-background flex-shrink-0">
+                  <div className="px-6 py-4 border-b bg-base-200 flex-shrink-0">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold">Available Tools</h3>
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-sm text-base-content/70">
                         {getSelectedToolsCount()} selected
                       </span>
                     </div>
 
                     <div className="relative mb-4">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-base-content/60" />
                       <Input
                         placeholder="Search tools..."
                         value={searchQuery}
@@ -253,7 +253,7 @@ export const CreateAgentDialog = ({ isOpen, onOpenChange, onAgentCreated }: Crea
                       {getFilteredTools().map(([toolName, toolInfo]) => (
                         <div 
                           key={toolName} 
-                          className="flex items-center gap-3 p-3 bg-card rounded-lg border hover:border-border/80 transition-colors"
+                          className="flex items-center gap-3 p-3 bg-base-100 rounded-lg border hover:border-base-300/80 transition-colors"
                         >
                           <div className={`w-10 h-10 rounded-lg ${toolInfo.color} flex items-center justify-center flex-shrink-0`}>
                             <span className="text-lg">{toolInfo.icon}</span>

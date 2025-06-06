@@ -52,7 +52,7 @@ export function CsvRenderer({
                         <thead className="bg-muted sticky top-0">
                             <tr>
                                 {parsedData.headers.map((header, index) => (
-                                    <th key={index} className="px-3 py-2 text-left font-medium border border-border">
+                                    <th key={index} className="px-3 py-2 text-left font-medium border border-base-300">
                                         {header}
                                     </th>
                                 ))}
@@ -60,9 +60,9 @@ export function CsvRenderer({
                         </thead>
                         <tbody>
                             {!isEmpty ? parsedData.data.map((row: any, rowIndex) => (
-                                <tr key={rowIndex} className="border-b border-border hover:bg-muted/50">
+                                <tr key={rowIndex} className="border-b border-base-300 hover:bg-base-200/50">
                                     {parsedData.headers.map((header, cellIndex) => (
-                                        <td key={cellIndex} className="px-3 py-2 border border-border">
+                                        <td key={cellIndex} className="px-3 py-2 border border-base-300">
                                             {row[header] || ''}
                                         </td>
                                     ))}

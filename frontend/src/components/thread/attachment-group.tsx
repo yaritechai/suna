@@ -250,9 +250,9 @@ export function AttachmentGroup({
                             {onRemove && (
                                 <div
                                     className="absolute -top-1 -right-1 h-5 w-5 rounded-full
-                                    bg-black dark:bg-white
-                                    border-3 border-sidebar
-                                    text-white dark:text-black flex items-center justify-center
+                                    bg-base-content
+                                    border-3 border-base-100
+                                    text-base-100 flex items-center justify-center
                                     z-30 cursor-pointer"
                                     onClick={() => onRemove(index)}
                                 >
@@ -291,9 +291,9 @@ export function AttachmentGroup({
                             {onRemove && (
                                 <div
                                     className="absolute -top-1 -right-1 h-5 w-5 rounded-full
-                                        bg-black dark:bg-white
-                                        border-3 border-sidebar
-                                        text-white dark:text-black flex items-center justify-center
+                                        bg-base-content
+                                        border-3 border-base-100
+                                        text-base-100 flex items-center justify-center
                                         z-30 cursor-pointer"
                                     onClick={() => onRemove(index)}
                                 >
@@ -320,16 +320,16 @@ export function AttachmentGroup({
                             onClick={() => setIsModalOpen(true)}
                             className={cn(
                                 "h-[54px] rounded-xl cursor-pointer",
-                                "border border-black/10 dark:border-white/10",
-                                "bg-black/5 dark:bg-black/20",
-                                "hover:bg-primary/10 dark:hover:bg-primary/20",
+                                "border border-base-300",
+                                "bg-base-100",
+                                "hover:bg-primary/10",
                                 "flex items-center justify-center transition-colors",
                                 isMobile ? "w-full" : "min-w-[120px] w-fit"
                             )}
                             title={`${moreCount} more ${moreCount === 1 ? 'file' : 'files'}`}
                         >
                             <div className="flex items-center gap-2">
-                                <div className="flex items-center justify-center w-6 h-6 bg-primary/10 rounded-full">
+                                <div className="flex items-center justify-center w-6 h-6 bg-primary/20 rounded-full">
                                     <Plus size={14} className="text-primary" />
                                 </div>
                                 <span className="text-sm font-medium">{moreCount} more</span>
@@ -451,9 +451,9 @@ export function AttachmentGroup({
                                     {onRemove && (
                                         <div
                                             className="absolute -top-1 -right-1 h-5 w-5 rounded-full
-                                                bg-black dark:bg-white
-                                                border-3 border-sidebar
-                                                text-white dark:text-black flex items-center justify-center
+                                                bg-base-content
+                                                border-3 border-base-100
+                                                text-base-100 flex items-center justify-center
                                                 z-30 cursor-pointer"
                                             onClick={() => {
                                                 onRemove(item.originalIndex);

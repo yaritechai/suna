@@ -187,8 +187,8 @@ export function SidebarSearch() {
           Array.from({ length: 3 }).map((_, index) => (
             <SidebarMenuItem key={`skeleton-${index}`}>
               <SidebarMenuButton>
-                <div className="h-4 w-4 bg-sidebar-foreground/10 rounded-md animate-pulse"></div>
-                <div className="h-3 bg-sidebar-foreground/10 rounded w-3/4 animate-pulse"></div>
+                                    <div className="h-4 w-4 bg-base-content/10 rounded-md animate-pulse"></div>
+                    <div className="h-3 bg-base-content/10 rounded w-3/4 animate-pulse"></div>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))
@@ -251,7 +251,7 @@ export function SidebarSearch() {
         ) : (
           // Empty state
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-sidebar-foreground/70">
+                            <SidebarMenuButton className="text-base-content/70">
               <FileText className="h-4 w-4" />
               <span>{query ? 'No results found' : 'No agents yet'}</span>
             </SidebarMenuButton>

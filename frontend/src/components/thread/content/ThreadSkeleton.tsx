@@ -19,7 +19,7 @@ export function ThreadSkeleton({
             >
                 {/* Skeleton Header */}
                 {showHeader && (
-                    <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                    <div className="border-b bg-base-100">
                         <div className="flex h-14 items-center gap-4 px-4">
                             <div className="flex-1">
                                 <div className="flex items-center gap-2">
@@ -36,7 +36,7 @@ export function ThreadSkeleton({
                 )}
 
                 {/* Skeleton Chat Messages */}
-                <div className="flex-1 overflow-y-auto px-6 py-4 pb-[5.5rem]">
+                <div className="flex-1 overflow-y-auto px-6 py-4 pb-72 bg-base-200">
                     <div className="mx-auto max-w-3xl space-y-6">
                         {/* Generate multiple message skeletons based on messageCount */}
                         {Array.from({ length: messageCount }).map((_, index) => (
@@ -57,7 +57,7 @@ export function ThreadSkeleton({
                                         <div className="flex items-start gap-3">
                                             <Skeleton className="flex-shrink-0 w-5 h-5 mt-2 rounded-full" />
                                             <div className="flex-1 space-y-2">
-                                                <div className="max-w-[90%] w-full rounded-lg bg-muted px-4 py-3">
+                                                <div className="max-w-[90%] w-full rounded-lg bg-base-100 px-4 py-3">
                                                     <div className="space-y-3">
                                                         <div>
                                                             <Skeleton className="h-4 w-full max-w-[360px] mb-2" />
@@ -93,9 +93,9 @@ export function ThreadSkeleton({
                                 <Skeleton className="flex-shrink-0 w-5 h-5 mt-2 rounded-full" />
                                 <div className="flex-1 space-y-2">
                                     <div className="flex items-center gap-1.5 py-1">
-                                        <div className="h-1.5 w-1.5 rounded-full bg-gray-400/50 animate-pulse" />
-                                        <div className="h-1.5 w-1.5 rounded-full bg-gray-400/50 animate-pulse delay-150" />
-                                        <div className="h-1.5 w-1.5 rounded-full bg-gray-400/50 animate-pulse delay-300" />
+                                        <div className="h-1.5 w-1.5 rounded-full bg-base-content/30 animate-pulse" />
+                                        <div className="h-1.5 w-1.5 rounded-full bg-base-content/30 animate-pulse delay-150" />
+                                        <div className="h-1.5 w-1.5 rounded-full bg-base-content/30 animate-pulse delay-300" />
                                     </div>
                                 </div>
                             </div>

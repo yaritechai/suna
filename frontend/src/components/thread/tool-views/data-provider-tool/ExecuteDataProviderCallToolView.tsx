@@ -107,7 +107,7 @@ export function ExecuteDataProviderCallToolView({
   const IconComponent = providerConfig.icon;
 
   return (
-    <Card className="gap-0 flex border shadow-none border-t border-b-0 border-x-0 p-0 rounded-none flex-col h-full overflow-hidden bg-white dark:bg-zinc-950">
+    <Card className="gap-0 flex border shadow-none border-t border-b-0 border-x-0 p-0 rounded-none flex-col h-full overflow-hidden bg-base-100">
       <CardHeader className="h-14 bg-zinc-50/80 dark:bg-zinc-900/80 backdrop-blur-sm border-b p-2 px-4 space-y-2">
         <div className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
@@ -165,7 +165,7 @@ export function ExecuteDataProviderCallToolView({
                 `bg-gradient-to-br ${providerConfig.color}`,
                 "border-white/20"
               )}>
-                <IconComponent className="h-6 w-6 text-white drop-shadow-sm" />
+                <IconComponent className="h-6 w-6 text-primary-content drop-shadow-sm" />
               </div>
               
               <div className="flex-1">
@@ -211,7 +211,7 @@ export function ExecuteDataProviderCallToolView({
                   {Object.entries(payload).map(([key, value]) => (
                     <div 
                       key={key}
-                      className="flex items-center justify-between p-3 bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
+                      className="flex items-center justify-between p-3 bg-base-100 rounded-lg border border-base-300 hover:bg-base-200 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-600"></div>

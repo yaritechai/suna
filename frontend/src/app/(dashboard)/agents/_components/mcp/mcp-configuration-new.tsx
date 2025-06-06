@@ -125,7 +125,7 @@ export const MCPConfigurationNew: React.FC<MCPConfigurationProps> = ({
       </div>
       
       {configuredMCPs.length === 0 && (
-        <div className="text-center py-12 px-6 bg-muted/30 rounded-xl border-2 border-dashed border-border">
+        <div className="text-center py-12 px-6 bg-base-200/30 rounded-xl border-2 border-dashed border-base-300">
           <div className="mx-auto w-12 h-12 bg-muted rounded-full flex items-center justify-center mb-4">
             <Zap className="h-6 w-6 text-muted-foreground" />
           </div>
@@ -138,8 +138,8 @@ export const MCPConfigurationNew: React.FC<MCPConfigurationProps> = ({
         </div>
       )}
       {configuredMCPs.length > 0 && (
-        <div className="bg-card rounded-xl border border-border overflow-hidden">
-          <div className="px-6 py-4 border-b border-border bg-muted/30">
+        <div className="bg-base-100 rounded-xl border border-base-300 overflow-hidden">
+          <div className="px-6 py-4 border-b border-base-300 bg-base-200/30">
             <h4 className="text-sm font-medium text-foreground">
               Configured Servers
             </h4>

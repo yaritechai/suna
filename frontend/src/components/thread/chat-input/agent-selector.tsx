@@ -68,7 +68,7 @@ export function AgentSelector({
           aria-expanded={open}
           className={cn(
             'w-full justify-between text-xs h-8',
-            !selectedAgent && 'text-muted-foreground',
+            !selectedAgent && 'text-base-content/60',
             className
           )}
           disabled={disabled}
@@ -113,7 +113,7 @@ export function AgentSelector({
                       )}
                     </div>
                     {agent.description && (
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="text-xs text-base-content/70 truncate">
                         {agent.description}
                       </p>
                     )}
@@ -124,7 +124,7 @@ export function AgentSelector({
             <CommandGroup>
               <CommandItem
                 onSelect={handleCreateNew}
-                className="text-muted-foreground"
+                className="text-base-content/60"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Create new agent

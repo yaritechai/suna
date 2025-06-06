@@ -34,7 +34,7 @@ export const ResultsInfo = ({
   };
 
   return (
-    <div className="flex items-center justify-between text-sm text-muted-foreground">
+    <div className="flex items-center justify-between text-sm text-base-content/70">
       <span>
         {showingText()}
         {searchQuery && ` for "${searchQuery}"`}

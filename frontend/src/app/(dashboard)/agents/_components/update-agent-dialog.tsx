@@ -266,7 +266,7 @@ export const UpdateAgentDialog = ({ agentId, isOpen, onOpenChange, onAgentUpdate
             </div>
 
             {/* Right Panel - Tools & MCP */}
-            <div className="border-l w-[60%] bg-muted/30 flex flex-col min-h-0">
+            <div className="border-l w-[60%] bg-base-200/30 flex flex-col min-h-0">
               <Tabs defaultValue="tools" className="flex flex-col h-full">
                 <TabsList className="w-full justify-start rounded-none border-b h-10">
                   <TabsTrigger 
@@ -287,13 +287,13 @@ export const UpdateAgentDialog = ({ agentId, isOpen, onOpenChange, onAgentUpdate
                   <div className="px-6 py-4 border-b bg-background flex-shrink-0">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold">Available Tools</h3>
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-sm text-base-content/70">
                         {getSelectedToolsCount()} selected
                       </span>
                     </div>
 
                     <div className="relative mb-4">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-base-content/60" />
                       <Input
                         placeholder="Search tools..."
                         value={searchQuery}

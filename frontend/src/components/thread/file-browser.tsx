@@ -131,17 +131,17 @@ export function FileBrowser({
       <DialogTrigger asChild>
         {trigger || <Button variant="outline">Browse Files</Button>}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-hidden flex flex-col">
-        <DialogHeader>
-          <DialogTitle>Sandbox Files</DialogTitle>
+      <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-hidden flex flex-col !bg-base-100 border-2 border-base-300 shadow-xl">
+        <DialogHeader className="bg-base-200 px-6 py-4 border-b-2 border-base-300 rounded-t-lg">
+          <DialogTitle className="text-xl font-bold text-base-content">Sandbox Files</DialogTitle>
         </DialogHeader>
 
         {/* Breadcrumbs */}
-        <div className="flex items-center space-x-1 text-sm py-2 border-b">
+        <div className="flex items-center space-x-1 text-sm py-3 px-6 border-b-2 border-base-300 bg-base-100">
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 px-2"
+            className="h-8 px-3 bg-base-200 hover:bg-primary hover:text-primary-content rounded-lg font-medium"
             onClick={() => navigateToBreadcrumb(-1)}
           >
             <Folder className="h-4 w-4 mr-1" />
@@ -149,11 +149,11 @@ export function FileBrowser({
           </Button>
           {breadcrumbs.map((part, index) => (
             <div key={index} className="flex items-center">
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              <ChevronRight className="h-4 w-4 text-base-content" />
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-6 px-2"
+                className="h-8 px-3 bg-base-200 hover:bg-primary hover:text-primary-content rounded-lg font-medium"
                 onClick={() => navigateToBreadcrumb(index)}
               >
                 {part}
@@ -162,9 +162,9 @@ export function FileBrowser({
           ))}
         </div>
 
-        <div className="grid grid-cols-2 gap-4 flex-1 overflow-hidden">
+        <div className="grid grid-cols-2 gap-6 flex-1 overflow-hidden p-6 bg-base-100">
           {/* File list */}
-          <div className="border rounded-md overflow-y-auto h-[400px]">
+          <div className="border-2 border-base-300 rounded-2xl overflow-y-auto h-[400px] bg-base-50">
             {isLoading && !files.length ? (
               <div className="p-4 space-y-2">
                 {[1, 2, 3, 4, 5].map((i) => (
@@ -172,16 +172,18 @@ export function FileBrowser({
                 ))}
               </div>
             ) : files.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-                <Coffee className="h-8 w-8 mb-2" />
-                <p>No files found</p>
+              <div className="flex flex-col items-center justify-center h-full text-base-content">
+                <div className="bg-base-100 rounded-2xl p-8 border-2 border-base-300 shadow-lg">
+                  <Coffee className="h-12 w-12 mb-4 text-base-content mx-auto" />
+                  <p className="font-semibold">No files found</p>
+                </div>
               </div>
             ) : (
-              <div className="p-2">
+              <div className="p-4">
                 {currentPath !== '' && (
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-sm mb-1"
+                    className="w-full justify-start text-sm mb-2 h-10 bg-base-100 hover:bg-primary hover:text-primary-content rounded-xl font-medium"
                     onClick={() => {
                       const parentPath = currentPath
                         .split('/')
@@ -198,13 +200,17 @@ export function FileBrowser({
                   <Button
                     key={file.path}
                     variant={selectedFile === file.path ? 'secondary' : 'ghost'}
-                    className="w-full justify-start text-sm mb-1"
+                    className={`w-full justify-start text-sm mb-2 h-10 rounded-xl font-medium ${
+                      selectedFile === file.path
+                        ? 'bg-primary/30 border-2 border-primary text-primary'
+                        : 'bg-base-100 hover:bg-primary hover:text-primary-content'
+                    }`}
                     onClick={() => handleItemClick(file)}
                   >
                     {file.is_dir ? (
-                      <Folder className="h-4 w-4 mr-2" />
+                      <Folder className="h-4 w-4 mr-2 text-primary" />
                     ) : (
-                      <FileText className="h-4 w-4 mr-2" />
+                      <FileText className="h-4 w-4 mr-2 text-base-content" />
                     )}
                     {file.name}
                   </Button>
@@ -214,23 +220,25 @@ export function FileBrowser({
           </div>
 
           {/* File preview */}
-          <div className="border rounded-md overflow-hidden flex flex-col">
-            <div className="p-2 bg-muted text-sm font-medium border-b">
+          <div className="border-2 border-base-300 rounded-2xl overflow-hidden flex flex-col bg-base-50">
+            <div className="p-4 bg-base-200 text-sm font-bold border-b-2 border-base-300 text-base-content">
               {selectedFile ? selectedFile.split('/').pop() : 'File Preview'}
             </div>
-            <div className="p-2 overflow-y-auto flex-1 h-[360px]">
+            <div className="p-4 overflow-y-auto flex-1 h-[360px] bg-base-100">
               {isLoading && selectedFile ? (
                 <div className="space-y-2">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Skeleton key={i} className="h-4 w-full" />
                   ))}
                 </div>
-              ) : fileContent ? (
-                <pre className="text-xs whitespace-pre-wrap">{fileContent}</pre>
+                              ) : fileContent ? (
+                <pre className="text-sm whitespace-pre-wrap text-base-content font-mono bg-base-200 p-4 rounded-xl border-2 border-base-300">{fileContent}</pre>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-                  <File className="h-8 w-8 mb-2" />
-                  <p>Select a file to preview</p>
+                <div className="flex flex-col items-center justify-center h-full text-base-content">
+                  <div className="bg-base-200 rounded-2xl p-8 border-2 border-base-300 shadow-lg text-center">
+                    <File className="h-12 w-12 mb-4 text-base-content mx-auto" />
+                    <p className="font-semibold">Select a file to preview</p>
+                  </div>
                 </div>
               )}
             </div>
@@ -238,8 +246,13 @@ export function FileBrowser({
         </div>
 
         {selectedFile && fileContent && onSelectFile && (
-          <div className="flex justify-end pt-2">
-            <Button onClick={handleSelectFile}>Select File</Button>
+          <div className="flex justify-end pt-4 px-6 pb-6">
+            <Button 
+              onClick={handleSelectFile}
+              className="bg-primary hover:bg-primary/90 text-primary-content font-semibold px-6 py-2 rounded-xl"
+            >
+              Select File
+            </Button>
           </div>
         )}
       </DialogContent>

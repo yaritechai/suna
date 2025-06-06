@@ -15,7 +15,7 @@ export function OpenSourceSection() {
             100% Open Source
           </h2>
           <p className="text-muted-foreground text-center text-balance font-medium">
-            Suna is fully open source. Join our community and help shape the
+            Yari is fully open source. Join our community and help shape the
             future of AI.
           </p>
         </SectionHeader>
@@ -32,7 +32,7 @@ export function OpenSourceSection() {
                   The Generalist AI Agent
                 </h3>
                 <p className="text-muted-foreground mt-2">
-                  Explore, contribute, or fork our repository. Suna is built
+                  Explore, contribute, or fork our repository. Yari is built
                   with transparency and collaboration at its core.
                 </p>
               </div>

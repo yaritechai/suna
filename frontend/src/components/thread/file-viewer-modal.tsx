@@ -72,6 +72,9 @@ export function FileViewerModal({
   project,
   filePathList,
 }: FileViewerModalProps) {
+  // Check if sandbox is available
+  const hasValidSandbox = Boolean(sandboxId && sandboxId.trim() !== '');
+  
   // Safely handle initialFilePath to ensure it's a string or null
   const safeInitialFilePath = typeof initialFilePath === 'string' ? initialFilePath : null;
 
@@ -103,7 +106,7 @@ export function FileViewerModal({
     error: filesError,
     refetch: refetchFiles
   } = useDirectoryQuery(sandboxId, currentPath, {
-    enabled: open && !!sandboxId,
+    enabled: open && hasValidSandbox,
     staleTime: 30 * 1000, // 30 seconds
   });
 
@@ -1186,25 +1189,48 @@ export function FileViewerModal({
   // --- Render --- //
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[90vw] md:max-w-[1200px] w-[95vw] h-[90vh] max-h-[900px] flex flex-col p-0 gap-0 overflow-hidden">
-        <DialogHeader className="px-4 py-2 border-b flex-shrink-0 flex flex-row gap-4 items-center">
-          <DialogTitle className="text-lg font-semibold">
+      <DialogContent className="sm:max-w-[90vw] md:max-w-[1200px] w-[95vw] h-[90vh] max-h-[900px] flex flex-col p-0 gap-0 overflow-hidden bg-base-100 border-2 border-base-300 shadow-xl">
+        {!hasValidSandbox ? (
+          /* No Sandbox State */
+          <div className="flex flex-col items-center justify-center h-full p-8">
+            <div className="text-center space-y-4">
+              <div className="mx-auto w-16 h-16 bg-base-200 rounded-full flex items-center justify-center">
+                <FolderOpen className="h-8 w-8 text-base-content/60" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-base-content mb-2">No Workspace Available</h3>
+                <p className="text-sm text-base-content/70 mb-4 max-w-md">
+                  File management requires an active workspace. Start a conversation with the AI agent to create a workspace automatically.
+                </p>
+                <Button
+                  onClick={() => onOpenChange(false)}
+                  className="bg-primary hover:bg-primary/90 text-primary-content"
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+        <DialogHeader className="px-6 py-4 border-b-2 border-base-300 flex-shrink-0 flex flex-row gap-4 items-center bg-base-200">
+          <DialogTitle className="text-xl font-bold text-base-content tracking-tight">
             Workspace Files
           </DialogTitle>
 
           {/* Download progress display */}
           {downloadProgress && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Loader className="h-3 w-3 animate-spin" />
-                <span>
+            <div className="flex items-center gap-3 text-sm text-base-content bg-primary/30 px-3 py-2 rounded-xl border-2 border-primary">
+              <div className="flex items-center gap-2">
+                <Loader className="h-4 w-4 animate-spin text-primary" />
+                <span className="font-medium text-base-content">
                   {downloadProgress.total > 0
                     ? `${downloadProgress.current}/${downloadProgress.total}`
                     : 'Preparing...'
                   }
                 </span>
               </div>
-              <span className="max-w-[200px] truncate">
+              <span className="max-w-[200px] truncate text-base-content">
                 {downloadProgress.currentFile}
               </span>
             </div>
@@ -1236,7 +1262,7 @@ export function FileViewerModal({
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <div className="text-xs text-muted-foreground px-1">
+                  <div className="text-xs text-base-content px-1">
                     {currentFileIndex + 1} / {filePathList.length}
                   </div>
                   <Button
@@ -1255,12 +1281,12 @@ export function FileViewerModal({
         </DialogHeader>
 
         {/* Navigation Bar */}
-        <div className="px-4 py-2 border-b flex items-center gap-2">
+        <div className="px-6 py-3 border-b-2 border-base-300 flex items-center gap-3 bg-base-100">
           <Button
             variant="ghost"
             size="icon"
             onClick={navigateHome}
-            className="h-8 w-8"
+            className="h-9 w-9 rounded-xl hover:bg-primary hover:text-primary-content border-2 border-base-300 bg-base-200"
             title="Go to home directory"
           >
             <Home className="h-4 w-4" />
@@ -1270,7 +1296,7 @@ export function FileViewerModal({
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 px-2 text-sm font-medium min-w-fit flex-shrink-0"
+              className="h-8 px-3 text-sm font-semibold min-w-fit flex-shrink-0 text-base-content hover:bg-primary hover:text-primary-content rounded-lg bg-base-200"
               onClick={navigateHome}
             >
               home
@@ -1280,11 +1306,11 @@ export function FileViewerModal({
               <>
                 {getBreadcrumbSegments(currentPath).map((segment, index) => (
                   <Fragment key={segment.path}>
-                    <ChevronRight className="h-4 w-4 mx-1 text-muted-foreground opacity-50 flex-shrink-0" />
+                    <ChevronRight className="h-4 w-4 mx-2 text-base-content flex-shrink-0" />
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 px-2 text-sm font-medium truncate max-w-[200px]"
+                      className="h-8 px-3 text-sm font-medium truncate max-w-[200px] text-base-content hover:bg-primary hover:text-primary-content rounded-lg bg-base-200"
                       onClick={() => navigateToBreadcrumb(segment.path)}
                     >
                       {segment.name}
@@ -1296,9 +1322,9 @@ export function FileViewerModal({
 
             {selectedFilePath && (
               <>
-                <ChevronRight className="h-4 w-4 mx-1 text-muted-foreground opacity-50 flex-shrink-0" />
+                <ChevronRight className="h-4 w-4 mx-2 text-base-content flex-shrink-0" />
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium truncate">
+                  <span className="text-sm font-semibold truncate text-primary bg-primary/30 px-2 py-1 rounded-lg border-2 border-primary">
                     {selectedFilePath.split('/').pop()}
                   </span>
                 </div>
@@ -1375,7 +1401,7 @@ export function FileViewerModal({
                     size="sm"
                     onClick={handleDownloadAll}
                     disabled={isDownloadingAll || isLoadingFiles}
-                    className="h-8 gap-1"
+                    className="h-9 gap-2 rounded-xl border-2 border-success bg-base-100 hover:bg-success hover:text-success-content font-medium"
                   >
                     {isDownloadingAll ? (
                       <Loader className="h-4 w-4 animate-spin" />
@@ -1391,7 +1417,7 @@ export function FileViewerModal({
                   size="sm"
                   onClick={handleUpload}
                   disabled={isUploading}
-                  className="h-8 gap-1"
+                  className="h-9 gap-2 rounded-xl border-2 border-primary bg-base-100 hover:bg-primary hover:text-primary-content font-medium"
                 >
                   {isUploading ? (
                     <Loader className="h-4 w-4 animate-spin" />
@@ -1419,32 +1445,34 @@ export function FileViewerModal({
             /* File Viewer */
             <div className="h-full w-full overflow-auto">
               {isCachedFileLoading ? (
-                <div className="h-full w-full flex flex-col items-center justify-center">
-                  <Loader className="h-8 w-8 animate-spin text-primary mb-3" />
-                  <p className="text-sm text-muted-foreground">
-                    Loading file{selectedFilePath ? `: ${selectedFilePath.split('/').pop()}` : '...'}
-                  </p>
-                  <p className="text-xs text-muted-foreground/70 mt-1">
-                    {(() => {
-                      // Normalize the path for consistent cache checks
-                      if (!selectedFilePath) return "Preparing...";
+                <div className="h-full w-full flex flex-col items-center justify-center bg-base-200">
+                  <div className="bg-base-100 rounded-2xl p-8 shadow-xl border-2 border-base-300 text-center">
+                    <Loader className="h-10 w-10 animate-spin text-primary mb-4 mx-auto" />
+                    <p className="text-base font-semibold text-base-content mb-2">
+                      Loading file{selectedFilePath ? `: ${selectedFilePath.split('/').pop()}` : '...'}
+                    </p>
+                    <p className="text-sm text-base-content/70">
+                      {(() => {
+                        // Normalize the path for consistent cache checks
+                        if (!selectedFilePath) return "Preparing...";
 
-                      let normalizedPath = selectedFilePath;
-                      if (!normalizedPath.startsWith('/workspace')) {
-                        normalizedPath = `/workspace/${normalizedPath.startsWith('/') ? normalizedPath.substring(1) : normalizedPath}`;
-                      }
+                        let normalizedPath = selectedFilePath;
+                        if (!normalizedPath.startsWith('/workspace')) {
+                          normalizedPath = `/workspace/${normalizedPath.startsWith('/') ? normalizedPath.substring(1) : normalizedPath}`;
+                        }
 
-                      // Detect the appropriate content type based on file extension
-                      const detectedContentType = FileCache.getContentTypeFromPath(normalizedPath);
+                        // Detect the appropriate content type based on file extension
+                        const detectedContentType = FileCache.getContentTypeFromPath(normalizedPath);
 
-                      // Check for cache with the correct content type
-                      const isCached = FileCache.has(`${sandboxId}:${normalizedPath}:${detectedContentType}`);
+                        // Check for cache with the correct content type
+                        const isCached = FileCache.has(`${sandboxId}:${normalizedPath}:${detectedContentType}`);
 
-                      return isCached
-                        ? "Using cached version"
-                        : "Fetching from server";
-                    })()}
-                  </p>
+                        return isCached
+                          ? "Using cached version"
+                          : "Fetching from server";
+                      })()}
+                    </p>
+                  </div>
                 </div>
               ) : contentError ? (
                 <div className="h-full w-full flex items-center justify-center p-4">
@@ -1524,27 +1552,35 @@ export function FileViewerModal({
             </div>
           ) : (
             /* File Explorer */
-            <div className="h-full w-full">
+            <div className="h-full w-full bg-base-200">
               {isLoadingFiles ? (
                 <div className="h-full w-full flex items-center justify-center">
-                  <Loader className="h-6 w-6 animate-spin text-primary" />
+                  <div className="bg-base-100 rounded-2xl p-8 shadow-xl border-2 border-base-300 text-center">
+                    <Loader className="h-8 w-8 animate-spin text-primary mb-3 mx-auto" />
+                    <p className="text-sm font-medium text-base-content">Loading files...</p>
+                  </div>
                 </div>
               ) : files.length === 0 ? (
                 <div className="h-full w-full flex flex-col items-center justify-center">
-                  <Folder className="h-12 w-12 mb-2 text-muted-foreground opacity-30" />
-                  <p className="text-sm text-muted-foreground">
-                    Directory is empty
-                  </p>
+                  <div className="bg-base-100 rounded-2xl p-12 shadow-xl border-2 border-base-300 text-center">
+                    <Folder className="h-16 w-16 mb-4 text-base-content mx-auto" />
+                    <p className="text-base font-semibold text-base-content mb-2">
+                      Directory is empty
+                    </p>
+                    <p className="text-sm text-base-content">
+                      Upload files or navigate to a different directory
+                    </p>
+                  </div>
                 </div>
               ) : (
                 <ScrollArea className="h-full w-full p-2">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 p-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-6">
                     {files.map((file) => (
                       <button
                         key={file.path}
-                        className={`flex flex-col items-center p-3 rounded-lg border hover:bg-muted/50 transition-colors ${selectedFilePath === file.path
-                          ? 'bg-muted border-primary/20'
-                          : ''
+                        className={`flex flex-col items-center p-4 rounded-2xl border-2 transition-all duration-200 hover:shadow-lg group ${selectedFilePath === file.path
+                          ? 'bg-primary/30 border-primary shadow-md'
+                          : 'bg-base-100 border-base-300 hover:bg-base-200 hover:border-primary'
                           }`}
                         onClick={() => {
                           if (file.is_dir) {
@@ -1557,14 +1593,14 @@ export function FileViewerModal({
                           }
                         }}
                       >
-                        <div className="w-12 h-12 flex items-center justify-center mb-1">
-                          {file.is_dir ? (
-                            <Folder className="h-9 w-9 text-blue-500" />
-                          ) : (
-                            <File className="h-8 w-8 text-muted-foreground" />
-                          )}
+                        <div className="w-14 h-14 flex items-center justify-center mb-3 rounded-xl bg-base-200 group-hover:bg-primary/30 transition-colors border-2 border-base-300">
+                                                      {file.is_dir ? (
+                              <Folder className="h-8 w-8 text-primary group-hover:scale-110 transition-transform" />
+                            ) : (
+                              <File className="h-7 w-7 text-base-content group-hover:text-primary group-hover:scale-110 transition-all" />
+                            )}
                         </div>
-                        <span className="text-xs text-center font-medium truncate max-w-full">
+                        <span className="text-sm text-center font-medium truncate max-w-full text-base-content group-hover:text-primary transition-colors">
                           {file.name}
                         </span>
                       </button>
@@ -1575,6 +1611,8 @@ export function FileViewerModal({
             </div>
           )}
         </div>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

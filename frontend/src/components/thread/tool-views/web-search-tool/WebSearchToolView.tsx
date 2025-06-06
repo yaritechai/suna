@@ -87,15 +87,15 @@ export function WebSearchToolView({
   };
 
   return (
-    <Card className="gap-0 flex border shadow-none border-t border-b-0 border-x-0 p-0 rounded-none flex-col h-full overflow-hidden bg-white dark:bg-zinc-950">
-      <CardHeader className="h-14 bg-zinc-50/80 dark:bg-zinc-900/80 backdrop-blur-sm border-b p-2 px-4 space-y-2">
+    <Card className="gap-0 flex border shadow-none border-t border-b-0 border-x-0 p-0 rounded-none flex-col h-full overflow-hidden bg-base-100">
+      <CardHeader className="h-14 bg-base-200/80 backdrop-blur-sm border-b border-base-300/50 p-2 px-4 space-y-2">
         <div className="flex flex-row items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="relative p-2 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/20">
-              <Search className="w-5 h-5 text-blue-500 dark:text-blue-400" />
+          <div className="flex items-center gap-3">
+            <div className="relative p-2 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/20 shadow-sm">
+              <Search className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <CardTitle className="text-base font-medium text-zinc-900 dark:text-zinc-100">
+              <CardTitle className="text-base font-medium text-base-content">
                 {toolTitle}
               </CardTitle>
             </div>
@@ -106,8 +106,8 @@ export function WebSearchToolView({
               variant="secondary"
               className={
                 actualIsSuccess
-                  ? "bg-gradient-to-b from-emerald-200 to-emerald-100 text-emerald-700 dark:from-emerald-800/50 dark:to-emerald-900/60 dark:text-emerald-300"
-                  : "bg-gradient-to-b from-rose-200 to-rose-100 text-rose-700 dark:from-rose-800/50 dark:to-rose-900/60 dark:text-rose-300"
+                  ? "bg-success/20 text-success border-success/30 hover:bg-success/30"
+                  : "bg-error/20 text-error border-error/30 hover:bg-error/30"
               }
             >
               {actualIsSuccess ? (
@@ -125,8 +125,8 @@ export function WebSearchToolView({
         {isStreaming && searchResults.length === 0 && !answer ? (
           <LoadingState
             icon={Search}
-            iconColor="text-blue-500 dark:text-blue-400"
-            bgColor="bg-gradient-to-b from-blue-100 to-blue-50 shadow-inner dark:from-blue-800/40 dark:to-blue-900/60 dark:shadow-blue-950/20"
+            iconColor="text-primary"
+            bgColor="bg-gradient-to-b from-primary/10 to-primary/5 shadow-inner"
             title="Searching the web"
             filePath={query}
             showProgress={true}
@@ -136,7 +136,7 @@ export function WebSearchToolView({
             <div className="p-4 py-0 my-4">
               {images.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3 flex items-center">
+                  <h3 className="text-sm font-medium text-base-content/80 mb-3 flex items-center">
                     <ImageIcon className="h-4 w-4 mr-2 opacity-70" />
                     Images
                   </h3>
@@ -147,7 +147,7 @@ export function WebSearchToolView({
                         href={image}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 hover:border-blue-300 dark:hover:border-blue-700 transition-colors shadow-sm hover:shadow-md"
+                        className="group relative overflow-hidden rounded-lg border border-base-300 bg-base-200 hover:border-primary/50 transition-all duration-200 shadow-sm hover:shadow-lg hover:scale-[1.02]"
                       >
                         <img
                           src={image}
@@ -159,8 +159,8 @@ export function WebSearchToolView({
                             target.classList.add("p-4");
                           }}
                         />
-                        <div className="absolute top-0 right-0 p-1">
-                          <Badge variant="secondary" className="bg-black/60 hover:bg-black/70 text-white border-none shadow-md">
+                        <div className="absolute top-2 right-2">
+                          <Badge variant="secondary" className="bg-base-100/90 hover:bg-base-100 text-base-content border border-base-300/50 shadow-sm backdrop-blur-sm">
                             <ExternalLink className="h-3 w-3" />
                           </Badge>
                         </div>
@@ -168,7 +168,7 @@ export function WebSearchToolView({
                     ))}
                   </div>
                   {images.length > 6 && (
-                    <Button variant="outline" size="sm" className="mt-2 text-xs">
+                    <Button variant="outline" size="sm" className="mt-2 text-xs border-base-300 hover:bg-base-200">
                       View {images.length - 6} more images
                     </Button>
                   )}
@@ -176,16 +176,16 @@ export function WebSearchToolView({
               )}
 
               {searchResults.length > 0 && (
-                <div className="text-sm font-medium text-zinc-800 dark:text-zinc-200 mb-4 flex items-center justify-between">
+                <div className="text-base font-semibold text-base-content mb-6 flex items-center justify-between">
                   <span>Search Results ({searchResults.length})</span>
-                  <Badge variant="outline" className="text-xs font-normal">
-                    <Clock className="h-3 w-3 mr-1.5 opacity-70" />
+                  <Badge variant="outline" className="text-xs font-medium border-primary/30 bg-primary/10 text-primary">
+                    <Clock className="h-3 w-3 mr-1.5" />
                     {new Date().toLocaleDateString()}
                   </Badge>
                 </div>
               )}
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {searchResults.map((result, idx) => {
                   const { icon: ResultTypeIcon, label: resultTypeLabel } = getResultType(result);
                   const isExpanded = expandedResults[idx] || false;
@@ -194,38 +194,39 @@ export function WebSearchToolView({
                   return (
                     <div
                       key={idx}
-                      className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm hover:shadow transition-shadow"
+                      className="bg-base-300/60 border border-base-300/40 rounded-xl shadow-sm hover:shadow-lg hover:border-primary/40 hover:bg-base-300/80 transition-all duration-300 group backdrop-blur-sm"
                     >
-                      <div className="p-4">
-                        <div className="flex items-start gap-3 mb-2">
-                          {favicon && (
-                            <img
-                              src={favicon}
-                              alt=""
-                              className="w-5 h-5 mt-1 rounded"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = 'none';
-                              }}
-                            />
-                          )}
+                      <div className="p-5">
+                        <div className="flex items-start gap-4 mb-3">
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Badge variant="outline" className="text-xs px-2 py-0 h-5 font-normal bg-zinc-50 dark:bg-zinc-800">
-                                <ResultTypeIcon className="h-3 w-3 mr-1 opacity-70" />
+                            <div className="flex items-start justify-between gap-3 mb-3">
+                              <a
+                                href={result.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-base font-semibold text-base-content hover:text-primary hover:underline line-clamp-2 transition-colors leading-snug group-hover:text-primary flex-1"
+                              >
+                                {truncateString(cleanUrl(result.title), 60)}
+                              </a>
+                              <Badge variant="outline" className="text-xs px-2.5 py-1 h-6 font-medium bg-primary/10 border-primary/30 text-primary flex-shrink-0">
+                                <ResultTypeIcon className="h-3 w-3 mr-1.5" />
                                 {resultTypeLabel}
                               </Badge>
                             </div>
-                            <a
-                              href={result.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-md font-medium text-blue-600 dark:text-blue-400 hover:underline line-clamp-1 mb-1"
-                            >
-                              {truncateString(cleanUrl(result.title), 50)}
-                            </a>
-                            <div className="text-xs text-zinc-500 dark:text-zinc-400 mb-2 flex items-center">
-                              <Globe className="h-3 w-3 mr-1.5 flex-shrink-0 opacity-70" />
-                              {truncateString(cleanUrl(result.url), 70)}
+                            <div className="text-sm text-base-content/70 mb-1 flex items-center bg-base-100/60 rounded-lg px-3 py-2 border border-base-300/30">
+                              {favicon ? (
+                                <img
+                                  src={favicon}
+                                  alt=""
+                                  className="w-4 h-4 mr-2 flex-shrink-0 object-contain rounded"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).style.display = 'none';
+                                  }}
+                                />
+                              ) : (
+                                <Globe className="h-4 w-4 mr-2 flex-shrink-0 text-primary/60" />
+                              )}
+                              <span className="truncate">{truncateString(cleanUrl(result.url), 65)}</span>
                             </div>
                           </div>
                           {/* <TooltipProvider>
@@ -285,18 +286,18 @@ export function WebSearchToolView({
                       </div>
 
                       {isExpanded && (
-                        <div className="bg-zinc-50 px-4 dark:bg-zinc-800/50 border-t border-zinc-200 dark:border-zinc-800 p-3 flex justify-between items-center">
-                          <div className="text-xs text-zinc-500 dark:text-zinc-400">
+                        <div className="bg-base-100/40 px-5 border-t border-base-300/40 py-4 flex justify-between items-center">
+                          <div className="text-sm text-base-content/70 font-medium">
                             Source: {cleanUrl(result.url)}
                           </div>
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-7 text-xs bg-white dark:bg-zinc-900"
+                            className="h-8 text-sm bg-primary/5 border-primary/30 hover:bg-primary/10 hover:border-primary/50 text-primary font-medium"
                             asChild
                           >
                             <a href={result.url} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="h-3 w-3" />
+                              <ExternalLink className="h-4 w-4 mr-1.5" />
                               Visit Site
                             </a>
                           </Button>
@@ -309,36 +310,36 @@ export function WebSearchToolView({
             </div>
           </ScrollArea>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full py-12 px-6 bg-gradient-to-b from-white to-zinc-50 dark:from-zinc-950 dark:to-zinc-900">
-            <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 bg-gradient-to-b from-zinc-100 to-zinc-50 shadow-inner dark:from-zinc-800/40 dark:to-zinc-900/60">
-              <Search className="h-10 w-10 text-zinc-400 dark:text-zinc-600" />
+          <div className="flex flex-col items-center justify-center h-full py-12 px-6 bg-gradient-to-b from-base-100 to-base-200/50">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 bg-gradient-to-b from-base-200/80 to-base-300/60 shadow-inner border border-base-300/30">
+              <Search className="h-10 w-10 text-base-content/40" />
             </div>
-            <h3 className="text-xl font-semibold mb-2 text-zinc-900 dark:text-zinc-100">
+            <h3 className="text-xl font-semibold mb-2 text-base-content">
               No Results Found
             </h3>
-            <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 w-full max-w-md text-center mb-4 shadow-sm">
-              <code className="text-sm font-mono text-zinc-700 dark:text-zinc-300 break-all">
+            <div className="bg-base-200/60 border border-base-300/60 rounded-lg p-4 w-full max-w-md text-center mb-4 shadow-sm">
+              <code className="text-sm font-mono text-base-content/80 break-all">
                 {query || 'Unknown query'}
               </code>
             </div>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-base-content/60">
               Try refining your search query for better results
             </p>
           </div>
         )}
       </CardContent>
 
-      <div className="px-4 py-2 h-10 bg-gradient-to-r from-zinc-50/90 to-zinc-100/90 dark:from-zinc-900/90 dark:to-zinc-800/90 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-800 flex justify-between items-center gap-4">
-        <div className="h-full flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+      <div className="px-4 py-2 h-10 bg-gradient-to-r from-base-200/90 to-base-300/60 backdrop-blur-sm border-t border-base-300/50 flex justify-between items-center gap-4">
+        <div className="h-full flex items-center gap-2 text-sm text-base-content/70">
           {!isStreaming && searchResults.length > 0 && (
-            <Badge variant="outline" className="h-6 py-0.5">
+            <Badge variant="outline" className="h-6 py-0.5 border-base-300 bg-base-100/60 text-base-content/70">
               <Globe className="h-3 w-3" />
               {searchResults.length} results
             </Badge>
           )}
         </div>
 
-        <div className="text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="text-xs text-base-content/60">
           {actualToolTimestamp && !isStreaming
             ? formatTimestamp(actualToolTimestamp)
             : actualAssistantTimestamp

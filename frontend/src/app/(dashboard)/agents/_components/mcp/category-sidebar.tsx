@@ -26,8 +26,8 @@ export const CategorySidebar: React.FC<CategorySidebarProps> = ({
           <Button
             size="sm"
             className={cn(
-              "w-full justify-start shadow-none bg-transparent text-primary hover:bg-muted hover:text-primary",
-              selectedCategory === null && "bg-primary/5 text-foreground"
+                      "w-full justify-start shadow-none bg-transparent text-primary hover:bg-base-200 hover:text-primary",
+        selectedCategory === null && "bg-primary/5 text-base-content"
             )}
             onClick={() => onCategorySelect(null)}
           >
@@ -41,8 +41,8 @@ export const CategorySidebar: React.FC<CategorySidebarProps> = ({
                 key={category}
                 size="sm"
                 className={cn(
-                  "w-full justify-start shadow-none bg-transparent text-primary hover:bg-muted hover:text-primary",
-                  selectedCategory === category && "bg-primary/5 text-foreground"
+                              "w-full justify-start shadow-none bg-transparent text-primary hover:bg-base-200 hover:text-primary",
+            selectedCategory === category && "bg-primary/5 text-base-content"
                 )}
                 onClick={() => onCategorySelect(category)}
               >

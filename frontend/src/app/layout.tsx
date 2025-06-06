@@ -9,6 +9,10 @@ import { Analytics } from '@vercel/analytics/react';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Script from 'next/script';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
+import { ReactQueryProvider } from '@/providers/react-query-provider';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -20,18 +24,47 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const viewport: Viewport = {
-  themeColor: 'black',
-};
+// Theme initialization script
+const themeScript = `
+  (function() {
+    try {
+      // Get saved theme or default to 'light'
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      
+      // Apply theme immediately to prevent flash
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      
+      // Log for debugging
+      console.log('Applied theme:', savedTheme);
+      
+      // Determine if this is a dark theme for compatibility with other components
+      const isDarkTheme = savedTheme === 'dark' || 
+        ['synthwave', 'retro', 'cyberpunk', 'halloween', 'forest', 'black', 'luxury', 'dracula', 'night', 'coffee', 'dim', 'abyss', 'midnight', 'neonpunk'].includes(savedTheme);
+      
+      // Set the dark class for compatibility
+      if (isDarkTheme) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch (e) {
+      console.warn('Failed to initialize theme:', e);
+      // Fallback to light theme
+      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.classList.remove('dark');
+    }
+  })();
+`;
+
+const defaultUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : 'http://localhost:3000';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
-  },
+  metadataBase: new URL(defaultUrl),
+  title: 'Yari',
   description:
-    'Suna is a fully open source AI assistant that helps you accomplish real-world tasks with ease. Through natural conversation, Suna becomes your digital companion for research, data analysis, and everyday challenges.',
+    'Deploy AI agents in seconds that can build, run code, and use tools.',
   keywords: [
     'AI',
     'artificial intelligence',
@@ -49,7 +82,7 @@ export const metadata: Metadata = {
   publisher:
     'Kortix Team - Adam Cohen Hillel, Marko Kraemer, Domenico Gagliardi, and Quoc Dat Le',
   category: 'Technology',
-  applicationName: 'Suna',
+  applicationName: 'Yari',
   formatDetection: {
     telephone: false,
     email: false,
@@ -64,17 +97,17 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Suna - Open Source Generalist AI Agent',
+    title: 'Yari - Open Source Generalist AI Agent',
     description:
-      'Suna is a fully open source AI assistant that helps you accomplish real-world tasks with ease through natural conversation.',
+      'Yari is a fully open source AI assistant that helps you accomplish real-world tasks with ease through natural conversation.',
     url: siteConfig.url,
-    siteName: 'Suna',
+    siteName: 'Yari',
     images: [
       {
         url: '/banner.png',
         width: 1200,
         height: 630,
-        alt: 'Suna - Open Source Generalist AI Agent',
+        alt: 'Yari - Open Source Generalist AI Agent',
         type: 'image/png',
       },
     ],
@@ -83,9 +116,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Suna - Open Source Generalist AI Agent',
+    title: 'Yari - Open Source Generalist AI Agent',
     description:
-      'Suna is a fully open source AI assistant that helps you accomplish real-world tasks with ease through natural conversation.',
+      'Yari is a fully open source AI assistant that helps you accomplish real-world tasks with ease through natural conversation.',
     creator: '@kortixai',
     site: '@kortixai',
     images: [
@@ -93,7 +126,7 @@ export const metadata: Metadata = {
         url: '/banner.png',
         width: 1200,
         height: 630,
-        alt: 'Suna - Open Source Generalist AI Agent',
+        alt: 'Yari - Open Source Generalist AI Agent',
       },
     ],
   },
@@ -124,10 +157,15 @@ export default function RootLayout({
           })(window,document,'script','dataLayer','GTM-PCHSN4M2');`}
         </Script>
         {/* End Google Tag Manager */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: themeScript,
+          }}
+        />
       </head>
 
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans bg-background`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans bg-base-100 text-base-content`}
       >
         {/* Google Tag Manager (noscript) */}
         <noscript>
@@ -141,14 +179,18 @@ export default function RootLayout({
         {/* End Google Tag Manager (noscript) */}
 
         <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
+          attribute="data-theme"
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <Providers>
-            {children}
-            <Toaster />
+            <ReactQueryProvider>
+              <TooltipProvider>
+                {children}
+                <Toaster />
+              </TooltipProvider>
+            </ReactQueryProvider>
           </Providers>
           <Analytics />
           <GoogleAnalytics gaId="G-6ETJFB3PT3" />

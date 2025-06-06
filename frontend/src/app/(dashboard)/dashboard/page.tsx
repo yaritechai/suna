@@ -151,7 +151,7 @@ function DashboardContent() {
   return (
     <>
       <ModalProviders />
-      <div className="flex flex-col h-screen w-full">
+      <div className="flex flex-col h-screen w-full bg-base-200">
         {isMobile && (
           <div className="absolute top-4 left-4 z-10">
             <Tooltip>
@@ -171,27 +171,24 @@ function DashboardContent() {
           </div>
         )}
 
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[650px] max-w-[90%]">
-          <div className="flex flex-col items-center text-center w-full">
-            <div className="flex items-center gap-1">
-              <h1 className="tracking-tight text-4xl text-muted-foreground leading-tight">
-                Hey, I am
-              </h1>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[700px] max-w-[90%]">
+          <div className="flex flex-col items-center text-center w-full space-y-6">
+            <h1 className="tracking-tight text-4xl text-base-content leading-tight">
+              What would you like to do today?
+            </h1>
+            
+            <div className="w-full max-w-md">
               <AgentSelector 
                 selectedAgentId={selectedAgentId}
                 onAgentSelect={setSelectedAgentId}
                 variant="heading"
               />
             </div>
-            <p className="tracking-tight text-3xl font-normal text-muted-foreground/80 mt-2">
-              What would you like to do today?
-            </p>
           </div>
           
           <div className={cn(
-            "w-full mb-2",
-            "max-w-full",
-            "sm:max-w-3xl"
+            "w-full mt-8",
+            "max-w-full"
           )}>
             <ChatInput
               ref={chatInputRef}
@@ -204,7 +201,9 @@ function DashboardContent() {
             />
           </div>
           
-          <Examples onSelectPrompt={setInputValue} />
+          <div className="mt-6">
+            <Examples onSelectPrompt={setInputValue} />
+          </div>
         </div>
 
         <BillingErrorAlert

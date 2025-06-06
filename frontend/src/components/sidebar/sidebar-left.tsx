@@ -6,8 +6,7 @@ import { Bot, Menu, Store } from 'lucide-react';
 
 import { NavAgents } from '@/components/sidebar/nav-agents';
 import { NavUserWithTeams } from '@/components/sidebar/nav-user-with-teams';
-import { KortixLogo } from '@/components/sidebar/kortix-logo';
-import { CTACard } from '@/components/sidebar/cta';
+import CTA from '@/components/sidebar/cta';
 import {
   Sidebar,
   SidebarContent,
@@ -95,34 +94,37 @@ export function SidebarLeft({
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r-0 bg-background/95 backdrop-blur-sm [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+      className="border-r-0 !bg-base-200/95 !text-base-content backdrop-blur-xl 
+                 shadow-2xl shadow-base-content/10 
+                 border-r border-base-300/50
+                 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']
+                 [&_[data-sidebar=sidebar]]:!bg-base-200/95 [&_[data-sidebar=sidebar]]:!text-base-content"
       {...props}
     >
-      <SidebarHeader className="px-2 py-2">
-        <div className="flex h-[40px] items-center px-1 relative">
-          <Link href="/dashboard">
-            <KortixLogo />
-          </Link>
+      <SidebarHeader className="px-3 py-4 border-b border-base-300/30">
+        <div className="flex h-[40px] items-center px-2 relative">
           {state !== 'collapsed' && (
-            <div className="ml-2 transition-all duration-200 ease-in-out whitespace-nowrap">
-              {/* <span className="font-semibold"> SUNA</span> */}
+            <div className="transition-all duration-200 ease-in-out whitespace-nowrap">
+              <span className="font-bold text-lg text-base-content bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Yari</span>
             </div>
           )}
           <div className="ml-auto flex items-center gap-2">
             {state !== 'collapsed' && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <SidebarTrigger className="h-8 w-8" />
-                </TooltipTrigger>
-                <TooltipContent>Toggle sidebar (CMD+B)</TooltipContent>
-              </Tooltip>
+              <>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SidebarTrigger className="h-8 w-8" />
+                  </TooltipTrigger>
+                  <TooltipContent>Toggle sidebar (CMD+B)</TooltipContent>
+                </Tooltip>
+              </>
             )}
             {isMobile && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setOpenMobile(true)}
-                    className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-accent"
+                    className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-base-300"
                   >
                     <Menu className="h-4 w-4" />
                   </button>
@@ -133,14 +135,27 @@ export function SidebarLeft({
           </div>
         </div>
       </SidebarHeader>
+      {state === 'collapsed' && (
+        <div 
+          className="absolute inset-0 z-10 cursor-pointer" 
+          onClick={() => setOpen(true)}
+          aria-label="Expand sidebar"
+        />
+      )}
       <SidebarContent className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       <SidebarGroup>
         <Link href="/agents">
-          <SidebarMenuButton className={cn({
-            'bg-primary/10 font-medium': pathname === '/agents',
-          })}>
-            <Bot className="h-4 w-4 mr-2" />
-            <span className="flex items-center justify-between w-full">
+          <SidebarMenuButton className={cn(
+            "group relative overflow-hidden rounded-xl mx-2 mb-2 transition-all duration-300",
+            "hover:bg-base-300 hover:shadow-lg hover:shadow-base-content/10",
+            {
+              'bg-base-300 shadow-lg shadow-base-content/5 font-medium border border-base-content/20': pathname === '/agents',
+            }
+          )}>
+            <div className="absolute inset-0 bg-primary/10
+                           opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <Bot className="h-4 w-4 mr-3 relative z-10" />
+            <span className="flex items-center justify-between w-full relative z-10">
               Agent Playground
               <Badge variant="new">
                 New
@@ -150,11 +165,17 @@ export function SidebarLeft({
         </Link>
         
         <Link href="/marketplace">
-          <SidebarMenuButton className={cn({
-            'bg-primary/10 font-medium': pathname === '/marketplace',
-          })}>
-            <Store className="h-4 w-4 mr-2" />
-            <span className="flex items-center justify-between w-full">
+          <SidebarMenuButton className={cn(
+            "group relative overflow-hidden rounded-xl mx-2 mb-2 transition-all duration-300",
+            "hover:bg-base-300 hover:shadow-lg hover:shadow-base-content/10",
+            {
+              'bg-base-300 shadow-lg shadow-base-content/5 font-medium border border-base-content/20': pathname === '/marketplace',
+            }
+          )}>
+            <div className="absolute inset-0 bg-primary/10
+                           opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <Store className="h-4 w-4 mr-3 relative z-10" />
+            <span className="flex items-center justify-between w-full relative z-10">
               Marketplace
               <Badge variant="new">
                 New
@@ -166,11 +187,11 @@ export function SidebarLeft({
         <NavAgents />
       </SidebarContent>
       {state !== 'collapsed' && (
-        <div className="px-3 py-2">
-          <CTACard />
+        <div className="px-3 py-2 border-t border-base-300/30 bg-base-200/30">
+          <CTA />
         </div>
       )}
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-base-300/30 bg-base-200/50 backdrop-blur-sm">
         {state === 'collapsed' && (
           <div className="mt-2 flex justify-center">
             <Tooltip>

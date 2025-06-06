@@ -166,7 +166,7 @@ export function NavUserWithTeams({
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
                 size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                className="data-[state=open]:bg-base-300 data-[state=open]:text-base-content"
               >
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
@@ -206,7 +206,7 @@ export function NavUserWithTeams({
               {/* Teams Section */}
               {personalAccount && (
                 <>
-                  <DropdownMenuLabel className="text-muted-foreground text-xs">
+                  <DropdownMenuLabel className="text-base-content/70 text-xs">
                     Personal Account
                   </DropdownMenuLabel>
                   <DropdownMenuItem
@@ -234,7 +234,7 @@ export function NavUserWithTeams({
 
               {teamAccounts?.length > 0 && (
                 <>
-                  <DropdownMenuLabel className="text-muted-foreground text-xs mt-2">
+                  <DropdownMenuLabel className="text-base-content/70 text-xs mt-2">
                     Teams
                   </DropdownMenuLabel>
                   {teamAccounts.map((team, index) => (
@@ -292,19 +292,19 @@ export function NavUserWithTeams({
                     Settings
                   </Link>
                 </DropdownMenuItem> */}
-                <DropdownMenuItem
-                  onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                >
-                  <div className="flex items-center gap-2">
-                    <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                    <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                    <span>Theme</span>
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className='text-destructive focus:text-destructive focus:bg-destructive/10' onClick={handleLogout}>
-                <LogOut className="h-4 w-4 text-destructive" />
+                              <DropdownMenuItem
+                onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+              >
+                <div className="flex items-center gap-2">
+                  <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  <span>Theme</span>
+                </div>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className='text-error focus:text-error focus:bg-error/10' onClick={handleLogout}>
+              <LogOut className="h-4 w-4 text-error" />
                 Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -312,12 +312,12 @@ export function NavUserWithTeams({
         </SidebarMenuItem>
       </SidebarMenu>
 
-      <DialogContent className="sm:max-w-[425px] border-subtle dark:border-white/10 bg-card-bg dark:bg-background-secondary rounded-2xl shadow-custom">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-foreground">
+          <DialogTitle className="text-base-content">
             Create a new team
           </DialogTitle>
-          <DialogDescription className="text-foreground/70">
+          <DialogDescription className="text-base-content/70">
             Create a team to collaborate with others.
           </DialogDescription>
         </DialogHeader>

@@ -11,7 +11,7 @@ interface McpServerCardProps {
 export const McpServerCard: React.FC<McpServerCardProps> = ({ server, onClick }) => {
   return (
     <Card
-      className="p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+      className="p-4 cursor-pointer hover:bg-base-200/50 transition-colors"
       onClick={() => onClick(server)}
     >
       <div className="flex items-start gap-3">
@@ -34,17 +34,17 @@ export const McpServerCard: React.FC<McpServerCardProps> = ({ server, onClick })
               </Badge>
             )}
           </div>
-          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-            {server.description}
-          </p>
-          <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                <p className="text-xs text-base-content/70 mt-1 line-clamp-2">
+        {server.description}
+      </p>
+      <div className="flex items-center gap-4 mt-2 text-xs text-base-content/70">
             <span>Used {server.useCount} times</span>
             {server.homepage && (
               <ExternalLink className="h-3 w-3" />
             )}
           </div>
         </div>
-        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        <ChevronRight className="h-4 w-4 text-base-content/60" />
       </div>
     </Card>
   );

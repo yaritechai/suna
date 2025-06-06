@@ -33,7 +33,7 @@ const categoryData: CategoryData = {
   data: {
     title: 'Data Analysis & Research',
     icon: <BarChart3 size={14} />,
-    color: 'bg-blue-500 dark:bg-blue-600',
+    color: 'bg-primary text-primary-content',
     examples: [
       {
         title: 'Market research dashboard',
@@ -80,7 +80,7 @@ const categoryData: CategoryData = {
   ai: {
     title: 'AI & Machine Learning',
     icon: <Bot size={14} />,
-    color: 'bg-purple-500 dark:bg-purple-600',
+    color: 'bg-secondary text-secondary-content',
     examples: [
       {
         title: 'Recommendation engine development',
@@ -127,7 +127,7 @@ const categoryData: CategoryData = {
   business: {
     title: 'Business & Strategy',
     icon: <Briefcase size={14} />,
-    color: 'bg-emerald-500 dark:bg-emerald-600',
+    color: 'bg-accent text-accent-content',
     examples: [
       {
         title: 'Go-to-market strategy',
@@ -174,7 +174,7 @@ const categoryData: CategoryData = {
   automation: {
     title: 'Automation & Scripts',
     icon: <Settings size={14} />,
-    color: 'bg-orange-500 dark:bg-orange-600',
+    color: 'bg-info text-info-content',
     examples: [
       {
         title: 'Data pipeline automation',
@@ -221,7 +221,7 @@ const categoryData: CategoryData = {
   emerging: {
     title: 'Emerging Use Cases',
     icon: <TrendingUp size={14} />,
-    color: 'bg-indigo-500 dark:bg-indigo-600',
+    color: 'bg-warning text-warning-content',
     examples: [
       {
         title: 'Real estate investment analysis',
@@ -310,7 +310,7 @@ export const ExamplePrompts = ({
                 <motion.div
                   layoutId="activeCategoryBackground"
                   className={cn(
-                    'absolute inset-0 opacity-90 dark:opacity-80 rounded-full bg-primary',
+                    'absolute inset-0 opacity-90 rounded-full bg-primary',
                   )}
                   initial={{ scale: 1, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
@@ -349,9 +349,9 @@ export const ExamplePrompts = ({
             >
               <Card
                 className={cn(
-                  'cursor-pointer h-full shadow-none transition-all duration-300 bg-muted/50 dark:bg-card/50 relative overflow-hidden group',
+                  'cursor-pointer h-full shadow-none transition-all duration-300 bg-base-100 hover:bg-base-200 border-base-300 relative overflow-hidden group',
                   hoveredCard === index
-                    ? 'border-primary/70 dark:border-primary/70'
+                    ? 'border-primary/70'
                     : 'hover:border-primary/40',
                 )}
                 onClick={() => onSelectPrompt && onSelectPrompt(example.query)}
@@ -360,7 +360,7 @@ export const ExamplePrompts = ({
               >
                 {hoveredCard === index && (
                   <motion.div
-                    className="absolute inset-0 bg-primary/5 dark:bg-primary/10 pointer-events-none"
+                    className="absolute inset-0 bg-primary/5 pointer-events-none"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.2 }}
@@ -374,25 +374,25 @@ export const ExamplePrompts = ({
                     whileHover={{ rotate: 10 }}
                     transition={{ type: 'spring', stiffness: 300, damping: 10 }}
                   >
-                    <div className="text-background">
+                    <div className="text-primary-content">
                       {categoryData[activeCategory].icon}
                     </div>
                   </motion.div>
                   <div className="flex items-start justify-between mb-1">
                     <CardTitle
                       className={cn(
-                        'text-md font-semibold text-foreground',
+                        'text-md font-semibold text-base-content',
                       )}
                     >
                       {example.title}
                     </CardTitle>
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-base-content/70">
                     {example.description}
                   </p>
                 </CardHeader>
                 <CardContent className="px-4 pb-4 pt-0">
-                  <p className="text-xs text-muted-foreground/80 line-clamp-2 group-hover:text-muted-foreground transition-colors duration-200">
+                  <p className="text-xs text-base-content/60 line-clamp-2 group-hover:text-base-content/80 transition-colors duration-200">
                     {example.query}
                   </p>
                 </CardContent>

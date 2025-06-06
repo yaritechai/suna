@@ -83,14 +83,14 @@ function SearchResultsRenderer({ data, metadata }: { data: any; metadata?: any }
       <ScrollArea className="max-h-96">
         <div className="space-y-3">
           {results.map((result, idx) => (
-            <Card key={idx} className="p-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors">
+            <Card key={idx} className="p-3 bg-base-100 border border-base-300/60 hover:border-primary/30 transition-all duration-200 shadow-sm hover:shadow-md">
               <div className="space-y-2">
                 <div className="flex items-start gap-2">
-                  <Badge variant="outline" className="text-xs shrink-0 mt-0.5">
+                  <Badge variant="outline" className="text-xs shrink-0 mt-0.5 border-base-300 bg-base-200/60 text-base-content/70">
                     {idx + 1}
                   </Badge>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-snug">
+                    <h4 className="text-sm font-medium text-base-content line-clamp-2 leading-snug">
                       {result.title}
                     </h4>
                   </div>
@@ -98,7 +98,7 @@ function SearchResultsRenderer({ data, metadata }: { data: any; metadata?: any }
                     <img 
                       src={result.image} 
                       alt=""
-                      className="w-16 h-12 object-cover rounded border border-zinc-200 dark:border-zinc-700"
+                      className="w-16 h-12 object-cover rounded border border-base-300"
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}
@@ -107,7 +107,7 @@ function SearchResultsRenderer({ data, metadata }: { data: any; metadata?: any }
                 </div>
                 
                 {(result.author || result.date) && (
-                  <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+                  <div className="flex items-center gap-2 text-xs text-base-content/60">
                     {result.author && <span>By {result.author}</span>}
                     {result.date && (
                       <span>• {new Date(result.date).toLocaleDateString()}</span>

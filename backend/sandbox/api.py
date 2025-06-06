@@ -126,19 +126,50 @@ async def get_sandbox_by_id_safely(client, sandbox_id: str):
         logger.error(f"No project found for sandbox ID: {sandbox_id}")
         raise HTTPException(status_code=404, detail="Sandbox not found - no project owns this sandbox ID")
     
-    # project_id = project_result.data[0]['project_id']
-    # logger.debug(f"Found project {project_id} for sandbox {sandbox_id}")
-    
     try:
-        # Get the sandbox
+        # Get the sandbox - this will automatically start it if needed
         sandbox = await get_or_start_sandbox(sandbox_id)
-        # Extract just the sandbox object from the tuple (sandbox, sandbox_id, sandbox_pass)
-        # sandbox = sandbox_tuple[0]
-            
         return sandbox
     except Exception as e:
-        logger.error(f"Error retrieving sandbox {sandbox_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve sandbox: {str(e)}")
+        error_message = str(e)
+        logger.error(f"Error retrieving sandbox {sandbox_id}: {error_message}")
+        
+        # Provide more specific error messages based on the error type
+        if "not found" in error_message.lower() or "does not exist" in error_message.lower():
+            raise HTTPException(status_code=404, detail=f"Sandbox {sandbox_id} not found")
+        elif "not running" in error_message.lower() or "workspace is not running" in error_message.lower():
+            raise HTTPException(status_code=503, detail=f"Workspace is not running. Please restart the sandbox.")
+        elif "connection" in error_message.lower():
+            raise HTTPException(status_code=502, detail=f"Unable to connect to sandbox service")
+        else:
+            raise HTTPException(status_code=500, detail=f"Failed to retrieve sandbox: {error_message}")
+
+@router.post("/sandboxes/{sandbox_id}/restart")
+async def restart_sandbox(
+    sandbox_id: str,
+    request: Request = None,
+    user_id: Optional[str] = Depends(get_optional_user_id)
+):
+    """Restart a sandbox that has stopped or is having issues"""
+    logger.info(f"Received restart request for sandbox {sandbox_id}, user_id: {user_id}")
+    client = await db.client
+    
+    # Verify the user has access to this sandbox
+    await verify_sandbox_access(client, sandbox_id, user_id)
+    
+    try:
+        # Force restart the sandbox
+        sandbox = await get_or_start_sandbox(sandbox_id)
+        
+        logger.info(f"Successfully restarted sandbox {sandbox_id}")
+        return {
+            "status": "success", 
+            "sandbox_id": sandbox_id,
+            "message": "Sandbox restarted successfully"
+        }
+    except Exception as e:
+        logger.error(f"Error restarting sandbox {sandbox_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to restart sandbox: {str(e)}")
 
 @router.post("/sandboxes/{sandbox_id}/files")
 async def create_file(
@@ -170,6 +201,9 @@ async def create_file(
         logger.info(f"File created at {path} in sandbox {sandbox_id}")
         
         return {"status": "success", "created": True, "path": path}
+    except HTTPException:
+        # Re-raise HTTP exceptions without wrapping
+        raise
     except Exception as e:
         logger.error(f"Error creating file in sandbox {sandbox_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -215,6 +249,9 @@ async def list_files(
         
         logger.info(f"Successfully listed {len(result)} files in sandbox {sandbox_id}")
         return {"files": [file.dict() for file in result]}
+    except HTTPException:
+        # Re-raise HTTP exceptions without wrapping
+        raise
     except Exception as e:
         logger.error(f"Error listing files in sandbox {sandbox_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

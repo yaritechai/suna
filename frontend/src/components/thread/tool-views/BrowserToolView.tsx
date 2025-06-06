@@ -304,7 +304,7 @@ export function BrowserToolView({
                 <div className="relative w-full h-full min-h-[600px]" style={{ minHeight: '600px' }}>
                   {vncIframe}
                   <div className="absolute top-4 right-4 z-10">
-                    <Badge className="bg-blue-500/90 text-white border-none shadow-lg animate-pulse">
+                    <Badge className="bg-info/90 text-info-content border-none shadow-lg animate-pulse">
                       <CircleDashed className="h-3 w-3 animate-spin" />
                       {operation} in progress
                     </Badge>

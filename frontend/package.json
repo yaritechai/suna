@@ -1,5 +1,5 @@
 {
-  "name": "suna",
+  "name": "yari",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -37,7 +37,7 @@
     "@radix-ui/react-tabs": "^1.1.8",
     "@radix-ui/react-tooltip": "^1.2.3",
     "@react-pdf/renderer": "^4.3.0",
-    "@sentry/nextjs": "^9.22.0",
+    "@sentry/nextjs": "^9.26.0",
     "@silevis/reactgrid": "^4.1.17",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
@@ -98,6 +98,7 @@
     "tailwind-scrollbar-hide": "^2.0.0",
     "tailwindcss": "^4",
     "tailwindcss-animate": "^1.0.7",
+    "theme-change": "^2.5.0",
     "typescript": "^5",
     "vaul": "^1.1.2",
     "zod": "^3.24.2",
@@ -112,6 +113,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "daisyui": "^5.0.43",
     "encoding": "^0.1.13",
     "eslint": "^9",
     "eslint-config-next": "15.2.2",

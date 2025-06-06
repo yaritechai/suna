@@ -4,7 +4,6 @@ import { Project } from '@/lib/api';
 import { getToolIcon, getUserFriendlyToolName } from '@/components/thread/utils';
 import React from 'react';
 import { Slider } from '@/components/ui/slider';
-import { Skeleton } from '@/components/ui/skeleton';
 import { ApiMessageType } from '@/components/thread/types';
 import { CircleDashed, X, ChevronLeft, ChevronRight, Computer, Radio } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -200,7 +199,7 @@ export function ToolCallSidePanel({
 
   const currentToolName = displayToolCall?.assistantCall?.name || 'Tool Call';
   const CurrentToolIcon = getToolIcon(
-    currentToolCall?.assistantCall?.name || 'unknown',
+    displayToolCall?.assistantCall?.name || 'unknown',
   );
   const isStreaming = displayToolCall?.toolResult?.content === 'STREAMING';
 
@@ -307,16 +306,16 @@ export function ToolCallSidePanel({
     if (isLiveMode) {
       if (agentStatus === 'running') {
         return (
-          <div className={`${baseClasses} bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800`}>
-            <div className={`${dotClasses} bg-green-500 animate-pulse`} />
-            <span className={`${textClasses} text-green-700 dark:text-green-400`}>Live Updates</span>
+          <div className={`${baseClasses} bg-success/10 border border-success/20`}>
+            <div className={`${dotClasses} bg-success animate-pulse`} />
+            <span className={`${textClasses} text-success`}>Live Updates</span>
           </div>
         );
       } else {
         return (
-          <div className={`${baseClasses} bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-800`}>
-            <div className={`${dotClasses} bg-neutral-500`} />
-            <span className={`${textClasses} text-neutral-700 dark:text-neutral-400`}>Latest Tool</span>
+          <div className={`${baseClasses} bg-base-200 border border-base-300`}>
+            <div className={`${dotClasses} bg-base-content/50`} />
+            <span className={`${textClasses} text-base-content/70`}>Latest Tool</span>
           </div>
         );
       }
@@ -324,21 +323,21 @@ export function ToolCallSidePanel({
       if (agentStatus === 'running') {
         return (
           <div
-            className={`${baseClasses} bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors cursor-pointer`}
+            className={`${baseClasses} bg-success/10 border border-success/20 hover:bg-success/20 transition-colors cursor-pointer`}
             onClick={jumpToLive}
           >
-            <div className={`${dotClasses} bg-green-500 animate-pulse`} />
-            <span className={`${textClasses} text-green-700 dark:text-green-400`}>Jump to Live</span>
+            <div className={`${dotClasses} bg-success animate-pulse`} />
+            <span className={`${textClasses} text-success`}>Jump to Live</span>
           </div>
         );
       } else {
         return (
           <div
-            className={`${baseClasses} bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors cursor-pointer`}
+            className={`${baseClasses} bg-info/10 border border-info/20 hover:bg-info/20 transition-colors cursor-pointer`}
             onClick={jumpToLatest}
           >
-            <div className={`${dotClasses} bg-blue-500`} />
-            <span className={`${textClasses} text-blue-700 dark:text-blue-400`}>Jump to Latest</span>
+            <div className={`${dotClasses} bg-info`} />
+            <span className={`${textClasses} text-info`}>Jump to Latest</span>
           </div>
         );
       }
@@ -419,39 +418,44 @@ export function ToolCallSidePanel({
     return (
       <div
         className={cn(
-          'fixed inset-y-0 right-0 border-l flex flex-col z-30 h-screen transition-all duration-200 ease-in-out',
+          'fixed inset-y-0 right-0 flex flex-col z-30 h-screen transition-all duration-200 ease-in-out bg-base-100 shadow-2xl',
           isMobile
             ? 'w-full'
             : 'w-[90%] sm:w-[450px] md:w-[500px] lg:w-[550px] xl:w-[650px]',
           !isOpen && 'translate-x-full',
         )}
       >
-        <div className="flex-1 flex flex-col overflow-hidden bg-background">
+        <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex flex-col h-full">
-            <div className="pt-4 pl-4 pr-4">
-              <div className="flex items-center justify-between">
-                <div className="ml-2 flex items-center gap-2">
-                  <Computer className="h-4 w-4" />
-                  <h2 className="text-md font-medium text-zinc-900 dark:text-zinc-100">
-                    {agentName ? `${agentName}'s Computer` : 'Suna\'s Computer'}
-                  </h2>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onClose}
-                  className="h-8 w-8"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
+            {/* Header */}
+            <div className="flex items-center justify-end p-4 bg-base-100 border-b border-base-300/50 shadow-sm">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="text-base-content/60 hover:text-base-content hover:bg-base-200 rounded-xl transition-all duration-200 h-8 w-8"
+              >
+                <X className="h-4 w-4" />
+              </Button>
             </div>
-            <div className="flex-1 p-4 overflow-auto">
-              <div className="space-y-4">
-                <Skeleton className="h-8 w-32" />
-                <Skeleton className="h-20 w-full rounded-md" />
-                <Skeleton className="h-40 w-full rounded-md" />
-                <Skeleton className="h-20 w-full rounded-md" />
+            <div className="flex flex-col items-center justify-center flex-1 p-8 bg-base-50">
+              <div className="flex flex-col items-center space-y-6 max-w-sm text-center">
+                <div className="relative">
+                  <div className="w-20 h-20 bg-gradient-to-br from-info/10 to-info/5 border border-info/20 rounded-full flex items-center justify-center shadow-lg">
+                    <CircleDashed className="h-10 w-10 text-info animate-spin" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 px-2 py-1 bg-info text-info-content text-xs font-medium rounded-full shadow-sm">
+                    Loading
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <h3 className="text-xl font-semibold text-base-content">
+                    Starting up...
+                  </h3>
+                  <p className="text-sm text-base-content/70 leading-relaxed">
+                    Yari Computer is initializing. Please wait a moment.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -463,41 +467,23 @@ export function ToolCallSidePanel({
   const renderContent = () => {
     if (!displayToolCall && toolCallSnapshots.length === 0) {
       return (
-        <div className="flex flex-col h-full">
-          <div className="pt-4 pl-4 pr-4">
-            <div className="flex items-center justify-between">
-              <div className="ml-2 flex items-center gap-2">
-                <Computer className="h-4 w-4" />
-                <h2 className="text-md font-medium text-zinc-900 dark:text-zinc-100">
-                  {agentName ? `${agentName}'s Computer` : 'Suna\'s Computer'}
-                </h2>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="h-8 w-8"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+        <div className="flex flex-col h-full bg-base-50">
           <div className="flex flex-col items-center justify-center flex-1 p-8">
-            <div className="flex flex-col items-center space-y-4 max-w-sm text-center">
+            <div className="flex flex-col items-center space-y-6 max-w-sm text-center">
               <div className="relative">
-                <div className="w-16 h-16 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center">
-                  <Computer className="h-8 w-8 text-zinc-400 dark:text-zinc-500" />
+                <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-full flex items-center justify-center shadow-lg">
+                  <Computer className="h-10 w-10 text-primary" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-zinc-200 dark:bg-zinc-700 rounded-full flex items-center justify-center">
-                  <div className="w-2 h-2 bg-zinc-400 dark:text-zinc-500 rounded-full"></div>
+                <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-base-100 border-2 border-base-200 rounded-full flex items-center justify-center shadow-sm">
+                  <div className="w-2.5 h-2.5 bg-success rounded-full animate-pulse"></div>
                 </div>
               </div>
-              <div className="space-y-2">
-                <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
-                  No tool activity
+              <div className="space-y-3">
+                <h3 className="text-xl font-semibold text-base-content">
+                  Getting ready...
                 </h3>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                  Tool calls and computer interactions will appear here when they're being executed.
+                <p className="text-sm text-base-content/70 leading-relaxed">
+                  Yari Computer is initializing. Tool results will appear here shortly.
                 </p>
               </div>
             </div>
@@ -510,44 +496,23 @@ export function ToolCallSidePanel({
       const firstStreamingTool = toolCallSnapshots.find(s => s.toolCall.toolResult?.content === 'STREAMING');
       if (firstStreamingTool && totalCompletedCalls === 0) {
         return (
-          <div className="flex flex-col h-full">
-            <div className="pt-4 pl-4 pr-4">
-              <div className="flex items-center justify-between">
-                <div className="ml-2 flex items-center gap-2">
-                  <Computer className="h-4 w-4" />
-                  <h2 className="text-md font-medium text-zinc-900 dark:text-zinc-100">
-                    {agentName ? `${agentName}'s Computer` : 'Suna\'s Computer'}
-                  </h2>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 flex items-center gap-1.5">
-                    <CircleDashed className="h-3 w-3 animate-spin" />
-                    <span>Running</span>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={onClose}
-                    className="h-8 w-8 ml-1"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
+          <div className="flex flex-col h-full bg-base-50">
             <div className="flex flex-col items-center justify-center flex-1 p-8">
-              <div className="flex flex-col items-center space-y-4 max-w-sm text-center">
+              <div className="flex flex-col items-center space-y-6 max-w-sm text-center">
                 <div className="relative">
-                  <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
-                    <CircleDashed className="h-8 w-8 text-blue-500 dark:text-blue-400 animate-spin" />
+                  <div className="w-20 h-20 bg-gradient-to-br from-info/10 to-info/5 border border-info/20 rounded-full flex items-center justify-center shadow-lg">
+                    <CircleDashed className="h-10 w-10 text-info animate-spin" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 px-2 py-1 bg-info text-info-content text-xs font-medium rounded-full shadow-sm">
+                    Running
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
+                <div className="space-y-3">
+                  <h3 className="text-xl font-semibold text-base-content">
                     Tool is running
                   </h3>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                    {getUserFriendlyToolName(firstStreamingTool.toolCall.assistantCall.name || 'Tool')} is currently executing. Results will appear here when complete.
+                  <p className="text-sm text-base-content/70 leading-relaxed">
+                    {getUserFriendlyToolName(firstStreamingTool.toolCall.assistantCall.name || 'Tool')} is currently executing. Results will appear when complete.
                   </p>
                 </div>
               </div>
@@ -557,29 +522,25 @@ export function ToolCallSidePanel({
       }
 
       return (
-        <div className="flex flex-col h-full">
-          <div className="pt-4 pl-4 pr-4">
-            <div className="flex items-center justify-between">
-              <div className="ml-2 flex items-center gap-2">
-                <Computer className="h-4 w-4" />
-                <h2 className="text-md font-medium text-zinc-900 dark:text-zinc-100">
-                  {agentName ? `${agentName}'s Computer` : 'Suna\'s Computer'}
-                </h2>
+        <div className="flex flex-col h-full bg-base-50">
+          <div className="flex flex-col items-center justify-center flex-1 p-8">
+            <div className="flex flex-col items-center space-y-6 max-w-sm text-center">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-full flex items-center justify-center shadow-lg">
+                  <Computer className="h-10 w-10 text-primary" />
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-base-100 border-2 border-base-200 rounded-full flex items-center justify-center shadow-sm">
+                  <div className="w-2.5 h-2.5 bg-warning rounded-full animate-pulse"></div>
+                </div>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="h-8 w-8"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="flex-1 p-4 overflow-auto">
-            <div className="space-y-4">
-              <Skeleton className="h-8 w-32" />
-              <Skeleton className="h-20 w-full rounded-md" />
+              <div className="space-y-3">
+                <h3 className="text-xl font-semibold text-base-content">
+                  Preparing tools...
+                </h3>
+                <p className="text-sm text-base-content/70 leading-relaxed">
+                  Yari Computer is setting up the workspace. Tool results will appear here shortly.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -606,60 +567,10 @@ export function ToolCallSidePanel({
 
     return (
       <div className="flex flex-col h-full">
-        <div className="p-3">
-          <div className="flex items-center justify-between">
-            <div className="ml-2 flex items-center gap-2">
-              <Computer className="h-4 w-4" />
-              <h2 className="text-md font-medium text-zinc-900 dark:text-zinc-100">
-                {agentName ? `${agentName}'s Computer` : 'Suna\'s Computer'}
-              </h2>
-            </div>
-
-            {displayToolCall.toolResult?.content && !isStreaming && (
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onClose}
-                  className="h-8 w-8 ml-1"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-
-            {isStreaming && (
-              <div className="flex items-center gap-2">
-                <div className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 flex items-center gap-1.5">
-                  <CircleDashed className="h-3 w-3 animate-spin" />
-                  <span>Running</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onClose}
-                  className="h-8 w-8 ml-1"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-
-            {!displayToolCall.toolResult?.content && !isStreaming && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="h-8 w-8"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
+        <div className="flex-1 overflow-auto bg-base-50">
+          <div className="p-4">
+            {toolView}
           </div>
-        </div>
-
-        <div className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700 scrollbar-track-transparent">
-          {toolView}
         </div>
       </div>
     );
@@ -668,22 +579,38 @@ export function ToolCallSidePanel({
   return (
     <div
       className={cn(
-        'fixed inset-y-0 right-0 border-l flex flex-col z-30 h-screen transition-all duration-200 ease-in-out',
+        'fixed inset-y-0 right-0 flex flex-col z-30 h-screen transition-all duration-200 ease-in-out bg-base-200/95 backdrop-blur-xl shadow-2xl rounded-l-2xl',
         isMobile
-          ? 'w-full'
+          ? 'w-full rounded-l-none'
           : 'w-[40vw] sm:w-[450px] md:w-[500px] lg:w-[550px] xl:w-[650px]',
         !isOpen && 'translate-x-full',
       )}
     >
-      <div className="flex-1 flex flex-col overflow-hidden bg-background">
-        {renderContent()}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex h-screen">
+          {/* Main content area */}
+          <div className="flex-1 flex flex-col min-w-0">
+            {/* Header */}
+            <div className="flex items-center justify-end p-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onClose}
+                className="text-primary hover:text-primary hover:bg-primary/10 rounded-xl transition-all duration-200 h-9 w-9"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            {renderContent()}
+          </div>
+        </div>
       </div>
 
       {(displayTotalCalls > 1 || (isCurrentToolStreaming && totalCompletedCalls > 0)) && (
         <div
           className={cn(
-            'border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900',
-            isMobile ? 'p-2' : 'px-4 py-2.5',
+            'border-t border-base-300/50 bg-base-100/80 backdrop-blur-sm',
+            isMobile ? 'p-3' : 'px-4 py-3',
           )}
         >
           {isMobile ? (
@@ -693,14 +620,14 @@ export function ToolCallSidePanel({
                 size="sm"
                 onClick={navigateToPrevious}
                 disabled={displayIndex <= 0}
-                className="h-8 px-2.5 text-xs"
+                className="h-8 px-3 text-xs border-base-300 hover:bg-base-200"
               >
                 <ChevronLeft className="h-3.5 w-3.5 mr-1" />
                 <span>Prev</span>
               </Button>
 
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs text-zinc-600 dark:text-zinc-400 font-medium tabular-nums min-w-[44px]">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-base-content/70 font-medium tabular-nums min-w-[44px] bg-base-200 px-2 py-1 rounded-md">
                   {displayIndex + 1}/{displayTotalCalls}
                 </span>
                 {renderStatusButton()}
@@ -711,25 +638,25 @@ export function ToolCallSidePanel({
                 size="sm"
                 onClick={navigateToNext}
                 disabled={displayIndex >= displayTotalCalls - 1}
-                className="h-8 px-2.5 text-xs"
+                className="h-8 px-3 text-xs border-base-300 hover:bg-base-200"
               >
                 <span>Next</span>
                 <ChevronRight className="h-3.5 w-3.5 ml-1" />
               </Button>
             </div>
           ) : (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={navigateToPrevious}
                   disabled={displayIndex <= 0}
-                  className="h-7 w-7 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+                  className="h-7 w-7 text-base-content/60 hover:text-base-content hover:bg-base-200"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <span className="text-xs text-zinc-600 dark:text-zinc-400 font-medium tabular-nums px-1 min-w-[44px] text-center">
+                <span className="text-xs text-base-content/70 font-medium tabular-nums px-2 py-1 min-w-[44px] text-center bg-base-200 rounded-md">
                   {displayIndex + 1}/{displayTotalCalls}
                 </span>
                 <Button
@@ -737,7 +664,7 @@ export function ToolCallSidePanel({
                   size="icon"
                   onClick={navigateToNext}
                   disabled={displayIndex >= displayTotalCalls - 1}
-                  className="h-7 w-7 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+                  className="h-7 w-7 text-base-content/60 hover:text-base-content hover:bg-base-200"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -750,11 +677,11 @@ export function ToolCallSidePanel({
                   step={1}
                   value={[displayIndex]}
                   onValueChange={handleSliderChange}
-                  className="w-full [&>span:first-child]:h-1.5 [&>span:first-child]:bg-zinc-200 dark:[&>span:first-child]:bg-zinc-800 [&>span:first-child>span]:bg-zinc-500 dark:[&>span:first-child>span]:bg-zinc-400 [&>span:first-child>span]:h-1.5"
+                  className="w-full [&>span:first-child]:h-1.5 [&>span:first-child]:bg-base-300 [&>span:first-child>span]:bg-primary [&>span:first-child>span]:h-1.5"
                 />
               </div>
 
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 {renderStatusButton()}
               </div>
             </div>

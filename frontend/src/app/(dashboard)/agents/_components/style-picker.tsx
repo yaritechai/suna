@@ -1632,7 +1632,7 @@ export const StylePicker = ({
                     <button
                       key={color}
                       className={`w-8 h-8 rounded-lg border-2 transition-all hover:scale-110 ${
-                        selectedColor === color ? "border-gray-900 shadow-md" : "border-gray-200 hover:border-gray-300"
+                        selectedColor === color ? "border-base-content shadow-md" : "border-base-300 hover:border-base-content/50"
                       }`}
                       style={{ backgroundColor: color }}
                       onClick={() => setSelectedColor(color)}
@@ -1702,7 +1702,7 @@ export const StylePicker = ({
                 </ScrollArea>
 
                 {searchTerm && filteredEmojis.length === 0 && (
-                  <div className="text-center text-muted-foreground py-4">No emojis found for "{searchTerm}"</div>
+                  <div className="text-center text-base-content/70 py-4">No emojis found for "{searchTerm}"</div>
                 )}
               </div>
               <Separator />

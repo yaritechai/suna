@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { xcodeLight } from '@uiw/codemirror-theme-xcode';
 import { useTheme } from 'next-themes';
-import { EditorView } from '@codemirror/view';
 
 interface CodeRendererProps {
   content: string;
@@ -62,8 +61,8 @@ export function CodeRenderer({
   const langExtension =
     language && languageMap[language] ? [languageMap[language]()] : [];
 
-  // Add line wrapping extension
-  const extensions = [...langExtension, EditorView.lineWrapping];
+  // Use just the language extensions for now
+  const extensions = [...langExtension];
 
   // Select the theme based on the current theme
   const theme = mounted && resolvedTheme === 'dark' ? vscodeDark : xcodeLight;

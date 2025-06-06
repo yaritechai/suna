@@ -378,7 +378,7 @@ export function NavAgents() {
                   variant="ghost"
                   size="icon"
                   onClick={handleMultiDelete}
-                  className="h-7 w-7 text-destructive"
+                  className="h-7 w-7 text-error hover:text-error"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -389,7 +389,7 @@ export function NavAgents() {
                   <div>
                     <Link
                       href="/dashboard"
-                      className="text-muted-foreground hover:text-foreground h-7 w-7 flex items-center justify-center rounded-md"
+                      className="text-base-content/70 hover:text-base-content h-7 w-7 flex items-center justify-center rounded-md hover:bg-base-200 transition-colors"
                     >
                       <Plus className="h-4 w-4" />
                       <span className="sr-only">New Agent</span>
@@ -427,8 +427,8 @@ export function NavAgents() {
           Array.from({ length: 3 }).map((_, index) => (
             <SidebarMenuItem key={`skeleton-${index}`}>
               <SidebarMenuButton>
-                <div className="h-4 w-4 bg-sidebar-foreground/10 rounded-md animate-pulse"></div>
-                <div className="h-3 bg-sidebar-foreground/10 rounded w-3/4 animate-pulse"></div>
+                <div className="h-4 w-4 bg-base-content/10 rounded-md animate-pulse"></div>
+                <div className="h-3 bg-base-content/10 rounded w-3/4 animate-pulse"></div>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))
@@ -450,8 +450,8 @@ export function NavAgents() {
                           <SidebarMenuButton
                             asChild
                             className={
-                              isActive ? 'bg-accent text-accent-foreground' :
-                                isSelected ? 'bg-primary/10' : ''
+                              isActive ? 'bg-primary/20 text-primary hover:bg-primary/30' :
+                                isSelected ? 'bg-secondary/10 hover:bg-secondary/20' : 'hover:bg-base-200'
                             }
                           >
                             <Link
@@ -477,10 +477,10 @@ export function NavAgents() {
                       <SidebarMenuButton
                         asChild
                         className={`relative ${isActive
-                          ? 'bg-accent text-accent-foreground font-medium'
+                          ? 'bg-primary/20 text-primary hover:bg-primary/30 font-medium'
                           : isSelected
-                            ? 'bg-primary/10'
-                            : ''
+                            ? 'bg-secondary/10 hover:bg-secondary/20'
+                            : 'hover:bg-base-200'
                           }`}
                       >
                         <Link
@@ -511,12 +511,12 @@ export function NavAgents() {
                                   onClick={(e) => toggleThreadSelection(thread.threadId, e)}
                                 >
                                   <div
-                                    className={`h-4 w-4 border rounded cursor-pointer hover:bg-muted/50 transition-colors flex items-center justify-center ${isSelected
+                                    className={`h-4 w-4 border rounded cursor-pointer hover:bg-base-300 transition-colors flex items-center justify-center ${isSelected
                                       ? 'bg-primary border-primary'
-                                      : 'border-muted-foreground/30 bg-background'
+                                      : 'border-base-content/30 bg-base-100'
                                       }`}
                                   >
-                                    {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
+                                    {isSelected && <Check className="h-3 w-3 text-primary-content" />}
                                   </div>
                                 </div>
                               </>
@@ -551,7 +551,7 @@ export function NavAgents() {
                           setSelectedItem({ threadId: thread?.threadId, projectId: thread?.projectId })
                           setShowShareModal(true)
                         }}>
-                          <Share2 className="text-muted-foreground" />
+                          <Share2 className="text-base-content/70" />
                           <span>Share Chat</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
@@ -560,7 +560,7 @@ export function NavAgents() {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <ArrowUpRight className="text-muted-foreground" />
+                            <ArrowUpRight className="text-base-content/70" />
                             <span>Open in New Tab</span>
                           </a>
                         </DropdownMenuItem>
@@ -573,7 +573,7 @@ export function NavAgents() {
                             )
                           }
                         >
-                          <Trash2 className="text-muted-foreground" />
+                          <Trash2 className="text-base-content/70" />
                           <span>Delete</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -585,7 +585,7 @@ export function NavAgents() {
           </>
         ) : (
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-sidebar-foreground/70">
+            <SidebarMenuButton className="text-base-content/70">
               <MessagesSquare className="h-4 w-4" />
               <span>No tasks yet</span>
             </SidebarMenuButton>
@@ -595,10 +595,10 @@ export function NavAgents() {
 
       {(isDeletingSingle || isDeletingMultiple) && totalToDelete > 0 && (
         <div className="mt-2 px-2">
-          <div className="text-xs text-muted-foreground mb-1">
+          <div className="text-xs text-base-content/70 mb-1">
             Deleting {deleteProgress > 0 ? `(${Math.floor(deleteProgress)}%)` : '...'}
           </div>
-          <div className="w-full bg-secondary h-1 rounded-full overflow-hidden">
+          <div className="w-full bg-base-300 h-1 rounded-full overflow-hidden">
             <div
               className="bg-primary h-1 transition-all duration-300 ease-in-out"
               style={{ width: `${deleteProgress}%` }}

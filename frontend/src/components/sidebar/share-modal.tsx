@@ -239,7 +239,7 @@ export function ShareModal({ isOpen, onClose, threadId, projectId }: ShareModalP
               </div>
               <Button
                 variant="outline"
-                className="w-full text-destructive hover:bg-destructive hover:text-muted"
+                className="w-full text-destructive hover:bg-destructive hover:text-destructive-content"
                 onClick={removeShareLink}
                 disabled={isLoading}
               >
@@ -249,12 +249,12 @@ export function ShareModal({ isOpen, onClose, threadId, projectId }: ShareModalP
             </>
           ) : (
             <div className="text-center space-y-4">
-              <div className="mx-auto w-12 h-12 bg-muted-foreground/20 rounded-full flex items-center justify-center">
-                <Share2 className="h-6 w-6" />
+              <div className="mx-auto w-12 h-12 bg-base-200 rounded-full flex items-center justify-center">
+                <Share2 className="h-6 w-6 text-base-content" />
               </div>
               <div className="space-y-2">
                 <h3 className="text-xl font-semibold">Share this chat</h3>
-                <p className="text-sm text-muted-foreground">
+                                  <p className="text-sm text-base-content/70">
                   Create a shareable link that allows others to view this conversation publicly.
                 </p>
               </div>

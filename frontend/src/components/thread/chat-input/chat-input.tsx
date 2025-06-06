@@ -17,6 +17,7 @@ import { useModelSelection } from './_use-model-selection';
 import { AgentSelector } from './agent-selector';
 import { useFileDelete } from '@/hooks/react-query/files';
 import { useQueryClient } from '@tanstack/react-query';
+import { cn } from '@/lib/utils';
 
 export interface ChatInputHandles {
   getPendingFiles: () => File[];
@@ -225,97 +226,104 @@ export const ChatInput = forwardRef<ChatInputHandles, ChatInputProps>(
     };
 
     return (
-      <div className="mx-auto w-full max-w-4xl">
-        <Card
-          className="shadow-none w-full max-w-4xl mx-auto bg-transparent border-none rounded-xl overflow-hidden"
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setIsDraggingOver(false);
+      <div className="sticky bottom-0 z-10 px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-6">
+        <div className="mx-auto max-w-3xl">
+          <div className="relative">
+            <Card
+              className={cn(
+                "w-full bg-base-200/95 backdrop-blur-xl border border-base-300/50 shadow-2xl shadow-base-content/10",
+                "rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-200",
+                "hover:shadow-xl focus-within:shadow-xl focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20"
+              )}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsDraggingOver(false);
 
-            if (fileInputRef.current && e.dataTransfer.files.length > 0) {
-              const files = Array.from(e.dataTransfer.files);
-              handleFiles(
-                files,
-                sandboxId,
-                setPendingFiles,
-                setUploadedFiles,
-                setIsUploading,
-                messages,
-                queryClient,
-              );
-            }
-          }}
-        >
-          <div className="w-full text-sm flex flex-col justify-between items-start rounded-lg">            
-            <CardContent className={`w-full p-1.5 pb-2 ${bgColor} rounded-2xl border`}>              
-              {onAgentSelect && (                
-                <div className="mb-2 px-2">                  
-                <AgentSelector                    
-                selectedAgentId={selectedAgentId}                    
-                onAgentSelect={onAgentSelect}                    
-                disabled={loading || disabled}                    
-                className="w-full"                 
-                />                
-                </div>              
-              )}                            
-              <AttachmentGroup                
-              files={uploadedFiles || []}                
-              sandboxId={sandboxId}                
-              onRemove={removeUploadedFile}                
-              layout="inline"                
-              maxHeight="216px"                
-              showPreviews={true}              
-              />
+                if (fileInputRef.current && e.dataTransfer.files.length > 0) {
+                  const files = Array.from(e.dataTransfer.files);
+                  handleFiles(
+                    files,
+                    sandboxId,
+                    setPendingFiles,
+                    setUploadedFiles,
+                    setIsUploading,
+                    messages,
+                    queryClient,
+                  );
+                }
+              }}
+            >
+              <CardContent className="pt-2 pb-3 px-3 sm:pt-2 sm:pb-4 sm:px-4">
+                {onAgentSelect && (
+                  <div className="mb-4">
+                    <AgentSelector
+                      selectedAgentId={selectedAgentId}
+                      onAgentSelect={onAgentSelect}
+                      disabled={loading || disabled}
+                      className="w-full"
+                    />
+                  </div>
+                )}
 
-              <MessageInput
-                ref={textareaRef}
-                value={value}
-                onChange={handleChange}
-                onSubmit={handleSubmit}
-                onTranscription={handleTranscription}
-                placeholder={placeholder}
-                loading={loading}
-                disabled={disabled}
-                isAgentRunning={isAgentRunning}
-                onStopAgent={onStopAgent}
-                isDraggingOver={isDraggingOver}
-                uploadedFiles={uploadedFiles}
+                <AttachmentGroup
+                  files={uploadedFiles || []}
+                  sandboxId={sandboxId}
+                  onRemove={removeUploadedFile}
+                  layout="inline"
+                  maxHeight="216px"
+                  showPreviews={true}
+                />
 
-                fileInputRef={fileInputRef}
-                isUploading={isUploading}
-                sandboxId={sandboxId}
-                setPendingFiles={setPendingFiles}
-                setUploadedFiles={setUploadedFiles}
-                setIsUploading={setIsUploading}
-                hideAttachments={hideAttachments}
-                messages={messages}
+                <MessageInput
+                  ref={textareaRef}
+                  value={value}
+                  onChange={handleChange}
+                  onSubmit={handleSubmit}
+                  onTranscription={handleTranscription}
+                  placeholder={placeholder}
+                  loading={loading}
+                  disabled={disabled}
+                  isAgentRunning={isAgentRunning}
+                  onStopAgent={onStopAgent}
+                  isDraggingOver={isDraggingOver}
+                  uploadedFiles={uploadedFiles}
 
-                selectedModel={selectedModel}
-                onModelChange={handleModelChange}
-                modelOptions={modelOptions}
-                subscriptionStatus={subscriptionStatus}
-                canAccessModel={canAccessModel}
-                refreshCustomModels={refreshCustomModels}
-              />
-            </CardContent>
+                  fileInputRef={fileInputRef}
+                  isUploading={isUploading}
+                  sandboxId={sandboxId}
+                  setPendingFiles={setPendingFiles}
+                  setUploadedFiles={setUploadedFiles}
+                  setIsUploading={setIsUploading}
+                  hideAttachments={hideAttachments}
+                  messages={messages}
+
+                  selectedModel={selectedModel}
+                  onModelChange={handleModelChange}
+                  modelOptions={modelOptions}
+                  subscriptionStatus={subscriptionStatus}
+                  canAccessModel={canAccessModel}
+                  refreshCustomModels={refreshCustomModels}
+                />
+              </CardContent>
+            </Card>
+
+            {isAgentRunning && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-3 w-full flex items-center justify-center"
+              >
+                <div className="text-sm text-base-content/70 flex items-center gap-2 bg-base-200 px-3 py-2 rounded-full">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <span>{agentName ? `${agentName} is working...` : 'Yari is working...'}</span>
+                </div>
+              </motion.div>
+            )}
           </div>
-        </Card>
-
-        {isAgentRunning && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="pb-4 -mt-4 w-full flex items-center justify-center"
-          >
-            <div className="text-xs text-muted-foreground flex items-center gap-2">
-              <Loader2 className="h-3 w-3 animate-spin" />
-              <span>{agentName ? `${agentName} is working...` : 'Suna is working...'}</span>
-            </div>
-          </motion.div>
-        )}
+        </div>
       </div>
     );
   },

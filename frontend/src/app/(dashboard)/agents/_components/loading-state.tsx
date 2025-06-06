@@ -12,7 +12,7 @@ export const LoadingState = ({ viewMode }: LoadingStateProps) => {
   return (
     <div className={viewMode === 'grid' ? "grid gap-6 sm:grid-cols-2 lg:grid-cols-4" : "space-y-4"}>
       {Array.from({ length: skeletonCount }, (_, i) => (
-        <div key={i} className="bg-neutral-100 dark:bg-sidebar border border-border rounded-2xl overflow-hidden">
+        <div key={i} className="bg-base-100 border border-base-300 rounded-2xl overflow-hidden">
           <Skeleton className="h-50" />
           <div className="p-4 space-y-3">
             <Skeleton className="h-5 rounded" />

@@ -71,7 +71,7 @@ const AgentModal = ({ agent, isOpen, onClose, onCustomize, onChat, onPublish, on
           <div className="p-4 space-y-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <h2 className="text-xl font-semibold text-foreground">
+                <h2 className="text-xl font-semibold text-base-content">
                   {agent.name}
                 </h2>
                 {agent.is_public && (
@@ -81,7 +81,7 @@ const AgentModal = ({ agent, isOpen, onClose, onCustomize, onChat, onPublish, on
                   </Badge>
                 )}
               </div>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-base-content/70 text-sm leading-relaxed">
                 {truncateDescription(agent.description)}
               </p>
             </div>
@@ -108,7 +108,7 @@ const AgentModal = ({ agent, isOpen, onClose, onCustomize, onChat, onPublish, on
             <div className="pt-2 border-t">
               {agent.is_public ? (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <div className="flex items-center justify-between text-sm text-base-content/70">
                     <span>Published to marketplace</span>
                     <div className="flex items-center gap-1">
                       <Download className="h-3 w-3" />
@@ -228,7 +228,7 @@ export const AgentsGrid = ({
           return (
             <div 
               key={agent.agent_id} 
-              className="bg-neutral-100 dark:bg-sidebar border border-border rounded-2xl overflow-hidden hover:bg-muted/50 transition-all duration-200 cursor-pointer group"
+              className="bg-base-100 border border-base-300 rounded-2xl overflow-hidden hover:bg-base-200 transition-all duration-200 cursor-pointer group"
               onClick={() => handleAgentClick(agent)}
             >
               <div className={`h-50 flex items-center justify-center relative`} style={{ backgroundColor: color }}>
@@ -250,7 +250,7 @@ export const AgentsGrid = ({
               
               <div className="p-4">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-foreground font-medium text-lg line-clamp-1 flex-1">
+                  <h3 className="text-base-content font-medium text-lg line-clamp-1 flex-1">
                     {agent.name}
                   </h3>
                   {agent.is_public && (
@@ -260,12 +260,12 @@ export const AgentsGrid = ({
                     </Badge>
                   )}
                 </div>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                <p className="text-base-content/70 text-sm mb-4 line-clamp-2">
                   {agent.description || 'Try out this agent'}
                 </p>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground text-xs">
+                  <span className="text-base-content/70 text-xs">
                     By me
                   </span>
                   
@@ -276,7 +276,7 @@ export const AgentsGrid = ({
                           <Button 
                             variant="ghost" 
                             size="sm"
-                            className="h-7 w-7 p-0 hover:bg-destructive/10 hover:text-destructive text-muted-foreground"
+                            className="h-7 w-7 p-0 hover:bg-destructive/10 hover:text-destructive text-base-content/60"
                             disabled={deleteAgentMutation.isPending}
                             title="Delete agent"
                             onClick={(e) => e.stopPropagation()}

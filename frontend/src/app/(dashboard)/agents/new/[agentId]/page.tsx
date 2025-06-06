@@ -276,7 +276,7 @@ export default function AgentConfigurationPage() {
                 Preview
               </Button>
             </DrawerTrigger>
-            <DrawerContent className="h-[90vh] bg-muted">
+            <DrawerContent className="h-[90vh] bg-base-200">
               <DrawerHeader>
                 <DrawerTitle>Agent Preview</DrawerTitle>
               </DrawerHeader>
@@ -290,7 +290,7 @@ export default function AgentConfigurationPage() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
           <div className='w-full flex items-center justify-center flex-shrink-0 px-4 md:px-12 md:mt-10'>
             <div className='w-auto flex items-center gap-2'>
-              <TabsList className="grid h-auto w-full grid-cols-2 bg-muted-foreground/10">
+              <TabsList className="grid h-auto w-full grid-cols-2 bg-base-content/10">
                 <TabsTrigger value="agent-builder" className="w-48 flex items-center gap-1.5 px-2">
                   <span className="truncate">Agent Builder</span>
                   <Badge variant="beta">
@@ -330,14 +330,14 @@ export default function AgentConfigurationPage() {
                   <EditableText
                     value={formData.description}
                     onSave={(value) => handleFieldChange('description', value)}
-                    className="text-muted-foreground text-sm md:text-base"
+                    className="text-base-content/70 text-sm md:text-base"
                     placeholder="Click to add description..."
                   />
                 </div>
               </div>
 
               <div className='flex flex-col mt-6 md:mt-8'>
-                <div className='text-sm font-semibold text-muted-foreground mb-2'>Instructions</div>
+                <div className='text-sm font-semibold text-base-content/70 mb-2'>Instructions</div>
                 <EditableText
                   value={formData.system_prompt}
                   onSave={(value) => handleFieldChange('system_prompt', value)}
@@ -454,7 +454,7 @@ export default function AgentConfigurationPage() {
           ) : (
             <>
               <h2 className="text-xl font-semibold mb-2">Agent not found</h2>
-              <p className="text-muted-foreground mb-4">The agent you're looking for doesn't exist.</p>
+              <p className="text-base-content/70 mb-4">The agent you're looking for doesn't exist.</p>
             </>
           )}
         </div>

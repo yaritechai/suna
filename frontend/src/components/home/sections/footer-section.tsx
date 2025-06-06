@@ -20,10 +20,10 @@ export function FooterSection() {
   }, []);
 
   const logoSrc = !mounted
-    ? '/kortix-logo.svg'
+    ? '/yari-logo.svg'
     : resolvedTheme === 'dark'
-      ? '/kortix-logo-white.svg'
-      : '/kortix-logo.svg';
+      ? '/yari-logo-white.svg'
+      : '/yari-logo.svg';
 
   return (
     <footer id="footer" className="w-full pb-0">
@@ -32,10 +32,10 @@ export function FooterSection() {
           <Link href="/" className="flex items-center gap-2">
             <Image
               src={logoSrc}
-              alt="Kortix Logo"
-              width={122}
-              height={22}
-              priority
+              alt="Yari Logo"
+              width={120}
+              height={40}
+              className="h-10 w-auto"
             />
           </Link>
           <p className="tracking-tight text-muted-foreground font-medium">

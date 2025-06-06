@@ -85,7 +85,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         onClick={() => setIsEditing(true)}
       >
         <div className={cn(
-          value ? '' : 'text-muted-foreground italic',
+          value ? '' : 'text-base-content/50 italic',
           multiline && minHeight ? `min-h-[${minHeight}]` : ''
         )} style={multiline && minHeight ? { minHeight } : {}}>
           {value || placeholder}

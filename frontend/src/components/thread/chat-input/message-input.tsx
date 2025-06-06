@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Square, Loader2, ArrowUp } from 'lucide-react';
+import { Square, Loader2, ArrowUp, Paperclip, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { UploadedFile } from './chat-input';
 import { FileUploadHandler } from './file-upload-handler';
@@ -81,21 +81,36 @@ export const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(
       if (!textarea.current) return;
 
       const adjustHeight = () => {
+        // Reset height to auto to get proper scrollHeight
         textarea.current!.style.height = 'auto';
-        const newHeight = Math.min(
-          Math.max(textarea.current!.scrollHeight, 24),
-          200,
-        );
+        
+        // Calculate new height with better constraints
+        const scrollHeight = textarea.current!.scrollHeight;
+        const minHeight = 40; // Minimum height
+        const maxHeight = 120; // Maximum height before scrolling
+        
+        const newHeight = Math.min(Math.max(scrollHeight, minHeight), maxHeight);
         textarea.current!.style.height = `${newHeight}px`;
+        
+        // If content exceeds maxHeight, enable scrolling
+        if (scrollHeight > maxHeight) {
+          textarea.current!.style.overflowY = 'auto';
+        } else {
+          textarea.current!.style.overflowY = 'hidden';
+        }
       };
 
+      // Adjust height immediately
       adjustHeight();
-
-      // Call it twice to ensure proper height calculation
-      adjustHeight();
+      
+      // Use requestAnimationFrame for smoother updates
+      const timeoutId = setTimeout(adjustHeight, 0);
 
       window.addEventListener('resize', adjustHeight);
-      return () => window.removeEventListener('resize', adjustHeight);
+      return () => {
+        window.removeEventListener('resize', adjustHeight);
+        clearTimeout(timeoutId);
+      };
     }, [value, ref]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -111,63 +126,50 @@ export const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(
       }
     };
 
+    const handleFileClick = () => {
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+    };
+
     return (
-      <div className="flex flex-col w-full h-auto gap-4 justify-between">
-        <div className="flex gap-2 items-center px-2">
-          <Textarea
+      <div className="flex flex-col w-full h-auto">
+        {/* Textarea at the top */}
+        <div className={cn(
+          "relative w-full transition-all duration-200 mb-4",
+          isDraggingOver && "ring-2 ring-blue-300 dark:ring-blue-600"
+        )}>
+          <textarea
             ref={ref}
             value={value}
             onChange={onChange}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
+            disabled={disabled || loading}
+            rows={1}
             className={cn(
-              'w-full bg-transparent dark:bg-transparent border-none shadow-none focus-visible:ring-0 px-2 py-1 text-base min-h-[40px] max-h-[200px] overflow-y-auto resize-none',
-              isDraggingOver ? 'opacity-40' : '',
+              "w-full resize-none bg-transparent border-0",
+              "px-4 pt-1 pb-3 text-sm text-base-content",
+              "placeholder:text-base-content/60",
+              "focus:outline-none focus:ring-0 focus:bg-transparent",
+              "disabled:opacity-50 disabled:cursor-not-allowed",
+              "leading-5 transition-all duration-200",
+              // Clean scrolling without visible scrollbar
+              "scrollbar-none overflow-y-auto",
+              // Mobile responsive text size
+              "text-base sm:text-sm"
             )}
-            disabled={loading || (disabled && !isAgentRunning)}
-            rows={2}
+            style={{
+              minHeight: '40px',
+              maxHeight: '120px'
+            }}
           />
         </div>
 
-        <div className="flex items-center justify-between mt-1 ml-3 mb-1 pr-2">
-          <div className="flex items-center gap-3">
-            {!hideAttachments && (
-              <FileUploadHandler
-                ref={fileInputRef}
-                loading={loading}
-                disabled={disabled}
-                isAgentRunning={isAgentRunning}
-                isUploading={isUploading}
-                sandboxId={sandboxId}
-                setPendingFiles={setPendingFiles}
-                setUploadedFiles={setUploadedFiles}
-                setIsUploading={setIsUploading}
-                messages={messages}
-              />
-            )}
-            <VoiceRecorder
-              onTranscription={onTranscription}
-              disabled={loading || (disabled && !isAgentRunning)}
-            />
-          </div>
-          {subscriptionStatus === 'no_subscription' && !isLocalMode() &&
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <p className='text-sm text-amber-500 hidden sm:block'>Upgrade for full performance</p>
-                  <div className='sm:hidden absolute bottom-0 left-0 right-0 flex justify-center'>
-                    <p className='text-xs text-amber-500 px-2 py-1'>
-                      Upgrade for better performance
-                    </p>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>The free tier is severely limited by inferior models; upgrade to experience the true full Suna experience.</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          }
-          <div className='flex items-center gap-2'>
+        {/* Action buttons container at the bottom */}
+        <div className="flex items-center justify-between gap-2 px-1">
+          {/* Left side - Model selector (hidden on small screens, shown as icon) */}
+          <div className="flex items-center">
             <ModelSelector
               selectedModel={selectedModel}
               onModelChange={onModelChange}
@@ -176,24 +178,48 @@ export const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(
               canAccessModel={canAccessModel}
               refreshCustomModels={refreshCustomModels}
             />
+          </div>
+
+          {/* Right side - Action buttons */}
+          <div className="flex items-center gap-1.5">
+            {!hideAttachments && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleFileClick}
+                disabled={disabled || loading}
+                className={cn(
+                  "h-8 w-8 p-0 text-base-content/60 hover:text-base-content",
+                  "hover:bg-base-200 rounded-lg transition-all duration-200",
+                  "focus-visible:ring-2 focus-visible:ring-primary/50"
+                )}
+              >
+                <Paperclip className="h-4 w-4" />
+              </Button>
+            )}
+
+            <VoiceRecorder
+              onTranscription={onTranscription}
+              disabled={disabled || loading}
+            />
+
             <Button
               type="submit"
               onClick={isAgentRunning && onStopAgent ? onStopAgent : onSubmit}
               size="sm"
-              className={cn(
-                'w-7 h-7 flex-shrink-0 self-end',
-                isAgentRunning ? 'bg-red-500 hover:bg-red-600' : '',
-                (!value.trim() && uploadedFiles.length === 0 && !isAgentRunning) ||
-                  loading ||
-                  (disabled && !isAgentRunning)
-                  ? 'opacity-50'
-                  : '',
-              )}
               disabled={
                 (!value.trim() && uploadedFiles.length === 0 && !isAgentRunning) ||
                 loading ||
                 (disabled && !isAgentRunning)
               }
+              className={cn(
+                "h-8 w-8 p-0 rounded-lg transition-all duration-200",
+                "focus-visible:ring-2 focus-visible:ring-offset-2",
+                isAgentRunning
+                  ? "bg-error hover:bg-error/90 text-error-content focus-visible:ring-error/50"
+                  : "bg-primary hover:bg-primary/90 text-primary-content disabled:bg-base-300 disabled:text-base-content/50 focus-visible:ring-primary/50"
+              )}
             >
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -205,6 +231,40 @@ export const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(
             </Button>
           </div>
         </div>
+
+        {/* Hidden file input */}
+        {!hideAttachments && (
+          <FileUploadHandler
+            ref={fileInputRef}
+            loading={loading}
+            disabled={disabled}
+            isAgentRunning={isAgentRunning}
+            isUploading={isUploading}
+            sandboxId={sandboxId}
+            setPendingFiles={setPendingFiles}
+            setUploadedFiles={setUploadedFiles}
+            setIsUploading={setIsUploading}
+            messages={messages}
+          />
+        )}
+
+        {/* Subscription status notification */}
+        {subscriptionStatus === 'no_subscription' && !isLocalMode() && (
+          <div className="flex justify-center mt-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="text-xs text-amber-500 cursor-help">
+                    Upgrade for full performance
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>The free tier is severely limited by inferior models; upgrade to experience the true full Yari experience.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        )}
       </div>
     );
   },

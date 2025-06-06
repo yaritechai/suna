@@ -75,9 +75,9 @@ export function ThreadLayout({
   agentName
 }: ThreadLayoutProps) {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-base-100">
       {debugMode && (
-        <div className="fixed top-16 right-4 bg-amber-500 text-black text-xs px-2 py-1 rounded-md shadow-md z-50">
+        <div className="fixed top-16 right-4 bg-warning text-warning-content text-xs px-3 py-1.5 rounded-md shadow-lg z-50 border border-warning/20">
           Debug Mode
         </div>
       )}
@@ -119,16 +119,14 @@ export function ThreadLayout({
         agentName={agentName}
       />
 
-      {sandboxId && (
-        <FileViewerModal
-          open={fileViewerOpen}
-          onOpenChange={setFileViewerOpen}
-          sandboxId={sandboxId}
-          initialFilePath={fileToView}
-          project={project || undefined}
-          filePathList={filePathList}
-        />
-      )}
+      <FileViewerModal
+        open={fileViewerOpen}
+        onOpenChange={setFileViewerOpen}
+        sandboxId={sandboxId || ''}
+        initialFilePath={fileToView}
+        project={project || undefined}
+        filePathList={filePathList}
+      />
 
       <BillingErrorAlert
         message={billingData.message}

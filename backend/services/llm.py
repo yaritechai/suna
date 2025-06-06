@@ -23,9 +23,9 @@ from utils.config import config
 litellm.modify_params=True
 
 # Constants
-MAX_RETRIES = 2
-RATE_LIMIT_DELAY = 30
-RETRY_DELAY = 0.1
+MAX_RETRIES = 3  # Increased retries for better reliability
+RATE_LIMIT_DELAY = 10  # Reduced from 30 to 10 seconds for faster recovery
+RETRY_DELAY = 0.5  # Slightly increased for network stability
 
 class LLMError(Exception):
     """Base exception for LLM-related errors."""

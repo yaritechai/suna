@@ -28,16 +28,16 @@ export const PaymentRequiredDialog = () => {
               </DialogDescription>
             </DialogHeader>
             
-            <div className="flex-1 pb-2 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700 scrollbar-track-transparent px-4 sm:px-6 min-h-0">
+            <div className="flex-1 pb-2 overflow-y-auto scrollbar-thin scrollbar-thumb-base-300 scrollbar-track-transparent px-4 sm:px-6 min-h-0">
               <div className="space-y-4 sm:space-y-6 pb-4">
-                <div className="flex items-start p-3 sm:p-4 bg-destructive/5 border border-destructive/50 rounded-lg">
+                <div className="flex items-start p-3 sm:p-4 bg-error/5 border border-error/50 rounded-lg">
                   <div className="flex items-start space-x-3">
                     <div className="flex-shrink-0 mt-0.5">
-                      <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-destructive" />
+                      <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-error" />
                     </div>
                     <div className="text-xs sm:text-sm min-w-0">
-                      <p className="font-medium text-destructive">Usage Limit Reached</p>
-                      <p className="text-destructive break-words">
+                      <p className="font-medium text-error">Usage Limit Reached</p>
+                      <p className="text-error break-words">
                         Your current plan has been exhausted for this billing period.
                       </p>
                     </div>

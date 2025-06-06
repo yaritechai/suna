@@ -429,12 +429,12 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                     <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
                   )}
                   {isRecommended && (
-                    <span className="text-xs px-1.5 py-0.5 rounded-sm bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 font-medium">
+                    <span className="text-xs px-1.5 py-0.5 rounded-sm bg-info/10 text-info font-medium">
                       Recommended
                     </span>
                   )}
                   {isPremium && !accessible && (
-                    <Crown className="h-3.5 w-3.5 text-blue-500" />
+                    <Crown className="h-3.5 w-3.5 text-info" />
                   )}
                   {/* Custom model actions */}
                   {isLocalMode() && isCustom && (
@@ -444,7 +444,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                           e.stopPropagation();
                           openEditCustomModelDialog(opt, e);
                         }}
-                        className="text-muted-foreground hover:text-foreground"
+                        className="text-base-content/60 hover:text-base-content"
                       >
                         <Edit className="h-3.5 w-3.5" />
                       </button>
@@ -453,14 +453,14 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                           e.stopPropagation();
                           handleDeleteCustomModel(opt.id, e);
                         }}
-                        className="text-muted-foreground hover:text-red-500"
+                        className="text-base-content/60 hover:text-error"
                       >
                         <Trash className="h-3.5 w-3.5" />
                       </button>
                     </>
                   )}
                   {selectedModel === opt.id && (
-                    <Check className="h-4 w-4 text-blue-500" />
+                    <Check className="h-4 w-4 text-info" />
                   )}
                 </div>
               </DropdownMenuItem>
@@ -509,15 +509,20 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            size="default"
-            className="h-8 rounded-lg text-muted-foreground shadow-none border-none focus:ring-0 px-3"
+            size="sm"
+            className={cn(
+              "h-8 rounded-lg text-base-content/70 shadow-none border-none focus:ring-0",
+              "px-2 sm:px-3 text-xs sm:text-sm font-medium",
+              "hover:bg-base-200 transition-colors duration-200",
+              "focus-visible:ring-2 focus-visible:ring-primary/50"
+            )}
           >
-            <div className="flex items-center gap-1 text-sm font-medium">
+            <div className="flex items-center gap-1">
               {MODELS[selectedModel]?.lowQuality && (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <AlertTriangle className="h-3.5 w-3.5 text-amber-500 mr-1" />
+                      <AlertTriangle className="h-3 w-3 text-amber-500 flex-shrink-0" />
                     </TooltipTrigger>
                     <TooltipContent side="bottom" className="text-xs">
                       <p>Basic model with limited capabilities</p>
@@ -525,8 +530,14 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                   </Tooltip>
                 </TooltipProvider>
               )}
-              <span className="truncate max-w-[100px] sm:max-w-[160px] md:max-w-[200px] lg:max-w-none">{selectedLabel}</span>
-              <ChevronDown className="h-3 w-3 opacity-50 ml-1 flex-shrink-0" />
+              {/* Mobile: Show only first word, Desktop: Show full name */}
+              <span className="block sm:hidden truncate font-medium max-w-[60px]">
+                {selectedLabel.split(' ')[0]}
+              </span>
+              <span className="hidden sm:block truncate font-medium sm:max-w-[120px] md:max-w-[160px] lg:max-w-[200px] xl:max-w-none">
+                {selectedLabel}
+              </span>
+              <ChevronDown className="h-3 w-3 opacity-50 flex-shrink-0" />
             </div>
           </Button>
         </DropdownMenuTrigger>
@@ -542,7 +553,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
               /* No Subscription View */
               <div>
                 {/* Available Models Section - ONLY hardcoded free models */}
-                <div className="px-3 py-3 text-xs font-medium text-muted-foreground">
+                <div className="px-3 py-3 text-xs font-medium text-base-content/70">
                   Available Models
                 </div>
                 {/* Only show free models */}
@@ -574,12 +585,12 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                                   <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
                                 )}
                                 {(MODELS[model.id]?.recommended || false) && (
-                                  <span className="text-xs px-1.5 py-0.5 rounded-sm bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 font-medium">
+                                  <span className="text-xs px-1.5 py-0.5 rounded-sm bg-info/10 text-info font-medium">
                                     Recommended
                                   </span>
                                 )}
                                 {selectedModel === model.id && (
-                                  <Check className="h-4 w-4 text-blue-500" />
+                                  <Check className="h-4 w-4 text-info" />
                                 )}
                               </div>
                             </DropdownMenuItem>
@@ -596,8 +607,8 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                 }
 
                 {/* Premium Models Section */}
-                <div className="mt-4 border-t border-border pt-2">
-                  <div className="px-3 py-1.5 text-xs font-medium text-blue-500 flex items-center">
+                <div className="mt-4 border-t border-base-300 pt-2">
+                  <div className="px-3 py-1.5 text-xs font-medium text-info flex items-center">
                     <Crown className="h-3.5 w-3.5 mr-1.5" />
                     Premium Models
                   </div>
@@ -625,11 +636,11 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                                   <div className="flex items-center gap-2">
                                     {/* Show capabilities */}
                                     {MODELS[model.id]?.recommended && (
-                                      <span className="text-xs px-1.5 py-0.5 rounded-sm bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 font-medium whitespace-nowrap">
+                                      <span className="text-xs px-1.5 py-0.5 rounded-sm bg-info/10 text-info font-medium whitespace-nowrap">
                                         Recommended
                                       </span>
                                     )}
-                                    <Crown className="h-3.5 w-3.5 text-blue-500" />
+                                    <Crown className="h-3.5 w-3.5 text-info" />
                                   </div>
                                 </DropdownMenuItem>
                               </div>
@@ -648,7 +659,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                         <div className="rounded-xl bg-gradient-to-br from-blue-50/80 to-blue-200/70 dark:from-blue-950/40 dark:to-blue-900/30 shadow-sm border border-blue-200/50 dark:border-blue-800/50 p-3">
                           <div className="flex flex-col space-y-2">
                             <div className="flex items-center">
-                              <Crown className="h-4 w-4 text-blue-500 mr-2 flex-shrink-0" />
+                              <Crown className="h-4 w-4 text-info mr-2 flex-shrink-0" />
                               <div>
                                 <p className="text-sm font-medium">Unlock all models + higher limits</p>
                               </div>
@@ -671,7 +682,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
               /* Subscription or other status view */
               <div className='max-h-[320px] overflow-y-auto w-full'>
                 <div className="px-3 py-3 flex justify-between items-center">
-                  <span className="text-xs font-medium text-muted-foreground">All Models</span>
+                  <span className="text-xs font-medium text-base-content/70">All Models</span>
                   {isLocalMode() && (
                     <TooltipProvider>
                       <Tooltip>
@@ -725,16 +736,16 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                   .map((model, index) => renderModelOption(model, index))}
 
                 {uniqueModels.length === 0 && (
-                  <div className="text-sm text-center py-4 text-muted-foreground">
+                  <div className="text-sm text-center py-4 text-base-content/70">
                     No models match your search
                   </div>
                 )}
               </div>
             )}
           </div>
-          {!shouldDisplayAll && <div className="px-3 py-2 border-t border-border">
+          {!shouldDisplayAll && <div className="px-3 py-2 border-t border-base-300">
             <div className="relative flex items-center">
-              <Search className="absolute left-2.5 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+              <Search className="absolute left-2.5 h-3.5 w-3.5 text-base-content/60 pointer-events-none" />
               <input
                 ref={searchInputRef}
                 type="text"
@@ -742,7 +753,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchInputKeyDown}
-                className="w-full h-8 px-8 py-1 rounded-lg text-sm focus:outline-none bg-muted"
+                className="w-full h-8 px-8 py-1 rounded-lg text-sm focus:outline-none bg-base-100"
               />
             </div>
           </div>}
