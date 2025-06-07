@@ -1,0 +1,43 @@
+# Simplified docker-compose for Render deployment reference
+# This shows the expected environment variables for external services
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.render
+    ports:
+      - "8000:8000"
+    environment:
+      # Database
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      
+      # External Redis (for Render, use Redis Cloud or similar)
+      - REDIS_HOST=${REDIS_HOST}  # e.g., redis-12345.c1.us-east-1-1.ec2.cloud.redislabs.com
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SSL=${REDIS_SSL:-true}
+      
+      # LLM APIs
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      
+      # Daytona (for agent execution)
+      - DAYTONA_API_KEY=${DAYTONA_API_KEY}
+      - DAYTONA_SERVER_URL=${DAYTONA_SERVER_URL}
+      - DAYTONA_TARGET=${DAYTONA_TARGET}
+      
+      # Optional services
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
+      - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      
+      # Environment
+      - ENV_MODE=production
+      - LOG_LEVEL=INFO
+      
+    # No worker service for simplified Render deployment
+    # Workers should be handled by external queue service like Celery with Redis 

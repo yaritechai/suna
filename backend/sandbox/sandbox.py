@@ -70,7 +70,7 @@ async def get_or_start_sandbox(sandbox_id: str):
                     
                     try:
                         # Refresh sandbox state
-                                sandbox = daytona.get_current_sandbox(sandbox_id)
+                        sandbox = daytona.get_current_sandbox(sandbox_id)
                         if sandbox.instance.state == WorkspaceState.STARTED:
                             logger.info(f"Sandbox {sandbox_id} is now started after {elapsed_time}s")
                             break
