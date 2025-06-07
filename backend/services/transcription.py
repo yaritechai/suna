@@ -1,5 +1,8 @@
 import os
-import openai
+try:
+    import openai
+except ImportError:
+    openai = None
 import tempfile
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 from pydantic import BaseModel
