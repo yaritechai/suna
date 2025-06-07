@@ -1,32 +1,28 @@
 <div align="center">
 
-# Suna - Open Source Generalist AI Agent
+# Yari 2 - Open Source Generalist AI Agent
 
 (that acts on your behalf)
 
-![Suna Screenshot](frontend/public/banner.png)
+![Yari 2 Screenshot](frontend/public/banner.png)
 
-Suna is a fully open source AI assistant that helps you accomplish real-world tasks with ease. Through natural conversation, Suna becomes your digital companion for research, data analysis, and everyday challenges—combining powerful capabilities with an intuitive interface that understands what you need and delivers results.
+Yari 2 is a fully open source AI assistant that helps you accomplish real-world tasks with ease. Through natural conversation, Yari 2 becomes your digital companion for research, data analysis, and everyday challenges—combining powerful capabilities with an intuitive interface that understands what you need and delivers results.
 
-Suna's powerful toolkit includes seamless browser automation to navigate the web and extract data, file management for document creation and editing, web crawling and extended search capabilities, command-line execution for system tasks, website deployment, and integration with various APIs and services. These capabilities work together harmoniously, allowing Suna to solve your complex problems and automate workflows through simple conversations!
+Yari 2's powerful toolkit includes seamless browser automation to navigate the web and extract data, file management for document creation and editing, web crawling and extended search capabilities, command-line execution for system tasks, website deployment, and integration with various APIs and services. These capabilities work together harmoniously, allowing Yari 2 to solve your complex problems and automate workflows through simple conversations!
 
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue)](./license)
-[![Discord Follow](https://dcbadge.limes.pink/api/server/Py6pCBUUPw?style=flat)](https://discord.gg/Py6pCBUUPw)
-[![Twitter Follow](https://img.shields.io/twitter/follow/kortixai)](https://x.com/kortixai)
-[![GitHub Repo stars](https://img.shields.io/github/stars/kortix-ai/suna)](https://github.com/kortix-ai/suna)
-[![Issues](https://img.shields.io/github/issues/kortix-ai/suna)](https://github.com/kortix-ai/suna/labels/bug)
 
 </div>
 
 ## Table of Contents
 
-- [Suna Architecture](#project-architecture)
+- [Yari 2 Architecture](#project-architecture)
   - [Backend API](#backend-api)
   - [Frontend](#frontend)
   - [Agent Docker](#agent-docker)
   - [Supabase Database](#supabase-database)
 - [Use Cases](#use-cases)
-- [Self-Hosting](#self-hosting)
+- [Getting Started](#getting-started)
 - [Acknowledgements](#acknowledgements)
 - [License](#license)
 
@@ -34,7 +30,7 @@ Suna's powerful toolkit includes seamless browser automation to navigate the web
 
 ![Architecture Diagram](docs/images/diagram.png)
 
-Suna consists of four main components:
+Yari 2 consists of four main components:
 
 ### Backend API
 
@@ -78,44 +74,9 @@ Handles data persistence with authentication, user management, conversation hist
 
 12. **Scrape Forum Discussions** ([Watch](https://www.suna.so/share/7d7a5d93-a20d-48b0-82cc-e9a876e9fd04)) - _"I need to find the best beauty centers in Rome, but I want to find them by using open forums that speak about this topic. Go on Google, and scrape the forums by looking for beauty center discussions located in Rome. Then generate a list of 5 beauty centers with the best comments about them."_
 
-## Self-Hosting
+## Getting Started
 
-Suna can be self-hosted on your own infrastructure using our setup wizard. For a comprehensive guide to self-hosting Suna, please refer to our [Self-Hosting Guide](./docs/SELF-HOSTING.md).
-
-The setup process includes:
-
-- Setting up a Supabase project for database and authentication
-- Configuring Redis for caching and session management
-- Setting up Daytona for secure agent execution
-- Integrating with LLM providers (Anthropic, OpenAI, Groq, etc.)
-- Configuring web search and scraping capabilities
-
-### Quick Start
-
-1. **Clone the repository**:
-
-```bash
-git clone https://github.com/kortix-ai/suna.git
-cd suna
-```
-
-2. **Run the setup wizard**:
-
-```bash
-python setup.py
-```
-
-3. **Start or stop the containers**:
-
-```bash
-python start.py
-```
-
-### Manual Setup
-
-See the [Self-Hosting Guide](./docs/SELF-HOSTING.md) for detailed manual setup instructions.
-
-The wizard will guide you through all necessary steps to get your Suna instance up and running. For detailed instructions, troubleshooting tips, and advanced configuration options, see the [Self-Hosting Guide](./SELF-HOSTING.md).
+To get started with Yari 2, you'll need to set up the development environment. The application consists of a React frontend and Python backend that work together to provide the AI agent capabilities.
 
 ## Contributing
 
@@ -142,4 +103,4 @@ We welcome contributions from the community! Please see our [Contributing Guide]
 
 ## License
 
-Kortix Suna is licensed under the Apache License, Version 2.0. See [LICENSE](./LICENSE) for the full license text.
+Yari 2 is licensed under the Apache License, Version 2.0. See [LICENSE](./LICENSE) for the full license text.
