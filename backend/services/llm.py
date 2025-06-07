@@ -43,7 +43,11 @@ def setup_api_keys() -> None:
         if key:
             logger.debug(f"API key set for provider: {provider}")
         else:
-            logger.warning(f"No API key found for provider: {provider}")
+            # Only warn for required providers, debug for optional ones
+            if provider in ['OPENAI', 'ANTHROPIC']:
+                logger.warning(f"No API key found for provider: {provider}")
+            else:
+                logger.debug(f"No API key found for optional provider: {provider}")
 
     # Set up OpenRouter API base if not already set
     if config.OPENROUTER_API_KEY and config.OPENROUTER_API_BASE:
@@ -62,7 +66,8 @@ def setup_api_keys() -> None:
         os.environ['AWS_SECRET_ACCESS_KEY'] = aws_secret_key
         os.environ['AWS_REGION_NAME'] = aws_region
     else:
-        logger.warning(f"Missing AWS credentials for Bedrock integration - access_key: {bool(aws_access_key)}, secret_key: {bool(aws_secret_key)}, region: {aws_region}")
+        # AWS Bedrock is optional, so only log at debug level
+        logger.debug(f"AWS credentials not configured for optional Bedrock integration - access_key: {bool(aws_access_key)}, secret_key: {bool(aws_secret_key)}, region: {aws_region}")
 
 async def handle_error(error: Exception, attempt: int, max_attempts: int) -> None:
     """Handle API errors with appropriate delays and logging."""
