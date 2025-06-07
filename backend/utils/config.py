@@ -141,11 +141,11 @@ class Configuration:
     DAYTONA_SERVER_URL: str
     DAYTONA_TARGET: str
     
-    # Search and other API keys
-    TAVILY_API_KEY: str
-    RAPID_API_KEY: str
+    # Search and other API keys (optional for basic functionality)
+    TAVILY_API_KEY: Optional[str] = None
+    RAPID_API_KEY: Optional[str] = None
     CLOUDFLARE_API_TOKEN: Optional[str] = None
-    FIRECRAWL_API_KEY: str
+    FIRECRAWL_API_KEY: Optional[str] = None
     FIRECRAWL_URL: Optional[str] = "https://api.firecrawl.dev"
     
     # Stripe configuration

@@ -25,13 +25,10 @@ class SandboxWebSearchTool(SandboxToolsBase):
         self.firecrawl_api_key = config.FIRECRAWL_API_KEY
         self.firecrawl_url = config.FIRECRAWL_URL
         
-        if not self.tavily_api_key:
-            raise ValueError("TAVILY_API_KEY not found in configuration")
-        if not self.firecrawl_api_key:
-            raise ValueError("FIRECRAWL_API_KEY not found in configuration")
-
-        # Tavily asynchronous search client
-        self.tavily_client = AsyncTavilyClient(api_key=self.tavily_api_key)
+        # Initialize clients only if API keys are available
+        self.tavily_client = None
+        if self.tavily_api_key:
+            self.tavily_client = AsyncTavilyClient(api_key=self.tavily_api_key)
 
     @openapi_schema({
         "type": "function",
@@ -87,6 +84,10 @@ class SandboxWebSearchTool(SandboxToolsBase):
         Search the web using the Tavily API to find relevant and up-to-date information.
         """
         try:
+            # Check if Tavily API is available
+            if not self.tavily_client:
+                return self.fail_response("Web search is not available. TAVILY_API_KEY is not configured.")
+            
             # Ensure we have a valid query
             if not query or not isinstance(query, str):
                 return self.fail_response("A valid search query is required.")
@@ -188,6 +189,10 @@ class SandboxWebSearchTool(SandboxToolsBase):
         - urls: Multiple URLs to scrape, separated by commas
         """
         try:
+            # Check if Firecrawl API is available
+            if not self.firecrawl_api_key:
+                return self.fail_response("Web scraping is not available. FIRECRAWL_API_KEY is not configured.")
+            
             logging.info(f"Starting to scrape webpages: {urls}")
             
             # Ensure sandbox is initialized
