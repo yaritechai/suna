@@ -22,7 +22,15 @@ from agentpress.response_processor import (
 )
 from services.supabase import DBConnection
 from utils.logger import logger
-from langfuse.client import StatefulGenerationClient, StatefulTraceClient
+try:
+    from langfuse.client import StatefulGenerationClient, StatefulTraceClient
+except ImportError:
+    try:
+        from langfuse import StatefulGenerationClient, StatefulTraceClient
+    except ImportError:
+        # Fallback - make these optional
+        StatefulGenerationClient = None
+        StatefulTraceClient = None
 from services.langfuse import langfuse
 import datetime
 

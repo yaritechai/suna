@@ -19,7 +19,14 @@ from utils.logger import logger
 from agentpress.tool import ToolResult
 from agentpress.tool_registry import ToolRegistry
 from agentpress.xml_tool_parser import XMLToolParser
-from langfuse.client import StatefulTraceClient
+try:
+    from langfuse.client import StatefulTraceClient
+except ImportError:
+    try:
+        from langfuse import StatefulTraceClient
+    except ImportError:
+        # Fallback - make StatefulTraceClient optional
+        StatefulTraceClient = None
 from services.langfuse import langfuse
 from agentpress.utils.json_helpers import (
     ensure_dict, ensure_list, safe_json_parse, 
