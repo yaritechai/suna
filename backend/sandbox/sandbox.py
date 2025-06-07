@@ -41,8 +41,8 @@ async def get_or_start_sandbox(sandbox_id: str):
     
     try:
         # Try to get the current sandbox
-        try:
-            sandbox = daytona.get_current_sandbox(sandbox_id)
+    try:
+        sandbox = daytona.get_current_sandbox(sandbox_id)
             logger.debug(f"Found existing sandbox {sandbox_id}")
         except Exception as get_error:
             logger.error(f"Failed to get sandbox {sandbox_id}: {str(get_error)}")
@@ -70,7 +70,7 @@ async def get_or_start_sandbox(sandbox_id: str):
                     
                     try:
                         # Refresh sandbox state
-                        sandbox = daytona.get_current_sandbox(sandbox_id)
+                sandbox = daytona.get_current_sandbox(sandbox_id)
                         if sandbox.instance.state == WorkspaceState.STARTED:
                             logger.info(f"Sandbox {sandbox_id} is now started after {elapsed_time}s")
                             break
@@ -83,7 +83,7 @@ async def get_or_start_sandbox(sandbox_id: str):
                 
                 # Start supervisord in a session when restarting
                 try:
-                    start_supervisord_session(sandbox)
+                start_supervisord_session(sandbox)
                 except Exception as supervisord_error:
                     logger.warning(f"Failed to start supervisord session: {supervisord_error}")
                     # Continue anyway, supervisord failure shouldn't block the sandbox

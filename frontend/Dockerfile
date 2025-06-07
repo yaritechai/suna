@@ -24,11 +24,12 @@ RUN npm install
 # Copy the frontend code
 COPY . .
 
-ENV NEXT_PUBLIC_VERCEL_ENV production
+ENV NEXT_PUBLIC_VERCEL_ENV local
 
-RUN npm run build
+# Remove build step - will run in development mode
+# RUN npm run build
 
 EXPOSE 3000
 
 # Default command is dev, but can be overridden in docker-compose
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
