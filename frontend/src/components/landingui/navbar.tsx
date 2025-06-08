@@ -52,7 +52,7 @@ export const Navbar = () => {
   });
 
   return (
-    <motion.div ref={ref} className="w-full fixed top-2 inset-x-0 z-50">
+    <motion.div ref={ref} className="w-full fixed top-2 inset-x-0 z-[100]">
       <DesktopNav visible={visible} navItems={navItems} />
       <MobileNav visible={visible} navItems={navItems} />
     </motion.div>
@@ -83,7 +83,7 @@ const DesktopNav = ({ navItems, visible }: NavbarProps) => {
         damping: 30,
       }}
       className={cn(
-        "hidden lg:flex flex-row self-center items-center justify-between py-2 mx-auto px-6 rounded-full relative z-[60] backdrop-saturate-[1.8]"
+        "hidden lg:flex flex-row self-center items-center justify-between py-2 mx-auto px-6 rounded-full relative z-[110] backdrop-saturate-[1.8]"
       )}
     >
       <Logo />
@@ -159,7 +159,8 @@ const DesktopNav = ({ navItems, visible }: NavbarProps) => {
               <Button
                 as={Link}
                 href="/auth"
-                className="hidden md:block rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold hover:from-yellow-300 hover:to-orange-400 border-0 shadow-lg hover:shadow-xl transition-all duration-200"
+                variant="yellow"
+                className="hidden md:block relative z-[120]"
               >
                 Get Started
               </Button>
@@ -194,7 +195,7 @@ const MobileNav = ({ navItems, visible }: NavbarProps) => {
           damping: 30,
         }}
         className={cn(
-          "flex relative flex-col lg:hidden w-full justify-between items-center max-w-[calc(100vw-2rem)] mx-auto z-50 backdrop-saturate-[1.8] border border-solid border-white/40 rounded-full"
+          "flex relative flex-col lg:hidden w-full justify-between items-center max-w-[calc(100vw-2rem)] mx-auto z-[110] backdrop-saturate-[1.8] border border-solid border-white/40 rounded-full"
         )}
       >
         <div className="flex flex-row justify-between items-center w-full">

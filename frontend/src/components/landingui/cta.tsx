@@ -145,7 +145,7 @@ export default function CTA() {
   }, [controls, inView]);
 
   return (
-    <div className="bg-black w-full max-w-7xl mx-auto min-h-[80vh] md:min-h-[100dvh] flex items-center justify-center px-4 sm:px-6 lg:px-8 relative">
+    <div className="bg-zinc-950 w-full max-w-7xl mx-auto min-h-[80vh] md:min-h-[100dvh] flex items-center justify-center px-4 sm:px-6 lg:px-8 relative">
       <LineGradient position="left" />
       <motion.div
         ref={ref}
@@ -178,7 +178,8 @@ export default function CTA() {
           <Button
             as={Link}
             href="/auth"
-            className="h-10 md:h-12 lg:h-16 w-40 md:w-48 lg:w-56 rounded-full text-xs sm:text-sm md:text-base font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:from-yellow-300 hover:to-orange-400 transition-all duration-200 border-0 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            variant="yellow"
+            className="h-10 md:h-12 lg:h-16 w-40 md:w-48 lg:w-56 text-xs sm:text-sm md:text-base"
           >
             Get Started
           </Button>

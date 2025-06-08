@@ -37,15 +37,15 @@ export function Hero() {
       className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pt-20 md:px-8 md:pt-40"
     >
       {/* Premium Space Background */}
-      <div className="absolute inset-0 bg-black">
-        {/* Base gradient - pure blacks and muted grays */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-950 to-black" />
+      <div className="absolute inset-0 bg-zinc-950">
+        {/* Base gradient - matching CTA section background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-950 to-zinc-950" />
         
-        {/* Circular planet-like glow behind animation */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-yellow-400/10 via-orange-400/5 to-transparent rounded-full blur-3xl" />
+        {/* Large prominent yellow orb behind animation - positioned higher and more visible */}
+        <div className="absolute top-[35%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-yellow-400/20 via-yellow-500/10 via-orange-400/8 to-transparent rounded-full blur-3xl z-[5]" />
         
         {/* Animated vertical beams */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden z-[10]">
           {/* Beam 1 */}
           <motion.div
             className="absolute w-px h-full bg-gradient-to-b from-transparent via-yellow-400/30 to-transparent"
@@ -106,7 +106,7 @@ export function Hero() {
 
         {/* Subtle grid pattern */}
         <div 
-          className="absolute inset-0 opacity-5"
+          className="absolute inset-0 opacity-5 z-[8]"
           style={{
             backgroundImage: `
               linear-gradient(rgba(250, 204, 21, 0.05) 1px, transparent 1px),
@@ -117,27 +117,29 @@ export function Hero() {
         />
 
         {/* Floating particles */}
-        {Array.from({ length: 15 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-yellow-400/30 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.1, 0.6, 0.1],
-            }}
-            transition={{
-              duration: 4 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-            }}
-          />
-        ))}
+        <div className="absolute inset-0 z-[12]">
+          {Array.from({ length: 15 }).map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-yellow-400/30 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.1, 0.6, 0.1],
+              }}
+              transition={{
+                duration: 4 + Math.random() * 3,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+              }}
+            />
+          ))}
+        </div>
       </div>
-      <div className="text-balance relative z-20 mx-auto mb-4 mt-4 max-w-4xl text-center text-4xl font-semibold tracking-tight text-neutral-300 md:text-7xl">
+      <div className="text-balance relative z-[50] mx-auto mb-4 mt-4 max-w-4xl text-center text-4xl font-semibold tracking-tight md:text-7xl">
         <motion.h1
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -148,8 +150,8 @@ export function Hero() {
           }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className={cn(
-            "inline-block bg-gradient-to-r from-yellow-400 to-orange-500",
-            "bg-clip-text text-transparent"
+            "inline-block bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500",
+            "bg-clip-text text-transparent drop-shadow-lg"
           )}
         >
           AI Agents for Small Businesses
@@ -159,7 +161,7 @@ export function Hero() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2, delay: 0.5 }}
-        className="relative z-20 mx-auto mt-4 max-w-xl px-4 text-center text-base/6 text-gray-300 sm:text-lg"
+        className="relative z-[50] mx-auto mt-4 max-w-xl px-4 text-center text-base/6 text-gray-200 sm:text-lg"
       >
         Transform your business with intelligent AI Agents. 
         Do Research, draft proposals, and connect your tools.
@@ -168,12 +170,13 @@ export function Hero() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2, delay: 0.7 }}
-        className="mb-8 mt-6 sm:mb-10 sm:mt-8 flex w-full items-center justify-center px-4 sm:px-8 md:mb-20"
+        className="mb-8 mt-6 sm:mb-10 sm:mt-8 flex w-full items-center justify-center px-4 sm:px-8 md:mb-20 relative z-[50]"
       >
         <Button
           as={Link}
           href="/auth"
-          className="w-full sm:w-48 h-12 rounded-full flex items-center justify-center bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold hover:from-yellow-300 hover:to-orange-400 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 border-0"
+          variant="yellow"
+          className="w-full sm:w-48 h-12 relative z-[60]"
         >
           Get Started
         </Button>
@@ -183,7 +186,7 @@ export function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.9, ease: "easeOut" }}
         ref={containerRef}
-        className="relative mx-auto w-full max-w-6xl p-2 backdrop-blur-lg md:p-4"
+        className="relative mx-auto w-full max-w-6xl p-2 backdrop-blur-lg md:p-4 z-[40]"
       >
         <div className="rounded-[30px] relative">
           <GlowingEffect
@@ -195,9 +198,16 @@ export function Hero() {
             borderWidth={5}
             blur={10}
           />
-          <MacBrowserWindow>
-            <WireframeAnimation />
-          </MacBrowserWindow>
+          {/* Frosted Glass Border Wrapper */}
+          <div className="relative p-[6px] rounded-[28px] bg-gradient-to-br from-white/20 via-white/8 to-white/5 backdrop-blur-lg shadow-[0_16px_48px_rgba(0,0,0,0.5)] border border-white/15">
+            <div className="relative rounded-[22px] overflow-hidden backdrop-blur-md bg-gradient-to-b from-black/5 via-transparent to-black/40">
+              <MacBrowserWindow>
+                <WireframeAnimation />
+              </MacBrowserWindow>
+              {/* Bottom fade gradient */}
+              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent pointer-events-none rounded-b-[22px]"></div>
+            </div>
+          </div>
           <div
             className="absolute inset-0 rounded-[30px] pointer-events-none"
             style={{
@@ -213,16 +223,16 @@ export function Hero() {
 
 const MacBrowserWindow = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="bg-black/90 backdrop-blur-xl border border-gray-700/50 rounded-[20px] overflow-hidden shadow-2xl min-h-[500px]">
+    <div className="bg-black/80 backdrop-blur-xl rounded-[20px] overflow-hidden min-h-[500px] relative z-[45]">
       {/* Mac window controls */}
-      <div className="flex items-center px-4 py-3 bg-gray-900/50 border-b border-gray-700/30">
+      <div className="flex items-center px-4 py-3 bg-black/60 backdrop-blur-sm border-b border-white/10">
         <div className="flex space-x-2">
           <div className="w-3 h-3 bg-red-500 rounded-full"></div>
           <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
         </div>
         <div className="flex-1 mx-4">
-          <div className="bg-gray-800/50 rounded-lg px-3 py-1 text-xs text-gray-400 border border-gray-600/30">
+          <div className="bg-black/40 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-white/60 border border-white/20">
             yari.ai/agents/automation
           </div>
         </div>
@@ -296,14 +306,14 @@ const WireframeAnimation = () => {
   }, []);
 
   return (
-    <div className="p-6 h-[450px] relative bg-gradient-to-br from-gray-900/20 to-black/40">
+    <div className="p-6 h-[450px] relative bg-black/30 backdrop-blur-sm">
       {/* Status Bar */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
-          <span className="text-gray-300 text-sm font-mono">AI Agent Status</span>
+          <span className="text-white/80 text-sm font-mono">AI Agent Status</span>
         </div>
-        <div className="text-xs text-gray-500 font-mono">
+        <div className="text-xs text-white/50 font-mono">
           Step {currentStep + 1}/6
         </div>
       </div>
@@ -312,16 +322,16 @@ const WireframeAnimation = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
         {/* Left Panel - Search & Web Scraping */}
         <div className="space-y-4">
-          <div className="border border-gray-700/30 rounded-lg p-4 bg-gray-900/20 backdrop-blur-sm">
+          <div className="border border-white/10 rounded-lg p-4 bg-black/40 backdrop-blur-sm">
             <h3 className="text-sm font-semibold text-yellow-400 mb-3 flex items-center">
               <Search className="w-4 h-4 mr-2" />
               Web Research
             </h3>
             
             {/* Search Bar Animation */}
-            <div className="bg-gray-800/40 rounded-lg p-2 border border-gray-600/30 mb-3">
+            <div className="bg-black/50 backdrop-blur-sm rounded-lg p-2 border border-white/20 mb-3">
               <motion.div
-                className="text-gray-300 text-xs font-mono"
+                className="text-white/80 text-xs font-mono"
                 key={searchQuery}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -350,14 +360,14 @@ const WireframeAnimation = () => {
                   className="flex items-center space-x-2 py-1"
                 >
                   <Globe className="w-3 h-3 text-green-400" />
-                  <span className="text-xs text-gray-400">{result}</span>
+                  <span className="text-xs text-white/60">{result}</span>
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
 
           {/* Processing Animation */}
-          <div className="border border-gray-700/30 rounded-lg p-4 bg-gray-900/20 backdrop-blur-sm">
+          <div className="border border-white/10 rounded-lg p-4 bg-black/40 backdrop-blur-sm">
             <h3 className="text-sm font-semibold text-orange-400 mb-3 flex items-center">
               <Zap className="w-4 h-4 mr-2" />
               AI Processing
@@ -369,7 +379,7 @@ const WireframeAnimation = () => {
                   className={cn(
                     "flex items-center space-x-2 text-xs",
                     index === currentStep ? "text-yellow-400" : 
-                    index < currentStep ? "text-green-400" : "text-gray-500"
+                    index < currentStep ? "text-green-400" : "text-white/40"
                   )}
                   animate={index === currentStep ? { opacity: [0.5, 1, 0.5] } : {}}
                   transition={{ duration: 1, repeat: index === currentStep ? Infinity : 0 }}
@@ -379,7 +389,7 @@ const WireframeAnimation = () => {
                   ) : index === currentStep ? (
                     <div className="w-3 h-3 border border-yellow-400 rounded-full border-t-transparent animate-spin" />
                   ) : (
-                    <div className="w-3 h-3 border border-gray-600 rounded-full" />
+                    <div className="w-3 h-3 border border-white/30 rounded-full" />
                   )}
                   <span>{step}</span>
                 </motion.div>
@@ -390,7 +400,7 @@ const WireframeAnimation = () => {
 
         {/* Right Panel - Report Generation */}
         <div className="space-y-4">
-          <div className="border border-gray-700/30 rounded-lg p-4 bg-gray-900/20 backdrop-blur-sm h-full">
+          <div className="border border-white/10 rounded-lg p-4 bg-black/40 backdrop-blur-sm h-full">
             <h3 className="text-sm font-semibold text-green-400 mb-3 flex items-center">
               <FileText className="w-4 h-4 mr-2" />
               Generated Report
@@ -403,7 +413,7 @@ const WireframeAnimation = () => {
                 transition={{ duration: 0.5 }}
                 className="space-y-3"
               >
-                <div className="bg-gray-800/40 rounded p-3 border border-gray-600/30">
+                <div className="bg-black/50 backdrop-blur-sm rounded p-3 border border-white/20">
                   <h4 className="text-xs font-semibold text-white mb-2">Market Analysis Summary</h4>
                   <div className="space-y-2">
                     {reportData.map((item, index) => (
@@ -414,7 +424,7 @@ const WireframeAnimation = () => {
                         transition={{ delay: index * 0.2 }}
                         className="flex justify-between items-center"
                       >
-                        <span className="text-xs text-gray-400">{item.label}</span>
+                        <span className="text-xs text-white/60">{item.label}</span>
                         <span className="text-xs text-yellow-400 font-mono">{item.value}</span>
                       </motion.div>
                     ))}
@@ -422,10 +432,10 @@ const WireframeAnimation = () => {
                 </div>
 
                 {/* Chart Visualization */}
-                <div className="bg-gray-800/40 rounded p-3 border border-gray-600/30">
+                <div className="bg-black/50 backdrop-blur-sm rounded p-3 border border-white/20">
                   <div className="flex items-center mb-2">
-                    <BarChart3 className="w-3 h-3 text-gray-400 mr-2" />
-                    <span className="text-xs text-gray-300">Growth Projection</span>
+                    <BarChart3 className="w-3 h-3 text-white/60 mr-2" />
+                    <span className="text-xs text-white/80">Growth Projection</span>
                   </div>
                   <div className="flex items-end space-x-1 h-16">
                     {[40, 55, 70, 85, 95].map((height, index) => (
@@ -446,7 +456,7 @@ const WireframeAnimation = () => {
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="mt-4 p-3 bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-500/30 rounded-lg"
+                className="mt-4 p-3 bg-black/60 backdrop-blur-sm border border-green-500/30 rounded-lg"
               >
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-4 h-4 text-green-400" />
