@@ -41,21 +41,21 @@ export function FrequentlyAskedQuestions() {
   const [open, setOpen] = React.useState<string | null>(null);
 
   return (
-    <div className="w-full max-w-7xl mx-auto my-10 md:my-20 py-10 md:py-20 px-4 md:px-8">
+    <div className="w-full max-w-7xl mx-auto my-10 md:my-20 py-10 md:py-20 px-4 md:px-8 bg-white dark:bg-transparent transition-colors duration-300">
       <div className="text-balance relative z-20 mx-auto mb-4 max-w-4xl text-center">
         <h2
           className={cn(
-            "inline-block text-3xl md:text-6xl bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]",
-            "bg-clip-text text-transparent"
+            "inline-block text-3xl md:text-6xl bg-gradient-to-b from-gray-600 via-gray-900 to-gray-600 dark:bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]",
+            "bg-clip-text text-transparent transition-colors duration-300"
           )}
         >
           Frequently Asked Questions
         </h2>
       </div>
-      <p className="max-w-lg text-sm text-center mx-auto mt-4 text-neutral-400 px-4 md:px-0">
+      <p className="max-w-lg text-sm text-center mx-auto mt-4 text-gray-600 dark:text-neutral-400 px-4 md:px-0 transition-colors duration-300">
         Everything you need to know about Yari AI agents and how they can transform your business operations.
       </p>
-      <div className="mt-10 md:mt-20 max-w-3xl mx-auto divide-y divide-neutral-800">
+      <div className="mt-10 md:mt-20 max-w-3xl mx-auto divide-y divide-gray-200 dark:divide-neutral-800 transition-colors duration-300">
         {FAQs.map((faq, index) => (
           <FAQItem
             key={index}
@@ -85,7 +85,7 @@ const FAQItem = ({
 
   return (
     <motion.div
-      className="cursor-pointer py-4 md:py-6 hover:bg-neutral-900/30 rounded-lg px-4 transition-colors duration-200"
+      className="cursor-pointer py-4 md:py-6 hover:bg-gray-50 dark:hover:bg-neutral-900/30 rounded-lg px-4 transition-colors duration-200"
       onClick={() => {
         if (isOpen) {
           setOpen(null);
@@ -96,7 +96,7 @@ const FAQItem = ({
     >
       <div className="flex items-start justify-between">
         <div className="pr-8 md:pr-12">
-          <h3 className="text-base md:text-lg font-medium text-neutral-200 hover:text-yellow-400 transition-colors duration-200">
+          <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-neutral-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors duration-200">
             {question}
           </h3>
           <AnimatePresence mode="wait">
@@ -106,7 +106,7 @@ const FAQItem = ({
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="overflow-hidden text-sm md:text-base text-neutral-400 mt-2"
+                className="overflow-hidden text-sm md:text-base text-gray-700 dark:text-neutral-400 mt-2 transition-colors duration-200"
               >
                 <p>{answer}</p>
               </motion.div>
@@ -126,7 +126,7 @@ const FAQItem = ({
           >
             <ChevronRight className={cn(
               "absolute inset-0 h-5 w-5 md:h-6 md:w-6 transform transition-colors duration-200",
-              isOpen ? "text-yellow-400" : "text-neutral-500"
+              isOpen ? "text-yellow-500 dark:text-yellow-400" : "text-gray-500 dark:text-neutral-500"
             )} />
           </motion.div>
         </div>

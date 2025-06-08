@@ -124,7 +124,7 @@ const plans: Array<Plan> = [
 const MobileCard = ({ plan }: { plan: Plan }) => {
   return (
     <div className="mb-4 last:mb-0">
-      <div className="bg-neutral-900 rounded-xl p-4 border border-neutral-700">
+      <div className="bg-gray-100 dark:bg-neutral-900 rounded-xl p-4 border border-gray-300 dark:border-neutral-700 transition-colors duration-300">
         {plan.badge && (
           <div className="text-center -mt-8 mb-4">
             <span className="text-yellow-400 text-xs px-3 py-1 rounded-full bg-gradient-to-r from-yellow-400/20 to-orange-500/20 border border-yellow-400/30">
@@ -134,17 +134,17 @@ const MobileCard = ({ plan }: { plan: Plan }) => {
         )}
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="text-white font-semibold">{plan.name}</h3>
-            <p className="text-sm text-neutral-400">{plan.shortDescription}</p>
+            <h3 className="text-gray-900 dark:text-white font-semibold transition-colors duration-300">{plan.name}</h3>
+            <p className="text-sm text-gray-600 dark:text-neutral-400 transition-colors duration-300">{plan.shortDescription}</p>
           </div>
           <div className="text-right">
             {plan.originalPrice && (
-              <div className="text-xs text-neutral-500 line-through">
+              <div className="text-xs text-gray-500 dark:text-neutral-500 line-through transition-colors duration-300">
                 ${plan.originalPrice}
               </div>
             )}
-            <div className="text-xl font-bold text-white">${plan.price}</div>
-            <div className="text-xs text-neutral-400">{plan.period}</div>
+            <div className="text-xl font-bold text-gray-900 dark:text-white transition-colors duration-300">${plan.price}</div>
+            <div className="text-xs text-gray-600 dark:text-neutral-400 transition-colors duration-300">{plan.period}</div>
           </div>
         </div>
 
@@ -158,8 +158,8 @@ const MobileCard = ({ plan }: { plan: Plan }) => {
               )}
               <span
                 className={cn(
-                  "text-xs",
-                  feature.included ? "text-neutral-300" : "text-neutral-500"
+                  "text-xs transition-colors duration-300",
+                  feature.included ? "text-gray-700 dark:text-neutral-300" : "text-gray-500 dark:text-neutral-500"
                 )}
               >
                 {feature.text}
@@ -174,14 +174,14 @@ const MobileCard = ({ plan }: { plan: Plan }) => {
             "w-full py-2 text-sm rounded-lg border-0",
             plan.id === planType.pro
               ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold hover:from-yellow-300 hover:to-orange-400 shadow-lg hover:shadow-xl transition-all duration-200"
-              : "bg-gradient-to-b from-neutral-700 to-neutral-800 hover:from-neutral-600 hover:to-neutral-700 text-white"
+              : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-neutral-700 dark:to-neutral-800 hover:from-gray-200 hover:to-gray-300 dark:hover:from-neutral-600 dark:hover:to-neutral-700 text-gray-900 dark:text-white"
           )}
         >
           {plan.buttonText}
         </Button>
 
         {plan.subText && (
-          <p className="text-xs text-neutral-500 text-center mt-2">
+          <p className="text-xs text-gray-500 dark:text-neutral-500 text-center mt-2 transition-colors duration-300">
             {plan.subText}
           </p>
         )}
@@ -195,7 +195,7 @@ const DesktopCard = ({ plan }: { plan: Plan }) => {
   return (
     <div
       className={cn(
-        "rounded-3xl bg-neutral-900 p-8 ring-1 ring-neutral-700",
+        "rounded-3xl bg-gray-100 dark:bg-neutral-900 p-8 ring-1 ring-gray-300 dark:ring-neutral-700 transition-colors duration-300",
         plan.badge && "ring-2 ring-yellow-400/50 scale-105 transform"
       )}
     >
@@ -208,22 +208,22 @@ const DesktopCard = ({ plan }: { plan: Plan }) => {
       )}
       <div className="flex flex-col h-full">
         <div className="mb-8">
-          <div className="inline-flex items-center font-bold justify-center p-2 rounded-[10px] border border-neutral-600 bg-transparent">
-            <h3 className="text-sm text-white">{plan.name}</h3>
+          <div className="inline-flex items-center font-bold justify-center p-2 rounded-[10px] border border-gray-400 dark:border-neutral-600 bg-transparent transition-colors duration-300">
+            <h3 className="text-sm text-gray-900 dark:text-white transition-colors duration-300">{plan.name}</h3>
           </div>
           <div>
-            <p className="text-md text-neutral-400 my-4">
+            <p className="text-md text-gray-600 dark:text-neutral-400 my-4 transition-colors duration-300">
               {plan.shortDescription}
             </p>
           </div>
           <div className="mt-4">
             {plan.originalPrice && (
-              <span className="text-neutral-500 line-through mr-2">
+              <span className="text-gray-500 dark:text-neutral-500 line-through mr-2 transition-colors duration-300">
                 ${plan.originalPrice}
               </span>
             )}
-            <span className="text-5xl font-bold text-white">${plan.price}</span>
-            <span className="text-neutral-400 ml-2">{plan.period}</span>
+            <span className="text-5xl font-bold text-gray-900 dark:text-white transition-colors duration-300">${plan.price}</span>
+            <span className="text-gray-600 dark:text-neutral-400 ml-2 transition-colors duration-300">{plan.period}</span>
           </div>
         </div>
 
@@ -237,8 +237,8 @@ const DesktopCard = ({ plan }: { plan: Plan }) => {
               )}
               <span
                 className={cn(
-                  "text-sm",
-                  feature.included ? "text-neutral-300" : "text-neutral-500"
+                  "text-sm transition-colors duration-300",
+                  feature.included ? "text-gray-700 dark:text-neutral-300" : "text-gray-500 dark:text-neutral-500"
                 )}
               >
                 {feature.text}
@@ -254,13 +254,13 @@ const DesktopCard = ({ plan }: { plan: Plan }) => {
               "w-full py-3 rounded-xl border-0",
               plan.id === planType.pro
                 ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold hover:from-yellow-300 hover:to-orange-400 shadow-lg hover:shadow-xl transition-all duration-200"
-                : "bg-gradient-to-b from-neutral-700 to-neutral-800 hover:from-neutral-600 hover:to-neutral-700 text-white"
+                : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-neutral-700 dark:to-neutral-800 hover:from-gray-200 hover:to-gray-300 dark:hover:from-neutral-600 dark:hover:to-neutral-700 text-gray-900 dark:text-white"
             )}
           >
             {plan.buttonText}
           </Button>
           {plan.subText && (
-            <div className="text-sm text-neutral-500 text-center mt-4">
+            <div className="text-sm text-gray-500 dark:text-neutral-500 text-center mt-4 transition-colors duration-300">
               {plan.subText}
             </div>
           )}
@@ -302,10 +302,10 @@ export function Pricing() {
   return (
     <div
       id="pricing"
-      className="relative isolate w-full overflow-hidden px-4 py-16 md:py-40 pt-10 md:pt-60 lg:px-4"
+      className="relative isolate w-full overflow-hidden px-4 py-16 md:py-40 pt-10 md:pt-60 lg:px-4 bg-white dark:bg-transparent transition-colors duration-300"
     >
       {/* Yellow glow background */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-yellow-400/8 via-orange-400/4 to-transparent rounded-full blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-yellow-400/12 via-orange-400/6 to-transparent dark:from-yellow-400/8 dark:via-orange-400/4 dark:to-transparent rounded-full blur-3xl transition-colors duration-300" />
       {!isMobile && (
         <div className="pt-32 md:pt-48 mt-[600px]">
           <BackgroundShape />
@@ -325,8 +325,8 @@ export function Pricing() {
         >
           <h2
             className={cn(
-              "inline-block text-3xl md:text-6xl bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]",
-              "bg-clip-text text-transparent"
+              "inline-block text-3xl md:text-6xl bg-gradient-to-b from-gray-600 via-gray-900 to-gray-600 dark:bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]",
+              "bg-clip-text text-transparent transition-colors duration-300"
             )}
           >
             Simple, Transparent Pricing
@@ -334,7 +334,7 @@ export function Pricing() {
         </div>
         <p
           className={cn(
-            "text-sm text-neutral-400 mt-4 px-4",
+            "text-sm text-gray-600 dark:text-neutral-400 mt-4 px-4 transition-colors duration-300",
             isMobile ? "w-full" : "max-w-lg text-center mx-auto"
           )}
         >
@@ -347,6 +347,15 @@ export function Pricing() {
       {!isMobile && (
         <div
           className="absolute inset-0 rounded-[20px]"
+          style={{
+            background:
+              "linear-gradient(179.87deg, rgba(0, 0, 0, 0) 0.11%, rgba(255, 255, 255, 0.4) 69.48%, rgba(255, 255, 255, 0.8) 92.79%)",
+          }}
+        />
+      )}
+      {!isMobile && (
+        <div
+          className="absolute inset-0 rounded-[20px] dark:block hidden"
           style={{
             background:
               "linear-gradient(179.87deg, rgba(0, 0, 0, 0) 0.11%, rgba(0, 0, 0, 0.8) 69.48%, #000000 92.79%)",
@@ -364,43 +373,87 @@ function BackgroundShape() {
 
   return (
     <div className="absolute inset-0 overflow-hidden">
-      <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(255,255,255,0.1)]"
-        style={{
-          width: size,
-          height: size,
-          clipPath: "circle(50% at 50% 50%)",
-          background: `
-            radial-gradient(
-              circle at center,
-              rgba(40, 40, 40, 0.8) 0%,
-              rgba(20, 20, 20, 0.6) 30%,
-              rgba(0, 0, 0, 0.4) 70%
-            )
-          `,
-        }}
-      >
+      {/* Light mode background */}
+      <div className="block dark:hidden">
         <div
-          className="absolute inset-0 opacity-10"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-gray-200/30"
           style={{
-            backgroundImage: `
-              linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px)
+            width: size,
+            height: size,
+            clipPath: "circle(50% at 50% 50%)",
+            background: `
+              radial-gradient(
+                circle at center,
+                rgba(240, 240, 240, 0.8) 0%,
+                rgba(220, 220, 220, 0.6) 30%,
+                rgba(200, 200, 200, 0.4) 70%
+              )
             `,
-            backgroundSize: isMobile ? "20px 40px" : "60px 120px",
+          }}
+        >
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(100, 100, 100, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(100, 100, 100, 0.4) 1px, transparent 1px)
+              `,
+              backgroundSize: isMobile ? "20px 40px" : "60px 120px",
+            }}
+          />
+        </div>
+        <div
+          className="absolute bg-gray-100 z-2 left-1/2 top-1/2 
+            -translate-x-1/2 -translate-y-1/2 rounded-full 
+            border border-gray-300/30
+            shadow-[0_0_200px_80px_rgba(100,100,100,0.1)]"
+          style={{
+            width: innerSize,
+            height: innerSize,
           }}
         />
       </div>
-      <div
-        className="absolute bg-black z-2 left-1/2 top-1/2 
-          -translate-x-1/2 -translate-y-1/2 rounded-full 
-          border border-[rgba(255,255,255,0.1)]
-          shadow-[0_0_200px_80px_rgba(255,255,255,0.1)]"
-        style={{
-          width: innerSize,
-          height: innerSize,
-        }}
-      />
+
+      {/* Dark mode background */}
+      <div className="hidden dark:block">
+        <div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(255,255,255,0.1)]"
+          style={{
+            width: size,
+            height: size,
+            clipPath: "circle(50% at 50% 50%)",
+            background: `
+              radial-gradient(
+                circle at center,
+                rgba(40, 40, 40, 0.8) 0%,
+                rgba(20, 20, 20, 0.6) 30%,
+                rgba(0, 0, 0, 0.4) 70%
+              )
+            `,
+          }}
+        >
+          <div
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px)
+              `,
+              backgroundSize: isMobile ? "20px 40px" : "60px 120px",
+            }}
+          />
+        </div>
+        <div
+          className="absolute bg-black z-2 left-1/2 top-1/2 
+            -translate-x-1/2 -translate-y-1/2 rounded-full 
+            border border-[rgba(255,255,255,0.1)]
+            shadow-[0_0_200px_80px_rgba(255,255,255,0.1)]"
+          style={{
+            width: innerSize,
+            height: innerSize,
+          }}
+        />
+      </div>
     </div>
   );
 } 

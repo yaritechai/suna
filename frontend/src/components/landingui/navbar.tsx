@@ -11,6 +11,7 @@ import Link from "next/link";
 import React, { useRef, useState } from "react";
 import { Button } from "./button";
 import { Logo } from "./logo";
+import { ThemeToggle } from "@/components/home/theme-toggle";
 
 interface NavbarProps {
   navItems: {
@@ -67,15 +68,15 @@ const DesktopNav = ({ navItems, visible }: NavbarProps) => {
       onMouseLeave={() => setHoveredIndex(null)}
       animate={{
         backdropFilter: "blur(16px)",
-        background: visible ? "rgba(0, 0, 0, 0.7)" : "rgba(0, 0, 0, 0.4)",
-        width: visible ? "38%" : "80%",
+        background: visible ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.6)",
+        width: visible ? "42%" : "80%",
         height: visible ? "48px" : "64px",
         y: visible ? 8 : 0,
       }}
       initial={{
         width: "80%",
         height: "64px",
-        background: "rgba(0, 0, 0, 0.4)",
+        background: "rgba(255, 255, 255, 0.6)",
       }}
       transition={{
         type: "spring",
@@ -83,7 +84,8 @@ const DesktopNav = ({ navItems, visible }: NavbarProps) => {
         damping: 30,
       }}
       className={cn(
-        "hidden lg:flex flex-row self-center items-center justify-between py-2 mx-auto px-6 rounded-full relative z-[110] backdrop-saturate-[1.8]"
+        "hidden lg:flex flex-row self-center items-center justify-between py-2 mx-auto px-6 rounded-full relative z-[110] backdrop-saturate-[1.8] border border-gray-200/50 dark:border-white/20 transition-colors duration-300",
+        "bg-white/80 dark:bg-black/70"
       )}
     >
       <Logo />
@@ -101,20 +103,20 @@ const DesktopNav = ({ navItems, visible }: NavbarProps) => {
             className="relative"
           >
             <Link
-              className="text-white/90 relative px-3 py-1.5 transition-colors"
+              className="text-gray-800 dark:text-white/90 relative px-3 py-1.5 transition-colors duration-300"
               href={navItem.link}
             >
               <span className="relative z-10">{navItem.name}</span>
               {hoveredIndex === idx && (
                 <motion.div
                   layoutId="menu-hover"
-                  className="absolute inset-0 rounded-full bg-gradient-to-r from-white/10 to-white/20"
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-gray-200/50 to-gray-300/50 dark:from-white/10 dark:to-white/20 transition-colors duration-300"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{
                     opacity: 1,
                     scale: 1.1,
                     background:
-                      "radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 50%, transparent 100%)",
+                      "radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 50%, transparent 100%)",
                   }}
                   exit={{
                     opacity: 0,
@@ -135,6 +137,7 @@ const DesktopNav = ({ navItems, visible }: NavbarProps) => {
         ))}
       </motion.div>
       <div className="flex items-center gap-2">
+        <ThemeToggle />
         <AnimatePresence mode="popLayout" initial={false}>
           {!visible && (
             <motion.div
@@ -179,7 +182,7 @@ const MobileNav = ({ navItems, visible }: NavbarProps) => {
       <motion.div
         animate={{
           backdropFilter: "blur(16px)",
-          background: visible ? "rgba(0, 0, 0, 0.7)" : "rgba(0, 0, 0, 0.4)",
+          background: visible ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.6)",
           width: visible ? "80%" : "90%",
           y: visible ? 0 : 8,
           borderRadius: open ? "24px" : "full",
@@ -187,7 +190,7 @@ const MobileNav = ({ navItems, visible }: NavbarProps) => {
         }}
         initial={{
           width: "80%",
-          background: "rgba(0, 0, 0, 0.4)",
+          background: "rgba(255, 255, 255, 0.6)",
         }}
         transition={{
           type: "spring",
@@ -195,19 +198,23 @@ const MobileNav = ({ navItems, visible }: NavbarProps) => {
           damping: 30,
         }}
         className={cn(
-          "flex relative flex-col lg:hidden w-full justify-between items-center max-w-[calc(100vw-2rem)] mx-auto z-[110] backdrop-saturate-[1.8] border border-solid border-white/40 rounded-full"
+          "flex relative flex-col lg:hidden w-full justify-between items-center max-w-[calc(100vw-2rem)] mx-auto z-[110] backdrop-saturate-[1.8] border border-solid border-gray-200/50 dark:border-white/40 rounded-full transition-colors duration-300",
+          "bg-white/80 dark:bg-black/70"
         )}
       >
         <div className="flex flex-row justify-between items-center w-full">
           <Logo />
-          {open ? (
-            <X className="text-white/90" onClick={() => setOpen(!open)} />
-          ) : (
-            <Menu
-              className="text-white/90"
-              onClick={() => setOpen(!open)}
-            />
-          )}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            {open ? (
+              <X className="text-gray-800 dark:text-white/90 transition-colors duration-300" onClick={() => setOpen(!open)} />
+            ) : (
+              <Menu
+                className="text-gray-800 dark:text-white/90 transition-colors duration-300"
+                onClick={() => setOpen(!open)}
+              />
+            )}
+          </div>
         </div>
 
         <AnimatePresence>
@@ -230,7 +237,7 @@ const MobileNav = ({ navItems, visible }: NavbarProps) => {
                 stiffness: 400,
                 damping: 30,
               }}
-              className="flex rounded-3xl absolute top-16 bg-black/80 backdrop-blur-xl backdrop-saturate-[1.8] inset-x-0 z-50 flex-col items-start justify-start gap-4 w-full px-6 py-8"
+              className="flex rounded-3xl absolute top-16 bg-white/95 dark:bg-black/80 backdrop-blur-xl backdrop-saturate-[1.8] inset-x-0 z-50 flex-col items-start justify-start gap-4 w-full px-6 py-8 border border-gray-200/50 dark:border-white/20 transition-colors duration-300"
             >
               {navItems.map(
                 (navItem: { link: string; name: string }, idx: number) => (
@@ -238,7 +245,7 @@ const MobileNav = ({ navItems, visible }: NavbarProps) => {
                     key={`link=${idx}`}
                     href={navItem.link}
                     onClick={() => setOpen(false)}
-                    className="relative text-white/90 hover:text-white transition-colors"
+                    className="relative text-gray-800 dark:text-white/90 hover:text-gray-900 dark:hover:text-white transition-colors duration-300"
                   >
                     <motion.span className="block">{navItem.name}</motion.span>
                   </Link>

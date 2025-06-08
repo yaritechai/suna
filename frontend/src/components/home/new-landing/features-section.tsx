@@ -46,9 +46,9 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <div className="relative bg-black py-20 md:py-32">
+    <div className="relative bg-gray-50 dark:bg-black py-20 md:py-32">
       {/* Background pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8">
         {/* Section header */}
@@ -59,13 +59,13 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             Powerful Features for{' '}
             <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
               Modern Businesses
             </span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Everything you need to automate customer interactions and grow your business
           </p>
         </motion.div>
@@ -81,7 +81,7 @@ export function FeaturesSection() {
               viewport={{ once: true }}
               className="group relative"
             >
-              <div className="relative p-8 bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 hover:border-yellow-400/50 transition-all duration-300 h-full">
+              <div className="relative p-8 bg-white/80 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 hover:border-yellow-400/50 transition-all duration-300 h-full">
                 {/* Glow effect on hover */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-yellow-400/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 
@@ -94,10 +94,10 @@ export function FeaturesSection() {
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-yellow-400 transition-colors duration-300">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-yellow-400 transition-colors duration-300">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -114,7 +114,7 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center mt-16"
         >
-          <p className="text-gray-300 mb-8 text-lg">
+          <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg">
             Ready to transform your customer service?
           </p>
           <button className="px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold rounded-full hover:from-yellow-300 hover:to-orange-400 transition-all duration-200 transform hover:-translate-y-1 shadow-lg hover:shadow-xl">

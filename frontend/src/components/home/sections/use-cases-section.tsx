@@ -26,7 +26,7 @@ export function UseCasesSection() {
   return (
     <section
       id="use-cases"
-      className="flex flex-col items-center justify-center gap-10 pb-10 w-full relative"
+      className="flex flex-col items-center justify-center gap-10 pb-10 w-full relative bg-white dark:bg-transparent"
     >
       <SectionHeader>
         <h2 className="text-3xl md:text-4xl font-medium tracking-tighter text-center text-balance">
@@ -43,7 +43,7 @@ export function UseCasesSection() {
           {featuredUseCases.map((useCase: UseCase) => (
             <div
               key={useCase.id}
-              className="rounded-xl overflow-hidden relative h-fit min-[650px]:h-full flex flex-col md:shadow-[0px_61px_24px_-10px_rgba(0,0,0,0.01),0px_34px_20px_-8px_rgba(0,0,0,0.05),0px_15px_15px_-6px_rgba(0,0,0,0.09),0px_4px_8px_-2px_rgba(0,0,0,0.10),0px_0px_0px_1px_rgba(0,0,0,0.08)] bg-accent"
+              className="rounded-xl overflow-hidden relative h-fit min-[650px]:h-full flex flex-col md:shadow-[0px_61px_24px_-10px_rgba(0,0,0,0.01),0px_34px_20px_-8px_rgba(0,0,0,0.05),0px_15px_15px_-6px_rgba(0,0,0,0.09),0px_4px_8px_-2px_rgba(0,0,0,0.10),0px_0px_0px_1px_rgba(0,0,0,0.08)] dark:md:shadow-[0px_61px_24px_-10px_rgba(255,255,255,0.01),0px_34px_20px_-8px_rgba(255,255,255,0.05),0px_15px_15px_-6px_rgba(255,255,255,0.09),0px_4px_8px_-2px_rgba(255,255,255,0.10),0px_0px_0px_1px_rgba(255,255,255,0.08)] bg-gray-50/50 dark:bg-accent border border-gray-200/30 dark:border-transparent"
             >
               <div className="flex flex-col gap-4 p-4">
                 <div className="flex items-center gap-3">
@@ -69,9 +69,9 @@ export function UseCasesSection() {
               </div>
 
               <div className="mt-auto">
-                <hr className="border-border dark:border-white/20 m-0" />
+                <hr className="border-gray-200 dark:border-white/20 m-0" />
 
-                <div className="w-full h-[160px] bg-accent/10">
+                <div className="w-full h-[160px] bg-gray-100/50 dark:bg-accent/10">
                   <div className="relative w-full h-full overflow-hidden">
                     <img
                       src={

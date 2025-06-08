@@ -104,7 +104,7 @@ export function FourthBentoAnimation({
 
   return (
     <div
-      className="w-full h-full flex flex-col relative"
+      className="w-full h-full flex flex-col relative bg-gray-50/30 dark:bg-transparent transition-colors duration-300"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -176,7 +176,7 @@ export function FourthBentoAnimation({
       </div>
 
       {/* Days of the week */}
-      <div className="absolute top-4 left-0 right-0 flex justify-between max-w-md mx-auto px-8 text-sm text-gray-500">
+      <div className="absolute top-4 left-0 right-0 flex justify-between max-w-md mx-auto px-8 text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300">
         <span>Tue</span>
         <span>Wed</span>
         <span>Thu</span>
@@ -185,7 +185,7 @@ export function FourthBentoAnimation({
       </div>
 
       <motion.div
-        className="absolute top-10 w-[2px] h-[calc(100%-80px)] bg-gradient-to-b from-black dark:from-accent to-transparent z-10"
+        className="absolute top-10 w-[2px] h-[calc(100%-80px)] bg-gradient-to-b from-gray-600 dark:from-accent to-transparent z-10 transition-colors duration-300"
         style={{
           x: smoothX,
           translateX: '-50%',
@@ -200,7 +200,7 @@ export function FourthBentoAnimation({
         }}
       />
       <motion.div
-        className="absolute top-14 bg-black dark:bg-accent h-6 z-20 flex items-center justify-center text-xs p-2 rounded-md shadow-[0px_2.2px_6.6px_0px_rgba(18,43,105,0.04),0px_1.1px_2.2px_0px_rgba(18,43,105,0.08),0px_0px_0px_1.1px_rgba(18,43,105,0.08),0px_1.1px_0px_0px_rgba(255,255,255,0.20)_inset,0px_4.4px_6.6px_0px_rgba(255,255,255,0.01)_inset]"
+        className="absolute top-14 bg-gray-600 dark:bg-accent h-6 z-20 flex items-center justify-center text-xs p-2 rounded-md shadow-lg transition-colors duration-300"
         style={{
           x: smoothX,
           translateX: '-50%',

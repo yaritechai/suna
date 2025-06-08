@@ -10,7 +10,7 @@ import { Footer } from '@/components/landingui/footer';
 
 export default function Home() {
   return (
-    <main className="w-full bg-zinc-950">
+    <main className="w-full bg-white dark:bg-zinc-950 transition-colors duration-300">
       <Hero />
       <Features />
       <Testimonials />

@@ -37,18 +37,18 @@ export function Hero() {
       className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pt-20 md:px-8 md:pt-40"
     >
       {/* Premium Space Background */}
-      <div className="absolute inset-0 bg-zinc-950">
+      <div className="absolute inset-0 bg-gray-50 dark:bg-zinc-950 transition-colors duration-300">
         {/* Base gradient - matching CTA section background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-950 to-zinc-950" />
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-950 transition-colors duration-300" />
         
         {/* Large prominent yellow orb behind animation - positioned higher and more visible */}
-        <div className="absolute top-[35%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-yellow-400/20 via-yellow-500/10 via-orange-400/8 to-transparent rounded-full blur-3xl z-[5]" />
+        <div className="absolute top-[35%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-yellow-400/30 via-yellow-500/15 via-orange-400/12 dark:from-yellow-400/20 dark:via-yellow-500/10 dark:via-orange-400/8 to-transparent rounded-full blur-3xl z-[5] transition-opacity duration-300" />
         
         {/* Animated vertical beams */}
         <div className="absolute inset-0 overflow-hidden z-[10]">
           {/* Beam 1 */}
           <motion.div
-            className="absolute w-px h-full bg-gradient-to-b from-transparent via-yellow-400/30 to-transparent"
+            className="absolute w-px h-full bg-gradient-to-b from-transparent via-yellow-400/40 dark:via-yellow-400/30 to-transparent transition-colors duration-300"
             style={{ left: "15%" }}
             animate={{
               y: ["-100%", "100%"],
@@ -62,7 +62,7 @@ export function Hero() {
           />
           {/* Beam 2 */}
           <motion.div
-            className="absolute w-px h-full bg-gradient-to-b from-transparent via-orange-400/20 to-transparent"
+            className="absolute w-px h-full bg-gradient-to-b from-transparent via-orange-400/30 dark:via-orange-400/20 to-transparent transition-colors duration-300"
             style={{ left: "35%" }}
             animate={{
               y: ["100%", "-100%"],
@@ -76,7 +76,7 @@ export function Hero() {
           />
           {/* Beam 3 */}
           <motion.div
-            className="absolute w-px h-full bg-gradient-to-b from-transparent via-yellow-300/25 to-transparent"
+            className="absolute w-px h-full bg-gradient-to-b from-transparent via-yellow-300/35 dark:via-yellow-300/25 to-transparent transition-colors duration-300"
             style={{ left: "65%" }}
             animate={{
               y: ["-100%", "100%"],
@@ -90,7 +90,7 @@ export function Hero() {
           />
           {/* Beam 4 */}
           <motion.div
-            className="absolute w-px h-full bg-gradient-to-b from-transparent via-amber-400/15 to-transparent"
+            className="absolute w-px h-full bg-gradient-to-b from-transparent via-amber-400/25 dark:via-amber-400/15 to-transparent transition-colors duration-300"
             style={{ left: "85%" }}
             animate={{
               y: ["100%", "-100%"],
@@ -106,11 +106,11 @@ export function Hero() {
 
         {/* Subtle grid pattern */}
         <div 
-          className="absolute inset-0 opacity-5 z-[8]"
+          className="absolute inset-0 opacity-10 dark:opacity-5 z-[8] transition-opacity duration-300"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(250, 204, 21, 0.05) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(250, 204, 21, 0.05) 1px, transparent 1px)
+              linear-gradient(rgba(250, 204, 21, 0.08) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(250, 204, 21, 0.08) 1px, transparent 1px)
             `,
             backgroundSize: '50px 50px'
           }}
@@ -121,7 +121,7 @@ export function Hero() {
           {Array.from({ length: 15 }).map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-yellow-400/30 rounded-full"
+              className="absolute w-1 h-1 bg-yellow-400/40 dark:bg-yellow-400/30 rounded-full transition-colors duration-300"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
@@ -161,7 +161,7 @@ export function Hero() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2, delay: 0.5 }}
-        className="relative z-[50] mx-auto mt-4 max-w-xl px-4 text-center text-base/6 text-gray-200 sm:text-lg"
+        className="relative z-[50] mx-auto mt-4 max-w-xl px-4 text-center text-base/6 text-gray-600 dark:text-gray-200 sm:text-lg transition-colors duration-300"
       >
         Transform your business with intelligent AI Agents. 
         Do Research, draft proposals, and connect your tools.
@@ -205,14 +205,14 @@ export function Hero() {
                 <WireframeAnimation />
               </MacBrowserWindow>
               {/* Bottom fade gradient */}
-              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent pointer-events-none rounded-b-[22px]"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50 via-gray-50/60 dark:from-zinc-950 dark:via-zinc-950/60 to-transparent pointer-events-none rounded-b-[22px] transition-colors duration-300"></div>
             </div>
           </div>
           <div
             className="absolute inset-0 rounded-[30px] pointer-events-none"
             style={{
               background:
-                "linear-gradient(179.87deg, rgba(0, 0, 0, 0) 0.11%, rgba(0, 0, 0, 0.3) 69.48%, rgba(0, 0, 0, 0.6) 92.79%)",
+                "linear-gradient(179.87deg, rgba(0, 0, 0, 0) 0.11%, rgba(0, 0, 0, 0.15) 69.48%, rgba(0, 0, 0, 0.3) 92.79%)",
             }}
           />
         </div>
@@ -223,16 +223,16 @@ export function Hero() {
 
 const MacBrowserWindow = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="bg-black/80 backdrop-blur-xl rounded-[20px] overflow-hidden min-h-[500px] relative z-[45]">
+    <div className="bg-white/95 dark:bg-black/80 backdrop-blur-xl rounded-[20px] overflow-hidden min-h-[500px] relative z-[45] shadow-2xl transition-colors duration-300">
       {/* Mac window controls */}
-      <div className="flex items-center px-4 py-3 bg-black/60 backdrop-blur-sm border-b border-white/10">
+      <div className="flex items-center px-4 py-3 bg-gray-50/80 dark:bg-black/60 backdrop-blur-sm border-b border-gray-200/50 dark:border-white/10 transition-colors duration-300">
         <div className="flex space-x-2">
           <div className="w-3 h-3 bg-red-500 rounded-full"></div>
           <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
         </div>
         <div className="flex-1 mx-4">
-          <div className="bg-black/40 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-white/60 border border-white/20">
+          <div className="bg-gray-100 dark:bg-black/40 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-gray-600 dark:text-white/60 border border-gray-300/50 dark:border-white/20 transition-colors duration-300">
             yari.ai/agents/automation
           </div>
         </div>
@@ -306,14 +306,14 @@ const WireframeAnimation = () => {
   }, []);
 
   return (
-    <div className="p-6 h-[450px] relative bg-black/30 backdrop-blur-sm">
+    <div className="p-6 h-[450px] relative bg-gray-50/50 dark:bg-black/30 backdrop-blur-sm transition-colors duration-300">
       {/* Status Bar */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
-          <span className="text-white/80 text-sm font-mono">AI Agent Status</span>
+          <span className="text-gray-700 dark:text-white/80 text-sm font-mono transition-colors duration-300">AI Agent Status</span>
         </div>
-        <div className="text-xs text-white/50 font-mono">
+        <div className="text-xs text-gray-500 dark:text-white/50 font-mono transition-colors duration-300">
           Step {currentStep + 1}/6
         </div>
       </div>
@@ -322,16 +322,16 @@ const WireframeAnimation = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
         {/* Left Panel - Search & Web Scraping */}
         <div className="space-y-4">
-          <div className="border border-white/10 rounded-lg p-4 bg-black/40 backdrop-blur-sm">
-            <h3 className="text-sm font-semibold text-yellow-400 mb-3 flex items-center">
+          <div className="border border-gray-200 dark:border-white/10 rounded-lg p-4 bg-white/60 dark:bg-black/40 backdrop-blur-sm shadow-sm transition-colors duration-300">
+            <h3 className="text-sm font-semibold text-yellow-500 dark:text-yellow-400 mb-3 flex items-center transition-colors duration-300">
               <Search className="w-4 h-4 mr-2" />
               Web Research
             </h3>
             
             {/* Search Bar Animation */}
-            <div className="bg-black/50 backdrop-blur-sm rounded-lg p-2 border border-white/20 mb-3">
+            <div className="bg-gray-100 dark:bg-black/50 backdrop-blur-sm rounded-lg p-2 border border-gray-300/50 dark:border-white/20 mb-3 transition-colors duration-300">
               <motion.div
-                className="text-white/80 text-xs font-mono"
+                className="text-gray-700 dark:text-white/80 text-xs font-mono transition-colors duration-300"
                 key={searchQuery}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -359,16 +359,16 @@ const WireframeAnimation = () => {
                   transition={{ delay: index * 0.2 }}
                   className="flex items-center space-x-2 py-1"
                 >
-                  <Globe className="w-3 h-3 text-green-400" />
-                  <span className="text-xs text-white/60">{result}</span>
+                  <Globe className="w-3 h-3 text-green-500 dark:text-green-400 transition-colors duration-300" />
+                  <span className="text-xs text-gray-600 dark:text-white/60 transition-colors duration-300">{result}</span>
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
 
           {/* Processing Animation */}
-          <div className="border border-white/10 rounded-lg p-4 bg-black/40 backdrop-blur-sm">
-            <h3 className="text-sm font-semibold text-orange-400 mb-3 flex items-center">
+          <div className="border border-gray-200 dark:border-white/10 rounded-lg p-4 bg-white/60 dark:bg-black/40 backdrop-blur-sm shadow-sm transition-colors duration-300">
+            <h3 className="text-sm font-semibold text-orange-500 dark:text-orange-400 mb-3 flex items-center transition-colors duration-300">
               <Zap className="w-4 h-4 mr-2" />
               AI Processing
             </h3>
@@ -377,9 +377,9 @@ const WireframeAnimation = () => {
                 <motion.div
                   key={index}
                   className={cn(
-                    "flex items-center space-x-2 text-xs",
-                    index === currentStep ? "text-yellow-400" : 
-                    index < currentStep ? "text-green-400" : "text-white/40"
+                    "flex items-center space-x-2 text-xs transition-colors duration-300",
+                    index === currentStep ? "text-yellow-500 dark:text-yellow-400" : 
+                    index < currentStep ? "text-green-500 dark:text-green-400" : "text-gray-400 dark:text-white/40"
                   )}
                   animate={index === currentStep ? { opacity: [0.5, 1, 0.5] } : {}}
                   transition={{ duration: 1, repeat: index === currentStep ? Infinity : 0 }}
@@ -387,9 +387,9 @@ const WireframeAnimation = () => {
                   {index < currentStep ? (
                     <CheckCircle className="w-3 h-3" />
                   ) : index === currentStep ? (
-                    <div className="w-3 h-3 border border-yellow-400 rounded-full border-t-transparent animate-spin" />
+                    <div className="w-3 h-3 border border-yellow-500 dark:border-yellow-400 rounded-full border-t-transparent animate-spin" />
                   ) : (
-                    <div className="w-3 h-3 border border-white/30 rounded-full" />
+                    <div className="w-3 h-3 border border-gray-300 dark:border-white/30 rounded-full" />
                   )}
                   <span>{step}</span>
                 </motion.div>
@@ -400,8 +400,8 @@ const WireframeAnimation = () => {
 
         {/* Right Panel - Report Generation */}
         <div className="space-y-4">
-          <div className="border border-white/10 rounded-lg p-4 bg-black/40 backdrop-blur-sm h-full">
-            <h3 className="text-sm font-semibold text-green-400 mb-3 flex items-center">
+          <div className="border border-gray-200 dark:border-white/10 rounded-lg p-4 bg-white/60 dark:bg-black/40 backdrop-blur-sm h-full shadow-sm transition-colors duration-300">
+            <h3 className="text-sm font-semibold text-green-500 dark:text-green-400 mb-3 flex items-center transition-colors duration-300">
               <FileText className="w-4 h-4 mr-2" />
               Generated Report
             </h3>
@@ -413,8 +413,8 @@ const WireframeAnimation = () => {
                 transition={{ duration: 0.5 }}
                 className="space-y-3"
               >
-                <div className="bg-black/50 backdrop-blur-sm rounded p-3 border border-white/20">
-                  <h4 className="text-xs font-semibold text-white mb-2">Market Analysis Summary</h4>
+                <div className="bg-gray-100 dark:bg-black/50 backdrop-blur-sm rounded p-3 border border-gray-300/50 dark:border-white/20 transition-colors duration-300">
+                  <h4 className="text-xs font-semibold text-gray-800 dark:text-white mb-2 transition-colors duration-300">Market Analysis Summary</h4>
                   <div className="space-y-2">
                     {reportData.map((item, index) => (
                       <motion.div
@@ -424,18 +424,18 @@ const WireframeAnimation = () => {
                         transition={{ delay: index * 0.2 }}
                         className="flex justify-between items-center"
                       >
-                        <span className="text-xs text-white/60">{item.label}</span>
-                        <span className="text-xs text-yellow-400 font-mono">{item.value}</span>
+                        <span className="text-xs text-gray-600 dark:text-white/60 transition-colors duration-300">{item.label}</span>
+                        <span className="text-xs text-yellow-500 dark:text-yellow-400 font-mono transition-colors duration-300">{item.value}</span>
                       </motion.div>
                     ))}
                   </div>
                 </div>
 
                 {/* Chart Visualization */}
-                <div className="bg-black/50 backdrop-blur-sm rounded p-3 border border-white/20">
+                <div className="bg-gray-100 dark:bg-black/50 backdrop-blur-sm rounded p-3 border border-gray-300/50 dark:border-white/20 transition-colors duration-300">
                   <div className="flex items-center mb-2">
-                    <BarChart3 className="w-3 h-3 text-white/60 mr-2" />
-                    <span className="text-xs text-white/80">Growth Projection</span>
+                    <BarChart3 className="w-3 h-3 text-gray-600 dark:text-white/60 mr-2 transition-colors duration-300" />
+                    <span className="text-xs text-gray-700 dark:text-white/80 transition-colors duration-300">Growth Projection</span>
                   </div>
                   <div className="flex items-end space-x-1 h-16">
                     {[40, 55, 70, 85, 95].map((height, index) => (
@@ -456,11 +456,11 @@ const WireframeAnimation = () => {
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="mt-4 p-3 bg-black/60 backdrop-blur-sm border border-green-500/30 rounded-lg"
+                className="mt-4 p-3 bg-white/80 dark:bg-black/60 backdrop-blur-sm border border-green-500/50 dark:border-green-500/30 rounded-lg transition-colors duration-300"
               >
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-green-400" />
-                  <span className="text-xs text-green-400 font-semibold">Report Ready for Download</span>
+                  <CheckCircle className="w-4 h-4 text-green-500 dark:text-green-400 transition-colors duration-300" />
+                  <span className="text-xs text-green-600 dark:text-green-400 font-semibold transition-colors duration-300">Report Ready for Download</span>
                 </div>
               </motion.div>
             )}

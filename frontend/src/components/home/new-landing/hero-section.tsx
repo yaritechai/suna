@@ -70,12 +70,12 @@ export function HeroSection() {
   }, [currentMessageIndex]);
 
   return (
-    <div className="relative min-h-screen bg-black flex items-center justify-center overflow-hidden px-4 pt-20 md:px-8">
+    <div className="relative min-h-screen bg-gray-50 dark:bg-black flex items-center justify-center overflow-hidden px-4 pt-20 md:px-8">
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-black dark:via-gray-900 dark:to-black"></div>
       
       {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
         {/* Left side - Content */}
@@ -91,11 +91,11 @@ export function HeroSection() {
               <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center">
                 <span className="text-black font-bold text-sm">Y</span>
               </div>
-              <span className="text-white text-xl font-semibold">Yari</span>
+              <span className="text-gray-900 dark:text-white text-xl font-semibold">Yari</span>
             </div>
 
             {/* Main headline */}
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white leading-tight">
               AI Chatbots for{' '}
               <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
                 Small Business
@@ -103,7 +103,7 @@ export function HeroSection() {
             </h1>
 
             {/* Description */}
-            <p className="text-xl text-gray-300 max-w-xl leading-relaxed">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-xl leading-relaxed">
               Transform your customer service with intelligent AI chatbots. 
               Automate responses, capture leads, and grow your business 24/7.
             </p>
@@ -116,7 +116,7 @@ export function HeroSection() {
               >
                 Start Chatting →
               </Link>
-              <button className="px-8 py-4 border border-gray-600 text-white rounded-full hover:border-gray-400 transition-all duration-200 transform hover:-translate-y-1">
+              <button className="px-8 py-4 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-full hover:border-gray-400 dark:hover:border-gray-400 transition-all duration-200 transform hover:-translate-y-1">
                 Watch Demo
               </button>
             </div>
@@ -130,15 +130,15 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="relative"
         >
-          <div className="bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-gray-700/50 overflow-hidden shadow-2xl">
+          <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-2xl">
             {/* Chat header */}
-            <div className="bg-gray-800/90 px-6 py-4 border-b border-gray-700/50">
+            <div className="bg-gray-100/90 dark:bg-gray-800/90 px-6 py-4 border-b border-gray-200/50 dark:border-gray-700/50">
               <div className="flex items-center gap-3">
                 <div className="flex gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500"></div>
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
-                <span className="text-white font-medium ml-4">Live Chat</span>
+                <span className="text-gray-900 dark:text-white font-medium ml-4">Live Chat</span>
               </div>
             </div>
 
@@ -156,7 +156,7 @@ export function HeroSection() {
                     className={`max-w-[80%] px-4 py-3 rounded-lg ${
                       message.type === 'user'
                         ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black'
-                        : 'bg-gray-700/80 text-white'
+                        : 'bg-gray-200 dark:bg-gray-700/80 text-gray-900 dark:text-white'
                     }`}
                   >
                     <p className="text-sm">{message.content}</p>
@@ -171,13 +171,13 @@ export function HeroSection() {
                   animate={{ opacity: 1 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-gray-700/80 text-white px-4 py-3 rounded-lg">
+                  <div className="bg-gray-200 dark:bg-gray-700/80 text-gray-900 dark:text-white px-4 py-3 rounded-lg">
                     <div className="flex items-center gap-1">
-                      <span className="text-sm text-gray-300">AI is typing</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-300">AI is typing</span>
                       <div className="flex gap-1 ml-2">
-                        <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                        <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-1 h-1 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce"></div>
+                        <div className="w-1 h-1 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-1 h-1 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                       </div>
                     </div>
                   </div>
@@ -186,12 +186,12 @@ export function HeroSection() {
             </div>
 
             {/* Chat input */}
-            <div className="p-4 border-t border-gray-700/50">
+            <div className="p-4 border-t border-gray-200/50 dark:border-gray-700/50">
               <div className="flex gap-3">
                 <input
                   type="text"
                   placeholder="Type a message..."
-                  className="flex-1 bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400"
+                  className="flex-1 bg-gray-100/50 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-yellow-400"
                   disabled
                 />
                 <button className="px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-black rounded-lg font-medium hover:from-yellow-300 hover:to-orange-400 transition-all duration-200">

@@ -145,7 +145,7 @@ export default function CTA() {
   }, [controls, inView]);
 
   return (
-    <div className="bg-zinc-950 w-full max-w-7xl mx-auto min-h-[80vh] md:min-h-[100dvh] flex items-center justify-center px-4 sm:px-6 lg:px-8 relative">
+    <div className="bg-gray-100 dark:bg-zinc-950 w-full max-w-7xl mx-auto min-h-[80vh] md:min-h-[100dvh] flex items-center justify-center px-4 sm:px-6 lg:px-8 relative transition-colors duration-300">
       <LineGradient position="left" />
       <motion.div
         ref={ref}
@@ -157,14 +157,14 @@ export default function CTA() {
           <h2
             className={cn(
               "inline-block text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold",
-              "bg-gradient-to-b from-[#3B3B3B] via-[#FFFFFF] to-[#3B3B3B]",
+              "bg-gradient-to-b from-gray-600 via-gray-900 to-gray-600 dark:from-[#3B3B3B] dark:via-[#FFFFFF] dark:to-[#3B3B3B]",
               "bg-clip-text text-transparent",
-              "px-4 md:px-8"
+              "px-4 md:px-8 transition-colors duration-300"
             )}
           >
             Ready to Transform Your Business with AI Agents?
           </h2>
-          <p className="max-w-2xl text-xs sm:text-sm md:text-base text-neutral-400 text-center mx-auto my-4 md:my-6 lg:my-8 px-4">
+          <p className="max-w-2xl text-xs sm:text-sm md:text-base text-gray-600 dark:text-neutral-400 text-center mx-auto my-4 md:my-6 lg:my-8 px-4 transition-colors duration-300">
             Join thousands of businesses already using Yari to automate tasks, boost productivity, and scale their operations. Start free and experience the power of generalist AI agents that actually get work done.
           </p>
         </div>
@@ -190,7 +190,7 @@ export default function CTA() {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="mt-6 text-center"
         >
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-gray-500 dark:text-neutral-500 transition-colors duration-300">
             Free forever plan • No credit card required • Set up in minutes
           </p>
         </motion.div>

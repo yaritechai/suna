@@ -23,19 +23,19 @@ export function Features() {
   return (
     <div
       id="features"
-      className="w-full max-w-7xl mx-auto py-4 px-4 md:px-8 md:my-20 md:py-20"
+      className="w-full max-w-7xl mx-auto py-4 px-4 md:px-8 md:my-20 md:py-20 bg-white dark:bg-transparent transition-colors duration-300"
     >
-      <div className="text-balance relative z-20 mx-auto mb-4 max-w-4xl text-center text-lg font-semibold tracking-tight text-neutral-300 md:text-3xl">
+      <div className="text-balance relative z-20 mx-auto mb-4 max-w-4xl text-center text-lg font-semibold tracking-tight text-gray-600 dark:text-neutral-300 md:text-3xl transition-colors duration-300">
         <h2
           className={cn(
-            "inline-block text-3xl md:text-6xl bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]",
-            "bg-clip-text text-transparent"
+            "inline-block text-3xl md:text-6xl bg-gradient-to-b from-gray-600 via-gray-900 to-gray-600 dark:bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]",
+            "bg-clip-text text-transparent transition-colors duration-300"
           )}
         >
           Features & Benefits
         </h2>
       </div>
-      <p className="max-w-lg text-sm text-center mx-auto mt-4 text-neutral-400">
+      <p className="max-w-lg text-sm text-center mx-auto mt-4 text-gray-600 dark:text-neutral-400 transition-colors duration-300">
         Powerful AI agents that go beyond chatbots - they connect to your tools, perform complex tasks, and work autonomously to grow your business.
       </p>
       <div className="mt-20 grid cols-1 lg:grid-cols-5 gap-4 auto-rows-[25rem] max-w-3xl mx-auto lg:max-w-none">
@@ -157,7 +157,7 @@ const CardTitle = ({
   return (
     <h3
       className={cn(
-        "inline-block text-xl md:text-4xl bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]  bg-clip-text text-transparent",
+        "inline-block text-xl md:text-4xl bg-gradient-to-b from-gray-600 via-gray-900 to-gray-600 dark:bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)] bg-clip-text text-transparent transition-colors duration-300",
         className
       )}
     >
@@ -176,7 +176,7 @@ const CardDescription = ({
   return (
     <p
       className={cn(
-        "font-sans max-w-sm text-sm font-normal tracking-tight mt-2 text-neutral-400",
+        "font-sans max-w-sm text-sm font-normal tracking-tight mt-2 text-gray-600 dark:text-neutral-400 transition-colors duration-300",
         className
       )}
     >
@@ -196,7 +196,7 @@ const Card = ({
     <motion.div
       whileHover="animate"
       className={cn(
-        "group relative isolate flex flex-col rounded-2xl bg-neutral-900 shadow-[0_1px_1px_rgba(0,0,0,0.05),0_4px_6px_rgba(34,42,53,0.04),0_24px_68px_rgba(47,48,55,0.05),0_2px_3px_rgba(0,0,0,0.04)] overflow-hidden",
+        "group relative isolate flex flex-col rounded-2xl bg-gray-100 dark:bg-neutral-900 shadow-[0_1px_1px_rgba(0,0,0,0.05),0_4px_6px_rgba(34,42,53,0.04),0_24px_68px_rgba(47,48,55,0.05),0_2px_3px_rgba(0,0,0,0.04)] overflow-hidden transition-colors duration-300",
         className
       )}
     >

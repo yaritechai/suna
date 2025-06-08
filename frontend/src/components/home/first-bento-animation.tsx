@@ -45,9 +45,9 @@ export function FirstBentoAnimation() {
   return (
     <div
       ref={ref}
-      className="w-full h-full p-4 flex flex-col items-center justify-center gap-5"
+      className="w-full h-full p-4 flex flex-col items-center justify-center gap-5 bg-gray-50/30 dark:bg-transparent transition-colors duration-300"
     >
-      <div className="pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-t from-background to-transparent z-20"></div>
+      <div className="pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-t from-white dark:from-gray-900 to-transparent z-20 transition-colors duration-300"></div>
       <motion.div
         className="max-w-md mx-auto w-full flex flex-col gap-2"
         animate={{
@@ -61,7 +61,7 @@ export function FirstBentoAnimation() {
       >
         <div className="flex items-end justify-end gap-3">
           <motion.div
-            className="max-w-[280px] bg-secondary text-white p-4 rounded-2xl ml-auto shadow-[0_0_10px_rgba(0,0,0,0.05)]"
+            className="max-w-[280px] bg-gray-600 dark:bg-secondary text-white p-4 rounded-2xl ml-auto shadow-lg transition-colors duration-300"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{
@@ -74,7 +74,7 @@ export function FirstBentoAnimation() {
               everyone. Any suggestions for finding an optimal time slot?
             </p>
           </motion.div>
-          <div className="flex items-center bg-background rounded-full w-fit border border-border flex-shrink-0">
+          <div className="flex items-center bg-white dark:bg-background rounded-full w-fit border border-gray-200 dark:border-border flex-shrink-0 transition-colors duration-300">
             <img
               src="https://randomuser.me/api/portraits/women/79.jpg"
               alt="User Avatar"
@@ -83,7 +83,7 @@ export function FirstBentoAnimation() {
           </div>
         </div>
         <div className="flex items-start gap-2">
-          <div className="flex items-center bg-background rounded-full size-10 flex-shrink-0 justify-center shadow-[0_0_10px_rgba(0,0,0,0.05)] border border-border">
+          <div className="flex items-center bg-white dark:bg-background rounded-full size-10 flex-shrink-0 justify-center shadow-lg border border-gray-200 dark:border-border transition-colors duration-300">
             <Icons.logo className="size-4" />
           </div>
 
@@ -92,7 +92,7 @@ export function FirstBentoAnimation() {
               {!shouldAnimate ? (
                 <motion.div
                   key="dots"
-                  className="absolute left-0 top-0 bg-background p-4 rounded-2xl border border-border"
+                  className="absolute left-0 top-0 bg-white dark:bg-background p-4 rounded-2xl border border-gray-200 dark:border-border shadow-lg transition-colors duration-300"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
@@ -105,7 +105,7 @@ export function FirstBentoAnimation() {
                     {[0, 1, 2].map((index) => (
                       <motion.div
                         key={index}
-                        className="w-2 h-2 bg-primary/50 rounded-full"
+                        className="w-2 h-2 bg-gray-400 dark:bg-primary/50 rounded-full transition-colors duration-300"
                         animate={{ y: [0, -5, 0] }}
                         transition={{
                           duration: 0.6,
@@ -121,7 +121,7 @@ export function FirstBentoAnimation() {
                 <motion.div
                   key="response"
                   layout
-                  className="absolute left-0 top-0 md:min-w-[300px] min-w-[220px] p-4 bg-accent border border-border rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.05)]"
+                  className="absolute left-0 top-0 md:min-w-[300px] min-w-[220px] p-4 bg-gray-100 dark:bg-accent border border-gray-200 dark:border-border rounded-xl shadow-lg transition-colors duration-300"
                   initial={{ opacity: 0, x: 10 }}
                   animate={{
                     opacity: 1,

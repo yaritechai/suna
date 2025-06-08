@@ -243,7 +243,7 @@ export function NumberFlowCounter({
     <div
       className={`${
         showCounter ? 'opacity-100' : 'opacity-0'
-      } transition-opacity duration-300 ease-in-out absolute top-32 left-[42%] -translate-x-1/2 text-sm bg-[#1A1B25] border border-white/[0.07] text-white px-4 py-1 rounded-full h-8 flex items-center justify-center font-mono shadow-[0px_1.1px_0px_0px_rgba(255,255,255,0.20)_inset,0px_4.4px_6.6px_0px_rgba(255,255,255,0.01)_inset,0px_2.2px_6.6px_0px_rgba(18,43,105,0.04),0px_1.1px_2.2px_0px_rgba(18,43,105,0.08),0px_0px_0px_1.1px_rgba(18,43,105,0.08)]`}
+      } transition-opacity duration-300 ease-in-out absolute top-32 left-[42%] -translate-x-1/2 text-sm bg-gray-100 dark:bg-[#1A1B25] border border-gray-300 dark:border-white/[0.07] text-gray-800 dark:text-white px-4 py-1 rounded-full h-8 flex items-center justify-center font-mono shadow-lg transition-colors duration-300`}
     >
       <NumberFlow
         value={currentValue}
@@ -294,7 +294,7 @@ export function ThirdBentoAnimation({
   return (
     <div
       ref={ref}
-      className="relative flex size-full items-center justify-center h-[300px] pt-10 overflow-hidden"
+      className="relative flex size-full items-center justify-center h-[300px] pt-10 overflow-hidden bg-gray-50/30 dark:bg-transparent transition-colors duration-300"
       style={
         {
           '--color': computedColor,
