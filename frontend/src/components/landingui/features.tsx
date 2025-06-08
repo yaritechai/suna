@@ -23,12 +23,12 @@ export function Features() {
   return (
     <div
       id="features"
-      className="w-full max-w-7xl mx-auto py-4 px-4 md:px-8 md:my-20 md:py-20 bg-white dark:bg-transparent transition-colors duration-300"
+      className="w-full max-w-7xl mx-auto py-4 px-4 md:px-8 md:py-20 bg-gradient-to-b from-white via-white to-gray-50/50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-950 transition-colors duration-300 relative"
     >
       <div className="text-balance relative z-20 mx-auto mb-4 max-w-4xl text-center text-lg font-semibold tracking-tight text-gray-600 dark:text-neutral-300 md:text-3xl transition-colors duration-300">
         <h2
           className={cn(
-            "inline-block text-3xl md:text-6xl bg-gradient-to-b from-gray-600 via-gray-900 to-gray-600 dark:bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]",
+            "inline-block text-3xl md:text-6xl bg-gradient-to-b from-gray-800 via-gray-950 to-gray-800 dark:bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]",
             "bg-clip-text text-transparent transition-colors duration-300"
           )}
         >
@@ -48,7 +48,7 @@ export function Features() {
               1000+ MCP <br /> Integrations
             </CardTitle>
             <CardDescription>
-              Connect to any tool, API, or service through our vast ecosystem of MCP servers. From CRM to databases, everything works together.
+              Connect to any tool, API, or service through our vast ecosystem of MCP servers.
             </CardDescription>
           </CardContent>
         </Card>
@@ -66,7 +66,7 @@ export function Features() {
           </div>
           <h1
             className={cn(
-              "inline-block p-6 text-2xl md:text-6xl bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]  bg-clip-text text-transparent"
+              "inline-block p-6 text-2xl md:text-6xl bg-gradient-to-b from-gray-800 via-gray-950 to-gray-800 dark:bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)] bg-clip-text text-transparent transition-colors duration-300"
             )}
           >
             50+
@@ -77,7 +77,7 @@ export function Features() {
         <Card className="flex flex-col relative justify-between lg:col-span-3">
           <h1
             className={cn(
-              "inline-block text-right absolute top-0 right-0 p-6 text-xl md:text-6xl bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)] bg-clip-text text-transparent"
+              "inline-block text-right absolute top-0 right-0 p-6 text-xl md:text-6xl bg-gradient-to-b from-gray-800 via-gray-950 to-gray-800 dark:bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)] bg-clip-text text-transparent transition-colors duration-300"
             )}
           >
             10,000+
@@ -157,7 +157,7 @@ const CardTitle = ({
   return (
     <h3
       className={cn(
-        "inline-block text-xl md:text-4xl bg-gradient-to-b from-gray-600 via-gray-900 to-gray-600 dark:bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)] bg-clip-text text-transparent transition-colors duration-300",
+        "inline-block text-xl md:text-4xl bg-gradient-to-b from-gray-800 via-gray-950 to-gray-800 dark:bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)] bg-clip-text text-transparent transition-colors duration-300",
         className
       )}
     >

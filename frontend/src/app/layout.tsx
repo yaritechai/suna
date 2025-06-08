@@ -24,37 +24,7 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-// Theme initialization script
-const themeScript = `
-  (function() {
-    try {
-      // Get saved theme or default to 'light'
-      const savedTheme = localStorage.getItem('theme') || 'light';
-      
-      // Apply theme immediately to prevent flash
-      document.documentElement.setAttribute('data-theme', savedTheme);
-      
-      // Log for debugging
-      console.log('Applied theme:', savedTheme);
-      
-      // Determine if this is a dark theme for compatibility with other components
-      const isDarkTheme = savedTheme === 'dark' || 
-        ['synthwave', 'retro', 'cyberpunk', 'halloween', 'forest', 'black', 'luxury', 'dracula', 'night', 'coffee', 'dim', 'abyss', 'midnight', 'neonpunk'].includes(savedTheme);
-      
-      // Set the dark class for compatibility
-      if (isDarkTheme) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    } catch (e) {
-      console.warn('Failed to initialize theme:', e);
-      // Fallback to light theme
-      document.documentElement.setAttribute('data-theme', 'light');
-      document.documentElement.classList.remove('dark');
-    }
-  })();
-`;
+
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -131,8 +101,8 @@ export const metadata: Metadata = {
     ],
   },
   icons: {
-    icon: [{ url: '/favicon.png', sizes: 'any' }],
-    shortcut: '/favicon.png',
+    icon: [{ url: 'https://rd9rzh3qxh.ufs.sh/f/NUZrLWPd7wqS8q3nT4H0u2mQZfzoDwFiTjAaNkBehOYKdIX1', sizes: 'any' }],
+    shortcut: 'https://rd9rzh3qxh.ufs.sh/f/NUZrLWPd7wqS8q3nT4H0u2mQZfzoDwFiTjAaNkBehOYKdIX1',
   },
   // manifest: "/manifest.json",
   alternates: {
@@ -157,11 +127,7 @@ export default function RootLayout({
           })(window,document,'script','dataLayer','GTM-PCHSN4M2');`}
         </Script>
         {/* End Google Tag Manager */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: themeScript,
-          }}
-        />
+
       </head>
 
       <body
@@ -179,10 +145,10 @@ export default function RootLayout({
         {/* End Google Tag Manager (noscript) */}
 
         <ThemeProvider
-          attribute="data-theme"
-          defaultTheme="light"
+          attribute="class"
+          defaultTheme="dark"
           enableSystem={false}
-          disableTransitionOnChange
+          disableTransitionOnChange={false}
         >
           <Providers>
             <ReactQueryProvider>

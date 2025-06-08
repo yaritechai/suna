@@ -49,8 +49,7 @@ export function Footer() {
             <div className="mt-6">
               <Link
                 href="/auth"
-                variant="yellow"
-            className="inline-flex items-center px-6 py-3"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold rounded-full hover:from-yellow-300 hover:to-orange-400 transition-all duration-200 transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
               >
                 Get Started →
               </Link>

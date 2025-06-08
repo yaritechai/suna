@@ -68,7 +68,6 @@ const DesktopNav = ({ navItems, visible }: NavbarProps) => {
       onMouseLeave={() => setHoveredIndex(null)}
       animate={{
         backdropFilter: "blur(16px)",
-        background: visible ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.6)",
         width: visible ? "42%" : "80%",
         height: visible ? "48px" : "64px",
         y: visible ? 8 : 0,
@@ -76,7 +75,6 @@ const DesktopNav = ({ navItems, visible }: NavbarProps) => {
       initial={{
         width: "80%",
         height: "64px",
-        background: "rgba(255, 255, 255, 0.6)",
       }}
       transition={{
         type: "spring",
@@ -85,7 +83,7 @@ const DesktopNav = ({ navItems, visible }: NavbarProps) => {
       }}
       className={cn(
         "hidden lg:flex flex-row self-center items-center justify-between py-2 mx-auto px-6 rounded-full relative z-[110] backdrop-saturate-[1.8] border border-gray-200/50 dark:border-white/20 transition-colors duration-300",
-        "bg-white/80 dark:bg-black/70"
+        "bg-white/90 dark:bg-black/80"
       )}
     >
       <Logo />
@@ -182,7 +180,6 @@ const MobileNav = ({ navItems, visible }: NavbarProps) => {
       <motion.div
         animate={{
           backdropFilter: "blur(16px)",
-          background: visible ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.6)",
           width: visible ? "80%" : "90%",
           y: visible ? 0 : 8,
           borderRadius: open ? "24px" : "full",
@@ -190,7 +187,6 @@ const MobileNav = ({ navItems, visible }: NavbarProps) => {
         }}
         initial={{
           width: "80%",
-          background: "rgba(255, 255, 255, 0.6)",
         }}
         transition={{
           type: "spring",
@@ -199,7 +195,7 @@ const MobileNav = ({ navItems, visible }: NavbarProps) => {
         }}
         className={cn(
           "flex relative flex-col lg:hidden w-full justify-between items-center max-w-[calc(100vw-2rem)] mx-auto z-[110] backdrop-saturate-[1.8] border border-solid border-gray-200/50 dark:border-white/40 rounded-full transition-colors duration-300",
-          "bg-white/80 dark:bg-black/70"
+          "bg-white/90 dark:bg-black/80"
         )}
       >
         <div className="flex flex-row justify-between items-center w-full">

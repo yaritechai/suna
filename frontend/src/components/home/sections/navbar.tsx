@@ -10,7 +10,7 @@ import { AnimatePresence, motion, useScroll } from 'motion/react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
+
 import { useAuth } from '@/components/AuthProvider';
 
 const INITIAL_WIDTH = '70rem';
@@ -57,13 +57,10 @@ export function Navbar() {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
-  const { theme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+
   const { user } = useAuth();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,11 +96,7 @@ export function Navbar() {
   const toggleDrawer = () => setIsDrawerOpen((prev) => !prev);
   const handleOverlayClick = () => setIsDrawerOpen(false);
 
-  const logoSrc = !mounted
-    ? '/kortix-logo.svg'
-    : resolvedTheme === 'dark'
-      ? '/kortix-logo-white.svg'
-      : '/kortix-logo.svg';
+  const logoSrc = 'https://rd9rzh3qxh.ufs.sh/f/NUZrLWPd7wqS8q3nT4H0u2mQZfzoDwFiTjAaNkBehOYKdIX1';
 
   return (
     <header
@@ -129,7 +122,7 @@ export function Navbar() {
             <Link href="/" className="flex items-center gap-3">
               <Image
                 src={logoSrc}
-                alt="Kortix Logo"
+                alt="Yari Logo"
                 width={140}
                 height={22}
                 priority
@@ -208,14 +201,11 @@ export function Navbar() {
                   <Link href="/" className="flex items-center gap-3">
                     <Image
                       src={logoSrc}
-                      alt="Kortix Logo"
+                      alt="Yari Logo"
                       width={120}
                       height={22}
                       priority
                     />
-                    <span className="font-medium text-primary text-sm">
-                      / Yari
-                    </span>
                   </Link>
                   <button
                     onClick={toggleDrawer}

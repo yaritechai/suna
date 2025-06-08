@@ -15,11 +15,11 @@ export function YariLogo({ size = 24 }: YariLogoProps) {
 
   return (
     <Image
-      src="/yari-symbol.svg"
+      src="https://rd9rzh3qxh.ufs.sh/f/NUZrLWPd7wqS8q3nT4H0u2mQZfzoDwFiTjAaNkBehOYKdIX1"
       alt="Yari"
       width={size}
       height={size}
-      className={`${mounted && theme === 'dark' ? 'invert' : ''} flex-shrink-0`}
+      className="flex-shrink-0"
     />
   );
 } 

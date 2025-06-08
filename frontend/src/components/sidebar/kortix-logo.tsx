@@ -1,28 +1,18 @@
 'use client';
 
 import Image from 'next/image';
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
 
 interface KortixLogoProps {
   size?: number;
 }
 export function KortixLogo({ size = 24 }: KortixLogoProps) {
-  const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  // After mount, we can access the theme
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <Image
-        src="/yari-symbol.svg"
-        alt="Yari"
-        width={size}
-        height={size}
-        className={`${mounted && theme === 'dark' ? 'invert' : ''} flex-shrink-0`}
-      />
+      src="https://rd9rzh3qxh.ufs.sh/f/NUZrLWPd7wqS8q3nT4H0u2mQZfzoDwFiTjAaNkBehOYKdIX1"
+      alt="Yari"
+      width={size}
+      height={size}
+      className="flex-shrink-0"
+    />
   );
 }

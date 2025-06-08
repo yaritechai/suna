@@ -1,11 +1,16 @@
 "use client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import Image from "next/image";
 
 const LogoIcon = () => (
-  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center">
-    <span className="text-black font-bold text-sm">Y</span>
-  </div>
+  <Image
+    src="https://rd9rzh3qxh.ufs.sh/f/NUZrLWPd7wqS8q3nT4H0u2mQZfzoDwFiTjAaNkBehOYKdIX1"
+    alt="Yari Logo"
+    width={32}
+    height={32}
+    className="w-8 h-8"
+  />
 );
 
 export const Logo = () => {

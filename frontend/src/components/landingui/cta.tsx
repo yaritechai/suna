@@ -29,15 +29,37 @@ const BackgroundGrid = ({ className }: { className?: string }) => {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={controls}
         className="absolute w-full h-full"
-        style={{
-          background: `radial-gradient(circle at center, rgba(40,40,40,0.8) 0%, rgba(20,20,20,0.6) 30%, rgba(0,0,0,0.4) 70%)`,
-        }}
       >
+        {/* Light mode: very subtle gradient */}
+        <div 
+          className="absolute inset-0 dark:hidden"
+          style={{
+            background: `radial-gradient(circle at center, rgba(249,250,251,0.6) 0%, rgba(243,244,246,0.3) 30%, transparent 70%)`,
+          }}
+        />
+        {/* Dark mode: original dark gradient */}
+        <div 
+          className="absolute inset-0 hidden dark:block"
+          style={{
+            background: `radial-gradient(circle at center, rgba(40,40,40,0.8) 0%, rgba(20,20,20,0.6) 30%, rgba(0,0,0,0.4) 70%)`,
+          }}
+        />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.2 }}
           transition={{ duration: 1, delay: 0.5 }}
           className="absolute inset-0"
+          style={{
+            backgroundImage: `linear-gradient(rgba(200,200,200,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(200,200,200,0.2) 1px, transparent 1px)`,
+            backgroundSize: "120px 120px",
+          }}
+        />
+        {/* Dark mode grid overlay */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.2 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="absolute inset-0 hidden dark:block"
           style={{
             backgroundImage: `linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)`,
             backgroundSize: "120px 120px",
@@ -145,7 +167,7 @@ export default function CTA() {
   }, [controls, inView]);
 
   return (
-    <div className="bg-gray-100 dark:bg-zinc-950 w-full max-w-7xl mx-auto min-h-[80vh] md:min-h-[100dvh] flex items-center justify-center px-4 sm:px-6 lg:px-8 relative transition-colors duration-300">
+    <div className="bg-white dark:bg-zinc-950 w-full max-w-7xl mx-auto min-h-[80vh] md:min-h-[100dvh] flex items-center justify-center px-4 sm:px-6 lg:px-8 relative transition-colors duration-300">
       <LineGradient position="left" />
       <motion.div
         ref={ref}

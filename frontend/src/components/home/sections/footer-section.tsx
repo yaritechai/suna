@@ -6,24 +6,9 @@ import { siteConfig } from '@/lib/home';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
 
 export function FooterSection() {
   const tablet = useMediaQuery('(max-width: 1024px)');
-  const { theme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  // After mount, we can access the theme
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const logoSrc = !mounted
-    ? '/yari-logo.svg'
-    : resolvedTheme === 'dark'
-      ? '/yari-logo-white.svg'
-      : '/yari-logo.svg';
 
   return (
     <footer id="footer" className="w-full pb-0">
@@ -31,7 +16,7 @@ export function FooterSection() {
         <div className="flex flex-col items-start justify-start gap-y-5 max-w-xs mx-0">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src={logoSrc}
+              src="https://rd9rzh3qxh.ufs.sh/f/NUZrLWPd7wqS8q3nT4H0u2mQZfzoDwFiTjAaNkBehOYKdIX1"
               alt="Yari Logo"
               width={120}
               height={40}

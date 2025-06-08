@@ -34,7 +34,7 @@ export function Hero() {
   return (
     <div
       ref={parentRef}
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pt-20 md:px-8 md:pt-40"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pt-20 md:px-8 md:pt-40 pb-20 md:pb-32"
     >
       {/* Premium Space Background */}
       <div className="absolute inset-0 bg-gray-50 dark:bg-zinc-950 transition-colors duration-300">
@@ -199,17 +199,26 @@ export function Hero() {
             blur={10}
           />
           {/* Frosted Glass Border Wrapper */}
-          <div className="relative p-[6px] rounded-[28px] bg-gradient-to-br from-white/20 via-white/8 to-white/5 backdrop-blur-lg shadow-[0_16px_48px_rgba(0,0,0,0.5)] border border-white/15">
-            <div className="relative rounded-[22px] overflow-hidden backdrop-blur-md bg-gradient-to-b from-black/5 via-transparent to-black/40">
+          <div className="relative p-[6px] rounded-[28px] bg-gradient-to-br from-white/20 via-white/8 to-white/5 backdrop-blur-lg shadow-[0_16px_48px_rgba(0,0,0,0.2)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.5)] border border-white/15 transition-all duration-300">
+            <div className="relative rounded-[22px] overflow-hidden backdrop-blur-md bg-gradient-to-b from-gray-50/20 via-transparent to-gray-100/30 dark:from-black/5 dark:via-transparent dark:to-black/40 transition-all duration-300">
               <MacBrowserWindow>
                 <WireframeAnimation />
               </MacBrowserWindow>
-              {/* Bottom fade gradient */}
-              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50 via-gray-50/60 dark:from-zinc-950 dark:via-zinc-950/60 to-transparent pointer-events-none rounded-b-[22px] transition-colors duration-300"></div>
+              {/* Bottom fade gradient - extended and more gradual */}
+              <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/95 via-white/70 via-white/40 to-transparent dark:from-zinc-950 dark:via-zinc-950/95 dark:via-zinc-950/70 dark:via-zinc-950/40 dark:to-transparent pointer-events-none rounded-b-[22px] transition-colors duration-300"></div>
             </div>
           </div>
+          {/* Light mode gradient overlay */}
           <div
-            className="absolute inset-0 rounded-[30px] pointer-events-none"
+            className="absolute inset-0 rounded-[30px] pointer-events-none dark:hidden"
+            style={{
+              background:
+                "linear-gradient(179.87deg, rgba(0, 0, 0, 0) 0.11%, rgba(100, 100, 100, 0.05) 69.48%, rgba(150, 150, 150, 0.1) 92.79%)",
+            }}
+          />
+          {/* Dark mode gradient overlay */}
+          <div
+            className="absolute inset-0 rounded-[30px] pointer-events-none hidden dark:block"
             style={{
               background:
                 "linear-gradient(179.87deg, rgba(0, 0, 0, 0) 0.11%, rgba(0, 0, 0, 0.15) 69.48%, rgba(0, 0, 0, 0.3) 92.79%)",
@@ -217,6 +226,9 @@ export function Hero() {
           />
         </div>
       </motion.div>
+      
+      {/* Bottom gradient transition to blend with next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-b from-transparent via-white/60 to-white dark:via-zinc-950/60 dark:to-zinc-950 pointer-events-none z-[60] transition-colors duration-300"></div>
     </div>
   );
 }

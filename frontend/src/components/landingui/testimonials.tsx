@@ -13,14 +13,14 @@ export function Testimonials() {
           <div className="sticky top-20">
             <h2
               className={cn(
-                "text-3xl text-center lg:text-left md:text-6xl bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]",
-                "bg-clip-text text-transparent leading-tight"
+                "text-3xl text-center lg:text-left md:text-6xl bg-gradient-to-b from-gray-800 via-gray-950 to-gray-800 dark:bg-[radial-gradient(61.17%_178.53%_at_38.83%_-13.54%,#3B3B3B_0%,#888787_12.61%,#FFFFFF_50%,#888787_80%,#3B3B3B_100%)]",
+                "bg-clip-text text-transparent leading-tight transition-colors duration-300"
               )}
             >
               What our customers <br />
               say about Yari
             </h2>
-            <p className="text-sm text-center lg:text-left mx-auto lg:mx-0 text-neutral-400 mt-6 max-w-sm">
+            <p className="text-sm text-center lg:text-left mx-auto lg:mx-0 text-gray-600 dark:text-neutral-400 mt-6 max-w-sm transition-colors duration-300">
               See how businesses are transforming their operations with AI agents that work 24/7 to boost productivity and growth.
             </p>
           </div>
