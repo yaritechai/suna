@@ -113,7 +113,10 @@ allow_origin_regex = None
 # Add staging-specific origins
 if config.ENV_MODE == EnvMode.STAGING:
     allowed_origins.append("https://staging.suna.so")
-    allow_origin_regex = r"https://suna-.*-prjcts\.vercel\.app"
+    allow_origin_regex = r"https://suna-.*\.vercel\.app"
+else:
+    # For production and other environments, also allow Vercel preview deployments
+    allow_origin_regex = r"https://suna-.*\.vercel\.app"
 
 app.add_middleware(
     CORSMiddleware,
