@@ -103,9 +103,9 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', type: 'image/x-icon', sizes: '32x32' }
+      { url: '/icon.svg', type: 'image/svg+xml', sizes: '32x32' }
     ],
-    shortcut: '/favicon.ico',
+    shortcut: '/favicon.svg',
     apple: { url: '/favicon.svg', sizes: 'any' }
   },
   // manifest: "/manifest.json",
