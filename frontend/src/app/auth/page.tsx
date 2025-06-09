@@ -366,7 +366,7 @@ function LoginContent() {
               </Link>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tighter text-center text-balance text-white">
-                {isSignUp ? 'Join Suna' : 'Welcome back'}
+                {isSignUp ? 'Do More with Yari' : 'Welcome back'}
               </h1>
               <p className="text-base md:text-lg text-center text-white/70 font-medium text-balance leading-relaxed tracking-tight mt-2 mb-6">
                 {isSignUp
