@@ -89,8 +89,8 @@ export const metadata: Metadata = {
     title: 'Yari - Open Source Generalist AI Agent',
     description:
       'Yari is a fully open source AI assistant that helps you accomplish real-world tasks with ease through natural conversation.',
-    creator: '@kortixai',
-    site: '@kortixai',
+    creator: '@yaritechai',
+    site: '@yaritechai',
     images: [
       {
         url: '/banner.png',

@@ -134,7 +134,7 @@ export function Navbar() {
             <div className="flex flex-row items-center gap-1 md:gap-3 shrink-0">
               <div className="flex items-center space-x-3">
                 {/* <Link
-                  href="https://github.com/kortix-ai/suna"
+                  href="https://github.com/yaritechai/yari"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hidden md:flex items-center justify-center h-8 px-3 text-sm font-normal tracking-wide rounded-full text-primary hover:text-primary/80 transition-colors"
