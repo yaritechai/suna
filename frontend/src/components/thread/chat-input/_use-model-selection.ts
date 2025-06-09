@@ -159,13 +159,6 @@ export const MODELS = {
     description: 'Qwen3 - Alibaba\'s powerful multilingual language model'
   },
   // OpenRouter models
-  'gemini-flash-2.5': { 
-    tier: 'free', 
-    priority: 50,
-    recommended: false,
-    lowQuality: true,
-    description: 'Gemini Flash - Google\'s faster, more efficient model'
-  },
 };
 
 // Model tier definitions
