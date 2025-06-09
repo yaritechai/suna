@@ -1,9 +1,7 @@
 MODEL_ACCESS_TIERS = {
     "free": [
+        "anthropic/claude-sonnet-4-20250514",
         "anthropic/claude-3-7-sonnet-latest",
-        "openrouter/deepseek/deepseek-chat",
-        "openrouter/qwen/qwen3-235b-a22b",
-        "openrouter/google/gemini-2.5-flash-preview-05-20",
     ],
     "tier_2_20": [
         "openrouter/deepseek/deepseek-chat",

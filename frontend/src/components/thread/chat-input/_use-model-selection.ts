@@ -29,7 +29,7 @@ export interface CustomModel {
 
 // SINGLE SOURCE OF TRUTH for all model data
 export const MODELS = {
-  // Premium high-priority models
+  // Anthropic models only
   'claude-sonnet-4': { 
     tier: 'premium',
     priority: 100, 
