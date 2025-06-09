@@ -86,7 +86,7 @@ export function ThemeSelector({
     themeChange(false);
 
     // Get current theme from localStorage or default
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    const savedTheme = localStorage.getItem('theme') || 'bumblebee';
     setCurrentTheme(savedTheme);
     
     // Apply theme to document
