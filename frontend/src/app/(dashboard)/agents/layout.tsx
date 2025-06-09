@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Agent Conversation | Yari',
-  description: 'Interactive agent conversation powered by Yari',
+  title: 'AI Agent Conversation | Yari',
+  description: 'Interactive AI agent conversation helping small businesses automate tasks and boost productivity',
   openGraph: {
-    title: 'Agent Conversation | Yari',
-    description: 'Interactive agent conversation powered by Yari',
+    title: 'AI Agent Conversation | Yari',
+    description: 'Interactive AI agent conversation helping small businesses automate tasks and boost productivity',
     type: 'website',
   },
 };

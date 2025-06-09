@@ -4,7 +4,7 @@ import { siteConfig } from '@/lib/site';
 export const metadata: Metadata = {
   title: siteConfig.name,
   description: siteConfig.description,
-  keywords: ['Yari', 'AI', 'Agent'],
+  keywords: ['Yari', 'AI agents', 'small business', 'automation', 'productivity'],
   authors: [
     {
       name: 'Yaritech AI',

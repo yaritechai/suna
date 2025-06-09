@@ -32,19 +32,20 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: 'Yari',
+  title: 'Yari - AI Agents for Small Businesses',
   description:
-    'Deploy AI agents in seconds that can build, run code, and use tools.',
+    'Deploy AI agents for small businesses in seconds. Automate tasks, build tools, and boost productivity with powerful AI assistants.',
   keywords: [
-    'AI',
-    'artificial intelligence',
-    'browser automation',
-    'web scraping',
-    'file management',
-    'AI assistant',
-    'open source',
-    'research',
-    'data analysis',
+    'AI agents for small businesses',
+    'small business automation',
+    'AI assistants',
+    'business productivity',
+    'automated workflows',
+    'AI tools for SMB',
+    'business AI agents',
+    'small business AI',
+    'productivity automation',
+    'AI task automation',
   ],
   authors: [{ name: 'Yaritech Team', url: 'https://yaritech.ai' }],
       creator:
@@ -67,9 +68,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Yari - Open Source Generalist AI Agent',
+    title: 'Yari - AI Agents for Small Businesses',
     description:
-      'Yari is a fully open source AI assistant that helps you accomplish real-world tasks with ease through natural conversation.',
+      'Deploy AI agents for small businesses in seconds. Automate tasks, build tools, and boost productivity with powerful AI assistants.',
     url: siteConfig.url,
     siteName: 'Yari',
     images: [
@@ -77,7 +78,7 @@ export const metadata: Metadata = {
         url: '/banner.png',
         width: 1200,
         height: 630,
-        alt: 'Yari - Open Source Generalist AI Agent',
+        alt: 'Yari - AI Agents for Small Businesses',
         type: 'image/png',
       },
     ],
@@ -86,9 +87,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Yari - Open Source Generalist AI Agent',
+    title: 'Yari - AI Agents for Small Businesses',
     description:
-      'Yari is a fully open source AI assistant that helps you accomplish real-world tasks with ease through natural conversation.',
+      'Deploy AI agents for small businesses in seconds. Automate tasks, build tools, and boost productivity with powerful AI assistants.',
     creator: '@yaritechai',
     site: '@yaritechai',
     images: [
@@ -96,7 +97,7 @@ export const metadata: Metadata = {
         url: '/banner.png',
         width: 1200,
         height: 630,
-        alt: 'Yari - Open Source Generalist AI Agent',
+        alt: 'Yari - AI Agents for Small Businesses',
       },
     ],
   },

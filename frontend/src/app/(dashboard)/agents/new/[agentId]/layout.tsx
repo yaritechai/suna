@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Create Agent | Yari',
-  description: 'Interactive agent playground powered by Yari',
+  title: 'Create AI Agent | Yari',
+  description: 'Build custom AI agents for your small business to automate tasks and workflows',
   openGraph: {
-    title: 'Agent Playground | Yari',
-    description: 'Interactive agent playground powered by Yari',
+    title: 'AI Agent Builder | Yari',
+    description: 'Build custom AI agents for your small business to automate tasks and workflows',
     type: 'website',
   },
 };

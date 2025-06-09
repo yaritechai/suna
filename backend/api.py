@@ -107,16 +107,16 @@ async def log_requests_middleware(request: Request, call_next):
         raise
 
 # Define allowed origins based on environment
-allowed_origins = ["https://www.suna.so", "https://suna.so", "http://localhost:3000"]
+allowed_origins = ["https://www.yaritech.ai", "https://yaritech.ai", "http://localhost:3000"]
 allow_origin_regex = None
 
 # Add staging-specific origins
 if config.ENV_MODE == EnvMode.STAGING:
-    allowed_origins.append("https://staging.suna.so")
-    allow_origin_regex = r"https://suna-.*\.vercel\.app"
+    allowed_origins.append("https://staging.yaritech.ai")
+    allow_origin_regex = r"https://yari-.*\.vercel\.app"
 else:
     # For production and other environments, also allow Vercel preview deployments
-    allow_origin_regex = r"https://suna-.*\.vercel\.app"
+    allow_origin_regex = r"https://yari-.*\.vercel\.app"
 
 app.add_middleware(
     CORSMiddleware,

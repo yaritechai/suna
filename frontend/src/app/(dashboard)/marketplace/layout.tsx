@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Agent Marketplace | Yari',
-  description: 'Discover and add powerful AI agents created by the community to your personal library',
+  title: 'AI Agent Marketplace | Yari',
+  description: 'Discover powerful AI agents designed for small businesses to automate tasks and boost productivity',
   openGraph: {
-    title: 'Agent Marketplace | Yari',
-    description: 'Discover and add powerful AI agents created by the community to your personal library',
+    title: 'AI Agent Marketplace | Yari',
+    description: 'Discover powerful AI agents designed for small businesses to automate tasks and boost productivity',
     type: 'website',
   },
 };
