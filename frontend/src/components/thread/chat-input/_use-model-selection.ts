@@ -29,7 +29,7 @@ export interface CustomModel {
 
 // SINGLE SOURCE OF TRUTH for all model data
 export const MODELS = {
-  // Anthropic models only
+  // Anthropic models
   'claude-sonnet-4': { 
     tier: 'premium',
     priority: 100, 
@@ -157,6 +157,14 @@ export const MODELS = {
     recommended: false,
     lowQuality: true,
     description: 'Qwen3 - Alibaba\'s powerful multilingual language model'
+  },
+  // OpenRouter models
+  'gemini-flash-2.5': { 
+    tier: 'free', 
+    priority: 50,
+    recommended: false,
+    lowQuality: true,
+    description: 'Gemini Flash - Google\'s faster, more efficient model'
   },
 };
 
