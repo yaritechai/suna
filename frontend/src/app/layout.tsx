@@ -101,8 +101,12 @@ export const metadata: Metadata = {
     ],
   },
   icons: {
-    icon: [{ url: 'https://rd9rzh3qxh.ufs.sh/f/NUZrLWPd7wqS8q3nT4H0u2mQZfzoDwFiTjAaNkBehOYKdIX1', sizes: 'any' }],
-    shortcut: 'https://rd9rzh3qxh.ufs.sh/f/NUZrLWPd7wqS8q3nT4H0u2mQZfzoDwFiTjAaNkBehOYKdIX1',
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', type: 'image/x-icon', sizes: '32x32' }
+    ],
+    shortcut: '/favicon.ico',
+    apple: { url: '/favicon.svg', sizes: 'any' }
   },
   // manifest: "/manifest.json",
   alternates: {
