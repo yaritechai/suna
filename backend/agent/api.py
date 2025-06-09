@@ -73,7 +73,7 @@ class AgentResponse(BaseModel):
     description: Optional[str]
     system_prompt: str
     configured_mcps: List[Dict[str, Any]]
-    custom_mcps: Optional[List[Dict[str, Any]]] = []
+    custom_mcps: Optional[List[Dict[str, Any]]] = None
     agentpress_tools: Dict[str, Any]
     is_default: bool
     is_public: Optional[bool] = False
@@ -871,13 +871,13 @@ async def initiate_agent_with_files(
             agent_config = default_agent_result.data[0]
             logger.info(f"Using default agent: {agent_config['name']} ({agent_config['agent_id']})")
     
-    can_use, model_message, allowed_models = await can_use_model(client, account_id, model_name)
-    if not can_use:
-        raise HTTPException(status_code=403, detail={"message": model_message, "allowed_models": allowed_models})
+    # can_use, model_message, allowed_models = await can_use_model(client, account_id, model_name)
+    # if not can_use:
+    #     raise HTTPException(status_code=403, detail={"message": model_message, "allowed_models": allowed_models})
 
-    can_run, message, subscription = await check_billing_status(client, account_id)
-    if not can_run:
-        raise HTTPException(status_code=402, detail={"message": message, "subscription": subscription})
+    # can_run, message, subscription = await check_billing_status(client, account_id)
+    # if not can_run:
+    #     raise HTTPException(status_code=402, detail={"message": message, "subscription": subscription})
 
     try:
         # 1. Create Project
