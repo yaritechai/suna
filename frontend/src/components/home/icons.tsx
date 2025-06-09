@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 export const Icons = {
   logo: ({ className }: { className?: string }) => (
     <img
-      src="https://rd9rzh3qxh.ufs.sh/f/NUZrLWPd7wqS8q3nT4H0u2mQZfzoDwFiTjAaNkBehOYKdIX1"
+      src="/logo.svg"
       alt="Yari Logo"
       className={cn('size-4', className)}
     />

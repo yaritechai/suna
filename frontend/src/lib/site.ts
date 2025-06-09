@@ -1,11 +1,11 @@
 export const siteConfig = {
   name: 'Yari',
-  url: 'https://yari.so/',
-  description: 'Kortix AI',
+  url: 'https://yaritech.ai/',
+  description: 'Yari - Open Source Generalist AI Agent',
   links: {
-    twitter: 'https://x.com/kortixai',
-    github: 'https://github.com/kortix-ai/',
-    linkedin: 'https://www.linkedin.com/company/kortix/',
+    twitter: 'https://x.com/yaritechai',
+    github: 'https://github.com/yaritechai/',
+    linkedin: 'https://www.linkedin.com/company/yaritech/',
   },
 };
 

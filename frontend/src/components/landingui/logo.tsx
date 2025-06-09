@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const LogoIcon = () => (
   <Image
-    src="https://rd9rzh3qxh.ufs.sh/f/NUZrLWPd7wqS8q3nT4H0u2mQZfzoDwFiTjAaNkBehOYKdIX1"
+    src="/logo.svg"
     alt="Yari Logo"
     width={32}
     height={32}

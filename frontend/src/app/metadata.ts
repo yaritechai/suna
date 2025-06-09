@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   keywords: ['Yari', 'AI', 'Agent'],
   authors: [
     {
-      name: 'Kortix AI Corp',
-      url: 'https://kortix.ai',
+      name: 'Yaritech AI',
+      url: 'https://yaritech.ai',
     },
   ],
-  creator: 'Kortix AI Corp',
+  creator: 'Yaritech AI',
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: siteConfig.name,
     description: siteConfig.description,
-    creator: '@kortixai',
+    creator: '@yaritechai',
   },
   robots: {
     index: true,

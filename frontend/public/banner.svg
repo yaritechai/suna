@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Logo positioned on the left -->
+  <g transform="translate(100, 200)">
+    <!-- Gray left stroke of Y -->
+    <path d="M40 40 L20 80 L140 180 L160 220 L180 180 L60 80 L80 40 Z" fill="#6B7280"/>
+    <!-- Yellow right stroke and stem of Y -->
+    <path d="M220 40 L240 80 L160 180 L140 220 L160 280 L140 320 L180 320 L200 280 L200 180 L280 80 L260 40 Z" fill="#F9C23C"/>
+  </g>
+  
+  <!-- Title text -->
+  <text x="450" y="280" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="bold" fill="#1e293b">Yari</text>
+  
+  <!-- Subtitle -->
+  <text x="450" y="330" font-family="system-ui, -apple-system, sans-serif" font-size="32" fill="#64748b">Open Source Generalist AI Agent</text>
+  
+  <!-- Description -->
+  <text x="450" y="380" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#64748b">Deploy AI agents in seconds that can build, run code, and use tools.</text>
+</svg> 
