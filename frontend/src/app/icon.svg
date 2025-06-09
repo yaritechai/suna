@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Gray left stroke of Y -->
-  <path d="M6 6 L4 10 L14 16 L16 20 L18 16 L8 10 L10 6 Z" fill="#6B7280"/>
-  <!-- Yellow right stroke and stem of Y -->
-  <path d="M22 6 L24 10 L16 16 L14 20 L16 26 L14 30 L18 30 L20 26 L20 16 L28 10 L26 6 Z" fill="#F9C23C"/>
-</svg> 
