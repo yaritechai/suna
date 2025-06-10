@@ -129,10 +129,57 @@ def start_supervisord_session(sandbox: Sandbox):
         logger.error(f"Error starting supervisord session: {str(e)}")
         raise e
 
+async def cleanup_idle_sandboxes():
+    """Clean up stopped/archived sandboxes to free up quota before creating new ones."""
+    try:
+        logger.info("Checking for idle sandboxes to clean up...")
+        
+        # Get all sandboxes
+        sandboxes = daytona.list()
+        logger.info(f"Found {len(sandboxes)} total sandboxes")
+        
+        cleaned_count = 0
+        for sandbox in sandboxes:
+            try:
+                # Get detailed sandbox info
+                sandbox_info = sandbox.info()
+                
+                # Remove stopped or archived sandboxes to free up quota
+                if sandbox_info.state in ["stopped", "archived"]:
+                    logger.info(f"Removing idle sandbox {sandbox.id} in state '{sandbox_info.state}'")
+                    daytona.remove(sandbox)
+                    cleaned_count += 1
+                    
+                    # Don't remove too many at once to avoid API rate limits
+                    if cleaned_count >= 3:
+                        break
+                        
+            except Exception as sandbox_error:
+                logger.warning(f"Error checking/removing sandbox {sandbox.id}: {str(sandbox_error)}")
+                continue
+                
+        logger.info(f"Cleaned up {cleaned_count} idle sandboxes")
+        return cleaned_count
+        
+    except Exception as e:
+        logger.warning(f"Error during sandbox cleanup: {str(e)}")
+        return 0
+
 def create_sandbox(password: str, project_id: str = None):
     """Create a new sandbox with all required services configured and running."""
     
     logger.debug("Creating new Daytona sandbox environment")
+    
+    # Try to clean up idle sandboxes first to free quota
+    try:
+        import asyncio
+        loop = asyncio.get_event_loop()
+        cleaned_count = loop.run_until_complete(cleanup_idle_sandboxes())
+        if cleaned_count > 0:
+            logger.info(f"Freed up quota by cleaning {cleaned_count} idle sandboxes")
+    except Exception as cleanup_error:
+        logger.warning(f"Could not run sandbox cleanup: {str(cleanup_error)}")
+    
     logger.debug("Configuring sandbox with browser-use image and environment variables")
     
     labels = None
@@ -159,20 +206,76 @@ def create_sandbox(password: str, project_id: str = None):
         },
         resources={
             "cpu": 1,
-            "memory": 2,  # Reduced from 4GB to 2GB to prevent quota issues
-            "disk": 3,    # Reduced disk space as well
+            "memory": 1,  # Further reduced to 1GB to allow more concurrent sandboxes
+            "disk": 2,    # Reduced disk space as well
         }
     )
     
     # Create the sandbox
-    sandbox = daytona.create(params)
-    logger.debug(f"Sandbox created with ID: {sandbox.id}")
-    
-    # Start supervisord in a session for new sandbox
-    start_supervisord_session(sandbox)
-    
-    logger.debug(f"Sandbox environment successfully initialized")
-    return sandbox
+    try:
+        sandbox = daytona.create(params)
+        logger.debug(f"Sandbox created with ID: {sandbox.id}")
+        
+        # Start supervisord in a session for new sandbox
+        start_supervisord_session(sandbox)
+        
+        logger.debug(f"Sandbox environment successfully initialized")
+        return sandbox
+        
+    except Exception as create_error:
+        error_msg = str(create_error)
+        
+        # Check for quota exceeded error
+        if "quota exceeded" in error_msg.lower() or "memory" in error_msg.lower():
+            logger.error(f"Quota exceeded when creating sandbox: {error_msg}")
+            
+            # Try aggressive cleanup and retry once
+            try:
+                logger.info("Attempting aggressive cleanup due to quota exceeded...")
+                cleaned_count = loop.run_until_complete(cleanup_idle_sandboxes())
+                logger.info(f"Cleaned {cleaned_count} sandboxes, retrying sandbox creation...")
+                
+                # Retry sandbox creation with even smaller resources
+                retry_params = CreateSandboxParams(
+                    image=Configuration.SANDBOX_IMAGE_NAME,
+                    public=True,
+                    labels=labels,
+                    env_vars={
+                        "CHROME_PERSISTENT_SESSION": "true",
+                        "RESOLUTION": "1024x768x24",
+                        "RESOLUTION_WIDTH": "1024", 
+                        "RESOLUTION_HEIGHT": "768",
+                        "VNC_PASSWORD": password,
+                        "ANONYMIZED_TELEMETRY": "false",
+                        "CHROME_PATH": "",
+                        "CHROME_USER_DATA": "",
+                        "CHROME_DEBUGGING_PORT": "9222",
+                        "CHROME_DEBUGGING_HOST": "localhost",
+                        "CHROME_CDP": ""
+                    },
+                    resources={
+                        "cpu": 1,
+                        "memory": 0.5,  # Try with even less memory
+                        "disk": 1,
+                    }
+                )
+                
+                sandbox = daytona.create(retry_params)
+                logger.info(f"Successfully created sandbox {sandbox.id} after cleanup and retry")
+                
+                # Start supervisord in a session for new sandbox
+                start_supervisord_session(sandbox)
+                
+                return sandbox
+                
+            except Exception as retry_error:
+                logger.error(f"Failed to create sandbox even after cleanup: {str(retry_error)}")
+                raise Exception(f"Unable to create sandbox due to resource constraints. Please try again later or contact support.")
+                
+        else:
+            # Re-raise other errors as-is
+            logger.error(f"Error creating sandbox: {error_msg}")
+            raise create_error
 
 async def delete_sandbox(sandbox_id: str):
     """Delete a sandbox by its ID."""
