@@ -12,7 +12,7 @@ import uuid
 from agentpress.thread_manager import ThreadManager
 from services.supabase import DBConnection
 from services import redis
-from dramatiq.brokers.rabbitmq import RabbitmqBroker
+from dramatiq.brokers.redis import RedisBroker
 import os
 try:
     from services.langfuse import langfuse
@@ -26,10 +26,19 @@ except ImportError:
             return DummyTrace()
     langfuse = DummyLangfuse()
 
-rabbitmq_host = os.getenv('RABBITMQ_HOST', 'rabbitmq')
-rabbitmq_port = int(os.getenv('RABBITMQ_PORT', 5672))
-rabbitmq_broker = RabbitmqBroker(host=rabbitmq_host, port=rabbitmq_port, middleware=[dramatiq.middleware.AsyncIO()])
-dramatiq.set_broker(rabbitmq_broker)
+# Replace RabbitMQ configuration with Redis
+redis_host = os.getenv('REDIS_HOST', 'redis')
+redis_port = int(os.getenv('REDIS_PORT', 6379))
+redis_password = os.getenv('REDIS_PASSWORD', '')
+
+# Configure Redis broker for Dramatiq
+if redis_password:
+    redis_url = f"redis://:{redis_password}@{redis_host}:{redis_port}/0"
+else:
+    redis_url = f"redis://{redis_host}:{redis_port}/0"
+
+redis_broker = RedisBroker(url=redis_url, middleware=[dramatiq.middleware.AsyncIO()])
+dramatiq.set_broker(redis_broker)
 
 _initialized = False
 db = DBConnection()

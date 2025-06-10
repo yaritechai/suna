@@ -11,6 +11,7 @@ Your Dockerfile has been updated to match the original Suna repository exactly, 
 3. **Gunicorn Installation**: Added explicit gunicorn dependency to requirements.txt
 4. **Configuration**: Kept all original optimization flags but with conservative resource limits
 5. **Resource Settings**: Optimized for cloud deployment instead of 16-vCPU dedicated server
+6. **Task Queue**: **Updated to use Redis for background tasks instead of RabbitMQ**
 
 ## Prerequisites
 
@@ -18,16 +19,15 @@ Before deploying to Render, you need to set up external services since Render do
 
 ### Required External Services
 
-1. **Redis** (for caching and pub/sub)
+1. **Redis** (for caching, pub/sub, and background task queue)
    - Use [Redis Cloud](https://redis.com/redis-enterprise-cloud/) (free tier available)
    - Or [Upstash Redis](https://upstash.com/redis) (serverless)
+   - **Note**: Redis now handles both caching AND background task processing
 
-2. **RabbitMQ** (for background workers)
-   - Use [CloudAMQP](https://www.cloudamqp.com/) (free tier available)
-   - Or disable background workers (see Configuration section)
-
-3. **Supabase** (database)
+2. **Supabase** (database)
    - Already configured in the original setup
+
+**RabbitMQ is no longer required** - we've switched to Redis for all messaging needs.
 
 ## Deployment Steps
 
@@ -70,7 +70,7 @@ SUPABASE_URL=your-supabase-url
 SUPABASE_ANON_KEY=your-supabase-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
 
-# Redis (external service)
+# Redis (external service - handles both caching and task queue)
 REDIS_HOST=your-redis-host
 REDIS_PORT=6379
 REDIS_PASSWORD=your-redis-password
@@ -108,19 +108,33 @@ LANGFUSE_SECRET_KEY=your-langfuse-secret-key
 ## Configuration Options
 
 ### Option 1: Full Setup (Recommended)
-- Set up Redis Cloud for caching and pub/sub
-- Set up CloudAMQP for background workers
+- Set up Redis Cloud for caching, pub/sub, and background workers
 - Deploy both API and worker services
+- **No RabbitMQ needed**
 
 ### Option 2: Simplified Setup (API Only)
-- Set up Redis Cloud for basic caching
-- Disable background workers initially
-- Deploy only the API service
+- Set up Redis Cloud for basic caching and task processing
+- Deploy only the API service with built-in worker
+- **No RabbitMQ needed**
 
 ### Option 3: Minimal Setup (No External Services)
 - The application will run with degraded functionality
 - Redis operations will fail gracefully
 - No background processing
+
+## Recent Changes (Important for Existing Deployments)
+
+**Breaking Change**: We've switched from RabbitMQ to Redis for background task processing.
+
+If you have an existing deployment:
+1. **Remove RabbitMQ service** from your Render services
+2. **Remove these environment variables**:
+   - `RABBITMQ_HOST`
+   - `RABBITMQ_PORT`  
+   - `RABBITMQ_USER`
+   - `RABBITMQ_PASSWORD`
+3. **Ensure Redis is properly configured** - it now handles both caching AND task queue
+4. **Redeploy your services** with the updated code
 
 ## Troubleshooting
 
@@ -134,7 +148,14 @@ LANGFUSE_SECRET_KEY=your-langfuse-secret-key
    - Ensure SSL is enabled for cloud Redis providers
    - Verify Redis instance is accessible from Render
 
-2. **Health Check Failing**
+2. **Agent Initialization Failed** (Previous RabbitMQ Error)
+   ```
+   RabbitMQ connection failed
+   ```
+   - **Fixed**: This error should no longer occur after switching to Redis
+   - If you still see RabbitMQ errors, ensure you've redeployed with the latest code
+
+3. **Health Check Failing**
    ```
    Health check timeout
    ```
@@ -142,7 +163,7 @@ LANGFUSE_SECRET_KEY=your-langfuse-secret-key
    - Review application logs in Render dashboard
    - Verify Supabase connection
 
-3. **High Memory Usage**
+4. **High Memory Usage**
    ```
    Worker killed due to memory usage
    ```
@@ -155,6 +176,7 @@ Check Render logs for these patterns:
 - `Starting up FastAPI application` - App startup
 - `Redis connection initialized successfully` - Redis OK
 - `Health check endpoint called` - Health checks working
+- **No more RabbitMQ connection messages**
 
 ## Performance Optimization
 
@@ -174,14 +196,14 @@ Check Render logs for these patterns:
 3. **Monitor and scale**
    - Monitor response times in Render dashboard
    - Upgrade plan if needed for more resources
-   - Consider using Redis for caching frequently accessed data
+   - Redis handles both caching and task processing efficiently
 
 ## Differences from Local Development
 
 | Aspect | Local (docker-compose) | Render |
 |--------|----------------------|--------|
 | Redis | Local container | External Redis Cloud |
-| RabbitMQ | Local container | External CloudAMQP |
+| Task Queue | Redis (was RabbitMQ) | Redis via external service |
 | Workers | Separate container | Same process or external |
 | SSL | Not required | Required for external services |
 | Configuration | .env file | Render environment variables |
@@ -192,9 +214,10 @@ After successful deployment:
 
 1. Test the `/api/health` endpoint
 2. Verify Redis connectivity in logs
-3. Test basic API functionality
-4. Monitor performance and resource usage
-5. Set up monitoring and alerting
+3. Test agent initialization (should no longer fail with RabbitMQ errors)
+4. Test basic API functionality  
+5. Monitor performance and resource usage
+6. Set up monitoring and alerting
 
 ## Support
 
