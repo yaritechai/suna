@@ -18,12 +18,16 @@ try:
     from services.langfuse import langfuse
 except ImportError:
     # Create dummy langfuse for graceful degradation
+    class DummyTrace:
+        def span(self, *args, **kwargs): 
+            return DummyTrace()
+        def end(self, *args, **kwargs): 
+            pass
+    
     class DummyLangfuse:
         def trace(self, *args, **kwargs):
-            class DummyTrace:
-                def span(self, *args, **kwargs): return DummyTrace()
-                def end(self, *args, **kwargs): pass
             return DummyTrace()
+    
     langfuse = DummyLangfuse()
 
 # Replace RabbitMQ configuration with Redis
