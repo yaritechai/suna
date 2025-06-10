@@ -163,11 +163,11 @@ async def stop_agent_run(agent_run_id: str, error_message: Optional[str] = None)
     client = await db.client
     final_status = "failed" if error_message else "stopped"
 
-    # Attempt to fetch final responses from Redis
+    # Attempt to fetch final responses from Redis (with size limit)
     response_list_key = f"agent_run:{agent_run_id}:responses"
     all_responses = []
     try:
-        all_responses_json = await redis.lrange(response_list_key, 0, -1)
+        all_responses_json = await redis.lrange_chunked(response_list_key, 0, -1, max_size_mb=8.0)
         all_responses = [json.loads(r) for r in all_responses_json]
         logger.info(f"Fetched {len(all_responses)} responses from Redis for DB update on stop/fail: {agent_run_id}")
     except Exception as e:
@@ -618,8 +618,8 @@ async def stream_agent_run(
         initial_yield_complete = False
 
         try:
-            # 1. Fetch and yield initial responses from Redis list
-            initial_responses_json = await redis.lrange(response_list_key, 0, -1)
+            # 1. Fetch and yield initial responses from Redis list (with size limit)
+            initial_responses_json = await redis.lrange_latest(response_list_key, max_count=200, max_size_mb=8.0)
             initial_responses = []
             if initial_responses_json:
                 initial_responses = [json.loads(r) for r in initial_responses_json]
@@ -1778,3 +1778,39 @@ async def debug_env():
         "redis_ssl": os.getenv('REDIS_SSL', 'NOT SET'),
         "all_redis_vars": {k: v for k, v in os.environ.items() if k.startswith('REDIS')}
     }
+
+@router.get("/debug/redis/{agent_run_id}")
+async def debug_redis_size(agent_run_id: str):
+    """Debug endpoint to check Redis list size for an agent run"""
+    try:
+        response_list_key = f"agent_run:{agent_run_id}:responses"
+        
+        # Get list length
+        list_length = await redis.llen(response_list_key)
+        
+        if list_length == 0:
+            return {"agent_run_id": agent_run_id, "list_length": 0, "estimated_size_mb": 0}
+        
+        # Sample a few responses to estimate size
+        sample_size = min(10, list_length)
+        sample_responses = await redis.lrange(response_list_key, 0, sample_size - 1)
+        
+        if sample_responses:
+            total_sample_size = sum(len(item.encode('utf-8')) for item in sample_responses)
+            avg_response_size = total_sample_size / len(sample_responses)
+            estimated_total_size = avg_response_size * list_length
+            estimated_size_mb = estimated_total_size / (1024 * 1024)
+        else:
+            estimated_size_mb = 0
+            avg_response_size = 0
+        
+        return {
+            "agent_run_id": agent_run_id,
+            "list_length": list_length,
+            "estimated_size_mb": round(estimated_size_mb, 2),
+            "avg_response_size_bytes": round(avg_response_size, 0),
+            "upstash_limit_mb": 10,
+            "approaching_limit": estimated_size_mb > 8.0
+        }
+    except Exception as e:
+        return {"error": str(e)}

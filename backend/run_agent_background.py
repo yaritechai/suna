@@ -193,8 +193,8 @@ async def run_agent_background(
              await redis.rpush(response_list_key, json.dumps(completion_message))
              await redis.publish(response_channel, "new") # Notify about the completion message
 
-        # Fetch final responses from Redis for DB update
-        all_responses_json = await redis.lrange(response_list_key, 0, -1)
+        # Fetch final responses from Redis for DB update (with size limit)
+        all_responses_json = await redis.lrange_chunked(response_list_key, 0, -1, max_size_mb=8.0)
         all_responses = [json.loads(r) for r in all_responses_json]
 
         # Update DB status
@@ -225,10 +225,10 @@ async def run_agent_background(
         except Exception as redis_err:
              logger.error(f"Failed to push error response to Redis for {agent_run_id}: {redis_err}")
 
-        # Fetch final responses (including the error)
+        # Fetch final responses (including the error, with size limit)
         all_responses = []
         try:
-             all_responses_json = await redis.lrange(response_list_key, 0, -1)
+             all_responses_json = await redis.lrange_chunked(response_list_key, 0, -1, max_size_mb=8.0)
              all_responses = [json.loads(r) for r in all_responses_json]
         except Exception as fetch_err:
              logger.error(f"Failed to fetch responses from Redis after error for {agent_run_id}: {fetch_err}")

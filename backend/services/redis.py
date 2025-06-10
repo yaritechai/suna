@@ -195,3 +195,77 @@ async def keys(pattern: str) -> List[str]:
     """Get keys matching a pattern."""
     redis_client = await get_client()
     return await redis_client.keys(pattern)
+
+
+async def lrange_chunked(key: str, start: int, end: int, max_size_mb: float = 8.0) -> List[str]:
+    """Get a range of elements from a list with size limit to prevent Upstash 10MB request limit."""
+    redis_client = await get_client()
+    max_size_bytes = int(max_size_mb * 1024 * 1024)  # Convert MB to bytes
+    
+    # If end is -1, get the actual list length
+    if end == -1:
+        list_length = await redis_client.llen(key)
+        if list_length == 0:
+            return []
+        end = list_length - 1
+    
+    # Calculate chunk size based on estimated average response size
+    # Start with small chunks and adjust based on actual data
+    chunk_size = 50  # Start with 50 responses per chunk
+    all_results = []
+    current_pos = start
+    total_size = 0
+    
+    logger.debug(f"Fetching Redis list {key} from {start} to {end} with {max_size_mb}MB limit")
+    
+    while current_pos <= end:
+        chunk_end = min(current_pos + chunk_size - 1, end)
+        
+        try:
+            chunk_data = await redis_client.lrange(key, current_pos, chunk_end)
+            if not chunk_data:
+                break
+                
+            # Calculate chunk size in bytes
+            chunk_size_bytes = sum(len(item.encode('utf-8')) for item in chunk_data)
+            
+            # Check if adding this chunk would exceed the limit
+            if total_size + chunk_size_bytes > max_size_bytes and all_results:
+                logger.warning(f"Redis list {key}: Stopping at position {current_pos} to avoid {max_size_mb}MB limit (current: {total_size / 1024 / 1024:.1f}MB)")
+                break
+            
+            all_results.extend(chunk_data)
+            total_size += chunk_size_bytes
+            current_pos = chunk_end + 1
+            
+            # Adjust chunk size based on average item size
+            if chunk_data:
+                avg_item_size = chunk_size_bytes / len(chunk_data)
+                # Aim for ~1MB chunks
+                optimal_chunk_size = max(10, min(200, int(1024 * 1024 / avg_item_size)))
+                chunk_size = optimal_chunk_size
+                
+        except Exception as e:
+            logger.error(f"Error fetching chunk {current_pos}-{chunk_end} from Redis list {key}: {e}")
+            break
+    
+    logger.debug(f"Fetched {len(all_results)} items from Redis list {key} (total size: {total_size / 1024 / 1024:.1f}MB)")
+    return all_results
+
+
+async def lrange_latest(key: str, max_count: int = 100, max_size_mb: float = 8.0) -> List[str]:
+    """Get the latest N items from a Redis list with size limit."""
+    redis_client = await get_client()
+    max_size_bytes = int(max_size_mb * 1024 * 1024)
+    
+    # Get list length
+    list_length = await redis_client.llen(key)
+    if list_length == 0:
+        return []
+    
+    # Calculate start position for latest items
+    start_pos = max(0, list_length - max_count)
+    
+    logger.debug(f"Fetching latest {max_count} items from Redis list {key} (total length: {list_length})")
+    
+    return await lrange_chunked(key, start_pos, -1, max_size_mb)
