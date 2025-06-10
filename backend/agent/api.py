@@ -1033,7 +1033,8 @@ async def initiate_agent_with_files(
         
         # Health check Redis before attempting to queue tasks
         try:
-            await redis.ping()
+            redis_client = await redis.get_client()
+            await redis_client.ping()
             logger.debug("Redis health check passed")
         except Exception as redis_health_error:
             logger.warning(f"Redis health check failed: {str(redis_health_error)}")

@@ -129,9 +129,40 @@ async def publish(channel: str, message: str):
 
 
 async def create_pubsub():
-    """Create a Redis pubsub object."""
-    redis_client = await get_client()
-    return redis_client.pubsub()
+    """Create a Redis pubsub object with connection retry."""
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            redis_client = await get_client()
+            pubsub = redis_client.pubsub()
+            # Test the pubsub connection
+            await pubsub.ping()
+            logger.debug(f"Created Redis pubsub successfully on attempt {attempt + 1}")
+            return pubsub
+        except Exception as e:
+            logger.warning(f"Failed to create Redis pubsub (attempt {attempt + 1}/{max_retries}): {e}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # Exponential backoff
+            else:
+                logger.error("Failed to create Redis pubsub after all retries")
+                raise
+
+
+async def publish_with_retry(channel: str, message: str, max_retries: int = 3):
+    """Publish a message to a Redis channel with retry logic."""
+    for attempt in range(max_retries):
+        try:
+            redis_client = await get_client()
+            result = await redis_client.publish(channel, message)
+            logger.debug(f"Published message to {channel} successfully on attempt {attempt + 1}")
+            return result
+        except Exception as e:
+            logger.warning(f"Failed to publish to {channel} (attempt {attempt + 1}/{max_retries}): {e}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # Exponential backoff
+            else:
+                logger.error(f"Failed to publish to {channel} after all retries")
+                raise
 
 
 # List operations
