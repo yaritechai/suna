@@ -170,27 +170,19 @@ def create_sandbox(password: str, project_id: str = None):
     
     logger.debug("Creating new Daytona sandbox environment")
     
-    # Try to clean up idle sandboxes first to free quota
+    # Schedule cleanup as background task - don't block agent initialization
     try:
         import asyncio
-        # Check if we're already in an event loop
+        # Always run cleanup in background without blocking
+        logger.debug("Scheduling sandbox cleanup as non-blocking background task...")
         try:
-            loop = asyncio.get_running_loop()
-            # We're in an async context, so schedule the cleanup as a task
-            logger.info("Scheduling sandbox cleanup as background task...")
+            # If there's a running loop, schedule as task
             asyncio.create_task(cleanup_idle_sandboxes())
         except RuntimeError:
-            # No running loop, safe to use run_until_complete
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            try:
-                cleaned_count = loop.run_until_complete(cleanup_idle_sandboxes())
-                if cleaned_count > 0:
-                    logger.info(f"Freed up quota by cleaning {cleaned_count} idle sandboxes")
-            finally:
-                loop.close()
+            # No running loop - skip cleanup to avoid blocking agent startup
+            logger.debug("No async loop available, skipping cleanup to avoid blocking agent startup")
     except Exception as cleanup_error:
-        logger.warning(f"Could not run sandbox cleanup: {str(cleanup_error)}")
+        logger.debug(f"Skipping sandbox cleanup to avoid blocking agent startup: {str(cleanup_error)}")
     
     logger.debug("Configuring sandbox with browser-use image and environment variables")
     

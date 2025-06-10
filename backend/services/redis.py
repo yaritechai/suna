@@ -31,7 +31,7 @@ def initialize():
 
     logger.info(f"Initializing Redis connection to {redis_host}:{redis_port}")
 
-    # Create Redis client with basic configuration
+    # Create Redis client with minimal overhead configuration
     client = redis.Redis(
         host=redis_host,
         port=redis_port,
@@ -40,8 +40,8 @@ def initialize():
         decode_responses=True,
         socket_timeout=5.0,
         socket_connect_timeout=5.0,
-        retry_on_timeout=True,
-        health_check_interval=30
+        retry_on_timeout=True
+        # Removed health_check_interval for better performance
     )
 
     return client
