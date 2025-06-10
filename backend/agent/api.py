@@ -1027,17 +1027,37 @@ async def initiate_agent_with_files(
         except Exception as e:
             logger.warning(f"Failed to register agent run in Redis ({instance_key}): {str(e)}")
 
-        # Run agent in background
-        run_agent_background.send(
-            agent_run_id=agent_run_id, thread_id=thread_id, instance_id=instance_id,
-            project_id=project_id,
-            model_name=model_name,  # Already resolved above
-            enable_thinking=enable_thinking, reasoning_effort=reasoning_effort,
-            stream=stream, enable_context_manager=enable_context_manager,
-            agent_config=agent_config,  # Pass agent configuration
-            is_agent_builder=is_agent_builder,
-            target_agent_id=target_agent_id
-        )
+        # Run agent in background with retry logic
+        max_retries = 3
+        retry_delay = 1
+        
+        for attempt in range(max_retries):
+            try:
+                run_agent_background.send(
+                    agent_run_id=agent_run_id, thread_id=thread_id, instance_id=instance_id,
+                    project_id=project_id,
+                    model_name=model_name,  # Already resolved above
+                    enable_thinking=enable_thinking, reasoning_effort=reasoning_effort,
+                    stream=stream, enable_context_manager=enable_context_manager,
+                    agent_config=agent_config,  # Pass agent configuration
+                    is_agent_builder=is_agent_builder,
+                    target_agent_id=target_agent_id
+                )
+                logger.info(f"Successfully queued background task for agent run {agent_run_id}")
+                break
+                
+            except Exception as send_error:
+                logger.warning(f"Attempt {attempt + 1}/{max_retries} failed to queue background task: {str(send_error)}")
+                
+                if attempt == max_retries - 1:
+                    # Last attempt failed, raise the error
+                    logger.error(f"Failed to queue background task after {max_retries} attempts: {str(send_error)}")
+                    raise send_error
+                else:
+                    # Wait before retrying
+                    import asyncio
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
 
         return {"thread_id": thread_id, "agent_run_id": agent_run_id}
 

@@ -173,10 +173,22 @@ def create_sandbox(password: str, project_id: str = None):
     # Try to clean up idle sandboxes first to free quota
     try:
         import asyncio
-        loop = asyncio.get_event_loop()
-        cleaned_count = loop.run_until_complete(cleanup_idle_sandboxes())
-        if cleaned_count > 0:
-            logger.info(f"Freed up quota by cleaning {cleaned_count} idle sandboxes")
+        # Check if we're already in an event loop
+        try:
+            loop = asyncio.get_running_loop()
+            # We're in an async context, so schedule the cleanup as a task
+            logger.info("Scheduling sandbox cleanup as background task...")
+            asyncio.create_task(cleanup_idle_sandboxes())
+        except RuntimeError:
+            # No running loop, safe to use run_until_complete
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            try:
+                cleaned_count = loop.run_until_complete(cleanup_idle_sandboxes())
+                if cleaned_count > 0:
+                    logger.info(f"Freed up quota by cleaning {cleaned_count} idle sandboxes")
+            finally:
+                loop.close()
     except Exception as cleanup_error:
         logger.warning(f"Could not run sandbox cleanup: {str(cleanup_error)}")
     
