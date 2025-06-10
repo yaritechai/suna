@@ -172,7 +172,6 @@ def create_sandbox(password: str, project_id: str = None):
     
     # Schedule cleanup as background task - don't block agent initialization
     try:
-        import asyncio
         # Always run cleanup in background without blocking
         logger.debug("Scheduling sandbox cleanup as non-blocking background task...")
         try:
@@ -233,11 +232,9 @@ def create_sandbox(password: str, project_id: str = None):
         if "quota exceeded" in error_msg.lower() or "memory" in error_msg.lower():
             logger.error(f"Quota exceeded when creating sandbox: {error_msg}")
             
-            # Try aggressive cleanup and retry once
+            # Try creating with smaller resources without blocking cleanup
             try:
-                logger.info("Attempting aggressive cleanup due to quota exceeded...")
-                cleaned_count = loop.run_until_complete(cleanup_idle_sandboxes())
-                logger.info(f"Cleaned {cleaned_count} sandboxes, retrying sandbox creation...")
+                logger.info("Retrying sandbox creation with reduced resources...")
                 
                 # Retry sandbox creation with even smaller resources
                 retry_params = CreateSandboxParams(
@@ -265,7 +262,7 @@ def create_sandbox(password: str, project_id: str = None):
                 )
                 
                 sandbox = daytona.create(retry_params)
-                logger.info(f"Successfully created sandbox {sandbox.id} after cleanup and retry")
+                logger.info(f"Successfully created sandbox {sandbox.id} with reduced resources")
                 
                 # Start supervisord in a session for new sandbox
                 start_supervisord_session(sandbox)
@@ -273,7 +270,7 @@ def create_sandbox(password: str, project_id: str = None):
                 return sandbox
                 
             except Exception as retry_error:
-                logger.error(f"Failed to create sandbox even after cleanup: {str(retry_error)}")
+                logger.error(f"Failed to create sandbox even with reduced resources: {str(retry_error)}")
                 raise Exception(f"Unable to create sandbox due to resource constraints. Please try again later or contact support.")
                 
         else:
