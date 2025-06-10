@@ -29,7 +29,10 @@ def initialize():
     redis_ssl_str = os.getenv('REDIS_SSL', 'False')
     redis_ssl = redis_ssl_str.lower() == 'true'
 
-    logger.info(f"Initializing Redis connection to {redis_host}:{redis_port}")
+    logger.info(f"Initializing Redis connection to {redis_host}:{redis_port} (SSL: {redis_ssl})")
+    
+    # Log configuration for debugging (without password)
+    logger.info(f"Redis config - Host: {redis_host}, Port: {redis_port}, SSL: {redis_ssl}, Password: {'SET' if redis_password else 'NOT SET'}")
 
     # Create Redis client with minimal overhead configuration
     client = redis.Redis(
@@ -38,9 +41,10 @@ def initialize():
         password=redis_password,
         ssl=redis_ssl,
         decode_responses=True,
-        socket_timeout=5.0,
-        socket_connect_timeout=5.0,
-        retry_on_timeout=True
+        socket_timeout=10.0,  # Increased timeout
+        socket_connect_timeout=10.0,  # Increased timeout
+        retry_on_timeout=True,
+        health_check_interval=30  # Add health check
         # Removed health_check_interval for better performance
     )
 
@@ -48,7 +52,7 @@ def initialize():
 
 
 async def initialize_async():
-    """Initialize Redis connection asynchronously."""
+    """Initialize Redis connection asynchronously with retry logic."""
     global client, _initialized
 
     async with _init_lock:
@@ -56,14 +60,25 @@ async def initialize_async():
             logger.info("Initializing Redis connection")
             initialize()
 
-            try:
-                await client.ping()
-                logger.info("Successfully connected to Redis")
-                _initialized = True
-            except Exception as e:
-                logger.error(f"Failed to connect to Redis: {e}")
-                client = None
-                raise
+            # Retry logic for connection
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    logger.info(f"Attempting Redis connection (attempt {attempt + 1}/{max_retries})")
+                    await client.ping()
+                    logger.info("Successfully connected to Redis")
+                    _initialized = True
+                    return client
+                except Exception as e:
+                    logger.error(f"Redis connection attempt {attempt + 1} failed: {e}")
+                    if attempt < max_retries - 1:
+                        wait_time = 2 ** attempt  # Exponential backoff
+                        logger.info(f"Retrying in {wait_time} seconds...")
+                        await asyncio.sleep(wait_time)
+                    else:
+                        logger.error("All Redis connection attempts failed")
+                        client = None
+                        raise Exception(f"Failed to connect to Redis after {max_retries} attempts: {e}")
 
     return client
 

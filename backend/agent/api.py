@@ -1765,3 +1765,15 @@ async def get_agent_builder_chat_history(
     except Exception as e:
         logger.error(f"Error fetching agent builder chat history for agent {agent_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to fetch chat history: {str(e)}")
+
+@router.get("/debug/env")
+async def debug_env():
+    """Debug endpoint to check environment variables"""
+    import os
+    return {
+        "redis_host": os.getenv('REDIS_HOST', 'NOT SET'),
+        "redis_port": os.getenv('REDIS_PORT', 'NOT SET'), 
+        "redis_password_set": bool(os.getenv('REDIS_PASSWORD')),
+        "redis_ssl": os.getenv('REDIS_SSL', 'NOT SET'),
+        "all_redis_vars": {k: v for k, v in os.environ.items() if k.startswith('REDIS')}
+    }
