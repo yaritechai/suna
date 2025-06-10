@@ -418,13 +418,13 @@ async def start_agent(
         except Exception as e:
             logger.warning(f"Failed to update thread agent_id: {e}")
 
-    can_use, model_message, allowed_models = await can_use_model(client, account_id, model_name)
-    if not can_use:
-        raise HTTPException(status_code=403, detail={"message": model_message, "allowed_models": allowed_models})
+    # can_use, model_message, allowed_models = await can_use_model(client, account_id, model_name)
+    # if not can_use:
+    #     raise HTTPException(status_code=403, detail={"message": model_message, "allowed_models": allowed_models})
 
-    can_run, message, subscription = await check_billing_status(client, account_id)
-    if not can_run:
-        raise HTTPException(status_code=402, detail={"message": message, "subscription": subscription})
+    # can_run, message, subscription = await check_billing_status(client, account_id)
+    # if not can_run:
+    #     raise HTTPException(status_code=402, detail={"message": message, "subscription": subscription})
 
     active_run_id = await check_for_active_project_agent_run(client, project_id)
     if active_run_id:
