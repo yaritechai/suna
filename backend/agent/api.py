@@ -1031,6 +1031,14 @@ async def initiate_agent_with_files(
         max_retries = 3
         retry_delay = 1
         
+        # Health check Redis before attempting to queue tasks
+        try:
+            await redis.ping()
+            logger.debug("Redis health check passed")
+        except Exception as redis_health_error:
+            logger.warning(f"Redis health check failed: {str(redis_health_error)}")
+            # Continue anyway - the retry logic will handle connection issues
+        
         for attempt in range(max_retries):
             try:
                 run_agent_background.send(
