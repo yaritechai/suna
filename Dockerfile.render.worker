@@ -1,0 +1,36 @@
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    ENV_MODE="production" \
+    PYTHONPATH=/app/backend
+
+WORKDIR /app/backend
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user and set up directories
+RUN useradd -m -u 1000 appuser && \
+    mkdir -p /app/backend/logs && \
+    chown -R appuser:appuser /app
+
+# Install Python dependencies
+COPY --chown=appuser:appuser backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Switch to non-root user
+USER appuser
+
+# Copy backend code
+COPY --chown=appuser:appuser backend/ .
+
+# Expose port for health checks
+EXPOSE 8001
+
+# Run Dramatiq worker with health check endpoint
+CMD ["python", "-m", "dramatiq", "--processes", "2", "--threads", "2", "run_agent_background"] 
