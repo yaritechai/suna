@@ -31,16 +31,21 @@ redis_host = os.getenv('REDIS_HOST', 'redis')
 redis_port = int(os.getenv('REDIS_PORT', 6379))
 redis_password = os.getenv('REDIS_PASSWORD', '')
 
-# Configure Redis broker for Dramatiq with connection resilience
-if redis_password:
-    redis_url = f"redis://:{redis_password}@{redis_host}:{redis_port}/0"
-else:
-    redis_url = f"redis://{redis_host}:{redis_port}/0"
+# Configure Redis broker for Dramatiq with SSL support for Upstash
+redis_ssl = os.getenv('REDIS_SSL', 'True').lower() == 'true'
+ssl_protocol = "rediss" if redis_ssl else "redis"
 
-# Configure Redis broker with basic parameters
+if redis_password:
+    redis_url = f"{ssl_protocol}://:{redis_password}@{redis_host}:{redis_port}/0"
+else:
+    redis_url = f"{ssl_protocol}://{redis_host}:{redis_port}/0"
+
+# Configure Redis broker with SSL support for Upstash
 redis_broker = RedisBroker(
     url=redis_url, 
-    middleware=[dramatiq.middleware.AsyncIO()]
+    middleware=[dramatiq.middleware.AsyncIO()],
+    # Add SSL configuration for Upstash compatibility
+    **({'ssl_cert_reqs': None} if redis_ssl else {})
 )
 dramatiq.set_broker(redis_broker)
 
