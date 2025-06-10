@@ -778,15 +778,7 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                                 (messages.length === 0 || messages[messages.length - 1].type === 'user')) && (
                                     <div ref={latestMessageRef} className='w-full h-22 rounded'>
                                         <div className="flex flex-col gap-2">
-                                            {/* Logo positioned above the loader */}
-                                            <div className="flex items-center">
-                                                <div className="rounded-md flex items-center justify-center">
-                                                    {agentAvatar}
-                                                </div>
-                                                <p className='ml-2 text-sm text-base-content/70'>{agentName}</p>
-                                            </div>
-                                            
-                                            {/* Loader content */}
+                                            {/* Loader content without avatar */}
                                             <div className="space-y-2 w-full h-12">
                                                 <AgentLoader />
                                             </div>
@@ -798,15 +790,7 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                             {readOnly && currentToolCall && (
                                 <div ref={latestMessageRef}>
                                     <div className="flex flex-col gap-2">
-                                        {/* Logo positioned above the tool call */}
-                                        <div className="flex justify-start">
-                                            <div className="rounded-md flex items-center justify-center">
-                                                {agentAvatar}
-                                            </div>
-                                            <p className='ml-2 text-sm text-base-content/70'>{agentName}</p>
-                                        </div>
-                                        
-                                        {/* Tool call content */}
+                                        {/* Tool call content without avatar */}
                                         <div className="space-y-2">
                                             <div className="animate-shimmer inline-flex items-center gap-1.5 py-1.5 px-3 text-xs font-medium text-primary bg-primary/10 rounded-md border border-primary/20">
                                                 <CircleDashed className="h-3.5 w-3.5 text-primary flex-shrink-0 animate-spin animation-duration-2000" />
@@ -823,15 +807,7 @@ export const ThreadContent: React.FC<ThreadContentProps> = ({
                             {readOnly && visibleMessages && visibleMessages.length === 0 && isStreamingText && (
                                 <div ref={latestMessageRef}>
                                     <div className="flex flex-col gap-2">
-                                        {/* Logo positioned above the streaming indicator */}
-                                        <div className="flex justify-start">
-                                            <div className="rounded-md flex items-center justify-center">
-                                                {agentAvatar}
-                                            </div>
-                                            <p className='ml-2 text-sm text-base-content/70'>{agentName}</p>
-                                        </div>
-                                        
-                                        {/* Streaming indicator content */}
+                                        {/* Streaming indicator content without avatar */}
                                         <div className="max-w-[90%] px-4 py-3 text-sm">
                                             <div className="flex items-center gap-1.5 py-1">
                                                 <div className="h-1.5 w-1.5 rounded-full bg-primary/50 animate-pulse" />
