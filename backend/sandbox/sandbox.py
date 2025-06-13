@@ -94,6 +94,13 @@ async def get_or_start_sandbox(sandbox_id: str):
         
         elif current_state == WorkspaceState.STARTED:
             logger.info(f"Sandbox {sandbox_id} is already running")
+            # Ensure supervisord is running even for already started sandboxes
+            try:
+                start_supervisord_session(sandbox)
+                logger.info(f"Ensured supervisord is running in sandbox {sandbox_id}")
+            except Exception as supervisord_error:
+                logger.warning(f"Failed to start supervisord in running sandbox {sandbox_id}: {supervisord_error}")
+                # Continue anyway, supervisord failure shouldn't block the sandbox
         else:
             logger.warning(f"Sandbox {sandbox_id} is in unexpected state: {current_state}")
         
@@ -209,7 +216,7 @@ def create_sandbox(password: str, project_id: str = None):
         },
         resources={
             "cpu": 1,
-            "memory": 1,  # Further reduced to 1GB to allow more concurrent sandboxes
+            "memory": 2,  # Increased from 1GB to 2GB for better stability with VNC/Chrome
             "disk": 2,    # Reduced disk space as well
         }
     )
@@ -256,8 +263,8 @@ def create_sandbox(password: str, project_id: str = None):
                     },
                     resources={
                         "cpu": 1,
-                        "memory": 0.5,  # Try with even less memory
-                        "disk": 1,
+                        "memory": 2,  # Use same 2GB memory for retry attempts
+                        "disk": 2
                     }
                 )
                 
