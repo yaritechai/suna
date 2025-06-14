@@ -63,7 +63,8 @@ async def run_agent(
         logger.info(f"Using custom agent: {agent_config.get('name', 'Unknown')}")
 
     if not trace:
-        trace = langfuse.trace(name="run_agent", session_id=thread_id, metadata={"project_id": project_id})
+        # trace = langfuse.trace(name="run_agent", session_id=thread_id, metadata={"project_id": project_id})
+        trace = None  # Temporarily disable Langfuse to fix worker crash
     thread_manager = ThreadManager(trace=trace, is_agent_builder=is_agent_builder, target_agent_id=target_agent_id)
 
     client = await thread_manager.db.client
