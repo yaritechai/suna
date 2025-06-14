@@ -59,7 +59,7 @@ class ThreadManager:
         self.is_agent_builder = is_agent_builder
         self.target_agent_id = target_agent_id
         if not self.trace:
-            self.trace = langfuse.trace(name="anonymous:thread_manager")
+            self.trace = None  # Temporarily disable Langfuse to fix worker crash
         self.response_processor = ResponseProcessor(
             tool_registry=self.tool_registry,
             add_message_callback=self.add_message,
