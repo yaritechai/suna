@@ -120,18 +120,71 @@ async def get_or_start_sandbox(sandbox_id: str):
             raise Exception(error_msg)
 
 def start_supervisord_session(sandbox: Sandbox):
-    """Start supervisord in a session."""
+    """Start supervisord in a session with improved VNC service initialization."""
     session_id = "supervisord-session"
     try:
         logger.info(f"Creating session {session_id} for supervisord")
         sandbox.process.create_session(session_id)
         
-        # Execute supervisord command
+        # First, kill any existing supervisord processes to avoid conflicts
+        try:
+            sandbox.process.execute_session_command(session_id, SessionExecuteRequest(
+                command="pkill -f supervisord || true",
+                var_async=False
+            ))
+            logger.debug("Cleaned up any existing supervisord processes")
+        except Exception as cleanup_error:
+            logger.debug(f"Supervisord cleanup warning (expected): {cleanup_error}")
+        
+        # Wait a moment for cleanup
+        time.sleep(2)
+        
+        # Start supervisord with explicit configuration
         sandbox.process.execute_session_command(session_id, SessionExecuteRequest(
             command="exec /usr/bin/supervisord -n -c /etc/supervisor/conf.d/supervisord.conf",
             var_async=True
         ))
         logger.info(f"Supervisord started in session {session_id}")
+        
+        # Wait for supervisord to initialize
+        time.sleep(3)
+        
+        # Verify and restart VNC services if needed
+        try:
+            # Check if websockify (VNC proxy) is running on port 6080
+            check_result = sandbox.process.execute_session_command(session_id, SessionExecuteRequest(
+                command="netstat -tlnp | grep :6080 || echo 'VNC_NOT_RUNNING'",
+                var_async=False
+            ))
+            
+            if "VNC_NOT_RUNNING" in str(check_result):
+                logger.warning("VNC service not detected, attempting manual restart...")
+                
+                # Manually start VNC services
+                sandbox.process.execute_session_command(session_id, SessionExecuteRequest(
+                    command="supervisorctl restart all",
+                    var_async=False
+                ))
+                
+                # Wait and check again
+                time.sleep(5)
+                
+                # Final verification
+                final_check = sandbox.process.execute_session_command(session_id, SessionExecuteRequest(
+                    command="netstat -tlnp | grep :6080 && echo 'VNC_RUNNING' || echo 'VNC_FAILED'",
+                    var_async=False
+                ))
+                
+                if "VNC_RUNNING" in str(final_check):
+                    logger.info("VNC service successfully started on port 6080")
+                else:
+                    logger.error("VNC service failed to start properly")
+            else:
+                logger.info("VNC service is running on port 6080")
+                
+        except Exception as vnc_check_error:
+            logger.warning(f"Could not verify VNC service status: {vnc_check_error}")
+        
     except Exception as e:
         logger.error(f"Error starting supervisord session: {str(e)}")
         raise e
@@ -284,6 +337,24 @@ def create_sandbox(password: str, project_id: str = None):
             # Re-raise other errors as-is
             logger.error(f"Error creating sandbox: {error_msg}")
             raise create_error
+
+async def restart_vnc_services(sandbox_id: str):
+    """Restart VNC services in an existing sandbox to fix 502 errors."""
+    try:
+        logger.info(f"Restarting VNC services for sandbox {sandbox_id}")
+        
+        # Get the sandbox
+        sandbox = daytona.get_current_sandbox(sandbox_id)
+        
+        # Restart supervisord session
+        start_supervisord_session(sandbox)
+        
+        logger.info(f"VNC services restarted for sandbox {sandbox_id}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Error restarting VNC services for sandbox {sandbox_id}: {str(e)}")
+        return False
 
 async def delete_sandbox(sandbox_id: str):
     """Delete a sandbox by its ID."""
