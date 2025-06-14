@@ -93,7 +93,7 @@ class ProcessorConfig:
 class ResponseProcessor:
     """Processes LLM responses, extracting and executing tool calls."""
     
-    def __init__(self, tool_registry: ToolRegistry, add_message_callback: Callable, trace: Optional[StatefulTraceClient] = None, is_agent_builder: bool = False, target_agent_id: Optional[str] = None):
+    def __init__(self, tool_registry: ToolRegistry, add_message_callback: Callable, trace: Optional["StatefulTraceClient"] = None, is_agent_builder: bool = False, target_agent_id: Optional[str] = None):
         """Initialize the ResponseProcessor.
         
         Args:

@@ -45,7 +45,7 @@ class ThreadManager:
     XML-based tool execution patterns.
     """
 
-    def __init__(self, trace: Optional[StatefulTraceClient] = None, is_agent_builder: bool = False, target_agent_id: Optional[str] = None):
+    def __init__(self, trace: Optional["StatefulTraceClient"] = None, is_agent_builder: bool = False, target_agent_id: Optional[str] = None):
         """Initialize ThreadManager.
 
         Args:
@@ -180,7 +180,7 @@ class ThreadManager:
         enable_thinking: Optional[bool] = False,
         reasoning_effort: Optional[str] = 'low',
         enable_context_manager: bool = True,
-        generation: Optional[StatefulGenerationClient] = None,
+        generation: Optional["StatefulGenerationClient"] = None,
     ) -> Union[Dict[str, Any], AsyncGenerator]:
         """Run a conversation thread with LLM integration and tool execution.
 

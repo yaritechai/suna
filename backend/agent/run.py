@@ -53,7 +53,7 @@ async def run_agent(
     reasoning_effort: Optional[str] = 'low',
     enable_context_manager: bool = True,
     agent_config: Optional[dict] = None,    
-    trace: Optional[StatefulTraceClient] = None,
+    trace: Optional["StatefulTraceClient"] = None,
     is_agent_builder: Optional[bool] = False,
     target_agent_id: Optional[str] = None
 ):
