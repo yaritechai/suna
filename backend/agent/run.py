@@ -299,7 +299,8 @@ async def run_agent(
     latest_user_message = await client.table('messages').select('*').eq('thread_id', thread_id).eq('type', 'user').order('created_at', desc=True).limit(1).execute()
     if latest_user_message.data and len(latest_user_message.data) > 0:
         data = json.loads(latest_user_message.data[0]['content'])
-        trace.update(input=data['content'])
+        if trace:
+            trace.update(input=data['content'])
 
     while continue_execution and iteration_count < max_iterations:
         iteration_count += 1
@@ -309,7 +310,8 @@ async def run_agent(
         can_run, message, subscription = await check_billing_status(client, account_id)
         if not can_run:
             error_msg = f"Billing limit reached: {message}"
-            trace.event(name="billing_limit_reached", level="ERROR", status_message=(f"{error_msg}"))
+            if trace:
+                trace.event(name="billing_limit_reached", level="ERROR", status_message=(f"{error_msg}"))
             # Yield a special message to indicate billing limit reached
             yield {
                 "type": "status",
@@ -323,7 +325,8 @@ async def run_agent(
             message_type = latest_message.data[0].get('type')
             if message_type == 'assistant':
                 logger.info(f"Last message was from assistant, stopping execution")
-                trace.event(name="last_message_from_assistant", level="DEFAULT", status_message=(f"Last message was from assistant, stopping execution"))
+                if trace:
+                    trace.event(name="last_message_from_assistant", level="DEFAULT", status_message=(f"Last message was from assistant, stopping execution"))
                 continue_execution = False
                 break
 
@@ -371,7 +374,8 @@ async def run_agent(
 
             except Exception as e:
                 logger.error(f"Error parsing browser state: {e}")
-                trace.event(name="error_parsing_browser_state", level="ERROR", status_message=(f"{e}"))
+                if trace:
+                    trace.event(name="error_parsing_browser_state", level="ERROR", status_message=(f"{e}"))
 
         # Get the latest image_context message (NEW)
         latest_image_context_msg = await client.table('messages').select('*').eq('thread_id', thread_id).eq('type', 'image_context').order('created_at', desc=True).limit(1).execute()
@@ -399,7 +403,8 @@ async def run_agent(
                 await client.table('messages').delete().eq('message_id', latest_image_context_msg.data[0]["message_id"]).execute()
             except Exception as e:
                 logger.error(f"Error parsing image context: {e}")
-                trace.event(name="error_parsing_image_context", level="ERROR", status_message=(f"{e}"))
+                if trace:
+                    trace.event(name="error_parsing_image_context", level="ERROR", status_message=(f"{e}"))
 
         # If we have any content, construct the temporary_message
         if temp_message_content_list:
@@ -414,7 +419,7 @@ async def run_agent(
         elif "gpt-4" in model_name.lower():
             max_tokens = 4096
             
-        generation = trace.generation(name="thread_manager.run_thread")
+        generation = trace.generation(name="thread_manager.run_thread") if trace else None
         try:
             # Make the LLM call and process the response
             response = await thread_manager.run_thread(
@@ -445,7 +450,8 @@ async def run_agent(
 
             if isinstance(response, dict) and "status" in response and response["status"] == "error":
                 logger.error(f"Error response from run_thread: {response.get('message', 'Unknown error')}")
-                trace.event(name="error_response_from_run_thread", level="ERROR", status_message=(f"{response.get('message', 'Unknown error')}"))
+                if trace:
+                    trace.event(name="error_response_from_run_thread", level="ERROR", status_message=(f"{response.get('message', 'Unknown error')}"))
                 yield response
                 break
 
@@ -461,7 +467,8 @@ async def run_agent(
                     # If we receive an error chunk, we should stop after this iteration
                     if isinstance(chunk, dict) and chunk.get('type') == 'status' and chunk.get('status') == 'error':
                         logger.error(f"Error chunk detected: {chunk.get('message', 'Unknown error')}")
-                        trace.event(name="error_chunk_detected", level="ERROR", status_message=(f"{chunk.get('message', 'Unknown error')}"))
+                        if trace:
+                            trace.event(name="error_chunk_detected", level="ERROR", status_message=(f"{chunk.get('message', 'Unknown error')}"))
                         error_detected = True
                         yield chunk  # Forward the error chunk
                         continue     # Continue processing other chunks but don't break yet
@@ -477,7 +484,8 @@ async def run_agent(
                             if metadata.get('agent_should_terminate'):
                                 agent_should_terminate = True
                                 logger.info("Agent termination signal detected in status message")
-                                trace.event(name="agent_termination_signal_detected", level="DEFAULT", status_message="Agent termination signal detected in status message")
+                                if trace:
+                                    trace.event(name="agent_termination_signal_detected", level="DEFAULT", status_message="Agent termination signal detected in status message")
                                 
                                 # Extract the tool name from the status content if available
                                 content = chunk.get('content', {})
@@ -516,36 +524,45 @@ async def run_agent(
 
                                    last_tool_call = xml_tool
                                    logger.info(f"Agent used XML tool: {xml_tool}")
-                                   trace.event(name="agent_used_xml_tool", level="DEFAULT", status_message=(f"Agent used XML tool: {xml_tool}"))
+                                   if trace:
+                                       trace.event(name="agent_used_xml_tool", level="DEFAULT", status_message=(f"Agent used XML tool: {xml_tool}"))
                         except json.JSONDecodeError:
                             # Handle cases where content might not be valid JSON
                             logger.warning(f"Warning: Could not parse assistant content JSON: {chunk.get('content')}")
-                            trace.event(name="warning_could_not_parse_assistant_content_json", level="WARNING", status_message=(f"Warning: Could not parse assistant content JSON: {chunk.get('content')}"))
+                            if trace:
+                                trace.event(name="warning_could_not_parse_assistant_content_json", level="WARNING", status_message=(f"Warning: Could not parse assistant content JSON: {chunk.get('content')}"))
                         except Exception as e:
                             logger.error(f"Error processing assistant chunk: {e}")
-                            trace.event(name="error_processing_assistant_chunk", level="ERROR", status_message=(f"Error processing assistant chunk: {e}"))
+                            if trace:
+                                trace.event(name="error_processing_assistant_chunk", level="ERROR", status_message=(f"Error processing assistant chunk: {e}"))
 
                     yield chunk
 
                 # Check if we should stop based on the last tool call or error
                 if error_detected:
                     logger.info(f"Stopping due to error detected in response")
-                    trace.event(name="stopping_due_to_error_detected_in_response", level="DEFAULT", status_message=(f"Stopping due to error detected in response"))
-                    generation.end(output=full_response, status_message="error_detected", level="ERROR")
+                    if trace:
+                        trace.event(name="stopping_due_to_error_detected_in_response", level="DEFAULT", status_message=(f"Stopping due to error detected in response"))
+                    if generation:
+                        generation.end(output=full_response, status_message="error_detected", level="ERROR")
                     break
                     
                 if agent_should_terminate or last_tool_call in ['ask', 'complete', 'web-browser-takeover']:
                     logger.info(f"Agent decided to stop with tool: {last_tool_call}")
-                    trace.event(name="agent_decided_to_stop_with_tool", level="DEFAULT", status_message=(f"Agent decided to stop with tool: {last_tool_call}"))
-                    generation.end(output=full_response, status_message="agent_stopped")
+                    if trace:
+                        trace.event(name="agent_decided_to_stop_with_tool", level="DEFAULT", status_message=(f"Agent decided to stop with tool: {last_tool_call}"))
+                    if generation:
+                        generation.end(output=full_response, status_message="agent_stopped")
                     continue_execution = False
 
             except Exception as e:
                 # Just log the error and re-raise to stop all iterations
                 error_msg = f"Error during response streaming: {str(e)}"
                 logger.error(f"Error: {error_msg}")
-                trace.event(name="error_during_response_streaming", level="ERROR", status_message=(f"Error during response streaming: {str(e)}"))
-                generation.end(output=full_response, status_message=error_msg, level="ERROR")
+                if trace:
+                    trace.event(name="error_during_response_streaming", level="ERROR", status_message=(f"Error during response streaming: {str(e)}"))
+                if generation:
+                    generation.end(output=full_response, status_message=error_msg, level="ERROR")
                 yield {
                     "type": "status",
                     "status": "error",
@@ -558,7 +575,8 @@ async def run_agent(
             # Just log the error and re-raise to stop all iterations
             error_msg = f"Error running thread: {str(e)}"
             logger.error(f"Error: {error_msg}")
-            trace.event(name="error_running_thread", level="ERROR", status_message=(f"Error running thread: {str(e)}"))
+            if trace:
+                trace.event(name="error_running_thread", level="ERROR", status_message=(f"Error running thread: {str(e)}"))
             yield {
                 "type": "status",
                 "status": "error",
@@ -566,7 +584,8 @@ async def run_agent(
             }
             # Stop execution immediately on any error
             break
-        generation.end(output=full_response)
+        if generation:
+            generation.end(output=full_response)
 
     # langfuse.flush() # Flush Langfuse events at the end of the run - temporarily disabled
   

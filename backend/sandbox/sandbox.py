@@ -124,6 +124,18 @@ def start_supervisord_session(sandbox: Sandbox):
     session_id = "supervisord-session"
     try:
         logger.info(f"Creating session {session_id} for supervisord")
+        
+        # Check if session already exists and remove it if it does
+        try:
+            existing_sessions = sandbox.process.list_sessions()
+            if session_id in [session.id for session in existing_sessions]:
+                logger.info(f"Session {session_id} already exists, removing it first")
+                sandbox.process.remove_session(session_id)
+                time.sleep(1)  # Wait for cleanup
+        except Exception as session_check_error:
+            logger.debug(f"Session check/cleanup warning (expected): {session_check_error}")
+        
+        # Create the session
         sandbox.process.create_session(session_id)
         
         # First, kill any existing supervisord processes to avoid conflicts
