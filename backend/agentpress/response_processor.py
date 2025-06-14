@@ -105,7 +105,8 @@ class ResponseProcessor:
         self.add_message = add_message_callback
         self.trace = trace
         if not self.trace:
-            self.trace = langfuse.trace(name="anonymous:response_processor")
+            # self.trace = langfuse.trace(name="anonymous:response_processor")
+            self.trace = None  # Temporarily disable Langfuse to fix worker crash
         # Initialize the XML parser with backwards compatibility
         self.xml_parser = XMLToolParser(strict_mode=False)
         self.is_agent_builder = is_agent_builder

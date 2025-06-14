@@ -568,7 +568,7 @@ async def run_agent(
             break
         generation.end(output=full_response)
 
-    langfuse.flush() # Flush Langfuse events at the end of the run
+    # langfuse.flush() # Flush Langfuse events at the end of the run - temporarily disabled
   
 
 
