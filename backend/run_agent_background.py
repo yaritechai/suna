@@ -35,7 +35,12 @@ redis_broker = RedisBroker(
     url=redis_url, 
     middleware=[dramatiq.middleware.AsyncIO()],
     # Add SSL configuration for Upstash compatibility
-    **({'ssl_cert_reqs': None} if redis_ssl else {})
+    **({'ssl_cert_reqs': None} if redis_ssl else {}),
+    # Add timeout and retry settings for Upstash stability
+    socket_timeout=30.0,  # 30 second timeout for socket operations
+    socket_connect_timeout=10.0,  # 10 second connection timeout
+    retry_on_timeout=True,  # Retry on timeout
+    health_check_interval=30,  # Health check every 30 seconds
 )
 dramatiq.set_broker(redis_broker)
 
