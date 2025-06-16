@@ -5,9 +5,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import { Toaster } from '@/components/ui/sonner';
-import { Analytics } from '@vercel/analytics/react';
 import { GoogleAnalytics } from '@next/third-parties/google';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import Script from 'next/script';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
@@ -163,9 +161,7 @@ export default function RootLayout({
               </TooltipProvider>
             </ReactQueryProvider>
           </Providers>
-          <Analytics />
           <GoogleAnalytics gaId="G-6ETJFB3PT3" />
-          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>

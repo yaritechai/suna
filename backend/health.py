@@ -5,7 +5,6 @@ Simple health check endpoint for deployment monitoring
 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-import asyncio
 import time
 
 app = FastAPI()
@@ -14,7 +13,7 @@ app = FastAPI()
 async def health_check():
     """Basic health check endpoint"""
     return JSONResponse({
-        "status": "healthy", 
+        "status": "healthy",
         "timestamp": time.time(),
         "service": "yari-2-backend"
     })

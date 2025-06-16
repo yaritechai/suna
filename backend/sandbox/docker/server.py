@@ -11,7 +11,7 @@ class WorkspaceDirMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         # Check if workspace directory exists and recreate if deleted
         if not os.path.exists(workspace_dir):
-            print(f"Workspace directory {workspace_dir} not found, recreating...")
+            print("Workspace directory {workspace_dir} not found, recreating...")
             os.makedirs(workspace_dir, exist_ok=True)
         return await call_next(request)
 
@@ -24,6 +24,6 @@ app.mount('/', StaticFiles(directory=workspace_dir, html=True), name='site')
 
 # This is needed for the import string approach with uvicorn
 if __name__ == '__main__':
-    print(f"Starting server with auto-reload, serving files from: {workspace_dir}")
+    print("Starting server with auto-reload, serving files from: {workspace_dir}")
     # Don't use reload directly in the run call
-    uvicorn.run("server:app", host="0.0.0.0", port=8080, reload=True) 
+    uvicorn.run("server:app", host="0.0.0.0", port=8080, reload=True)

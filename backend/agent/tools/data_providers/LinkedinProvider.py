@@ -247,4 +247,3 @@ if __name__ == "__main__":
         payload={"profile_url": "https://www.linkedin.com/in/adamcohenhillel/", "page": 1}
     )
     print(result)
-

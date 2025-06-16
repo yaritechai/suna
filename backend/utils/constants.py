@@ -125,7 +125,7 @@ MODEL_NAME_ALIASES = {
     "qwen3": "openrouter/qwen/qwen3-235b-a22b",  # Commented out in constants.py
     "gemini-flash-2.5": "openrouter/google/gemini-2.5-flash-preview-05-20",
     "gemini-2.5-flash:thinking":"openrouter/google/gemini-2.5-flash-preview-05-20:thinking",
-    
+
     # "google/gemini-2.5-flash-preview":"openrouter/google/gemini-2.5-flash-preview",
     # "google/gemini-2.5-flash-preview:thinking":"openrouter/google/gemini-2.5-flash-preview:thinking",
     "google/gemini-2.5-pro-preview":"openrouter/google/gemini-2.5-pro-preview",
@@ -139,9 +139,9 @@ MODEL_NAME_ALIASES = {
     # "openai/gpt-4": "openai/gpt-4",  # Commented out in constants.py
     # "openrouter/google/gemini-2.5-flash-preview": "openrouter/google/gemini-2.5-flash-preview",  # Commented out in constants.py
     # "xai/grok-3-fast-latest": "xai/grok-3-fast-latest",  # Commented out in constants.py
-    # "deepseek/deepseek-chat": "openrouter/deepseek/deepseek-chat",    
+    # "deepseek/deepseek-chat": "openrouter/deepseek/deepseek-chat",
     # "deepseek/deepseek-r1": "openrouter/deepseek/deepseek-r1",
-    
+
     # "qwen/qwen3-235b-a22b": "openrouter/qwen/qwen3-235b-a22b",
     # "xai/grok-3-mini-fast-beta": "xai/grok-3-mini-fast-beta",  # Commented out in constants.py
 }

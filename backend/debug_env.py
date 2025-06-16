@@ -9,15 +9,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 print("=== REDIS ENVIRONMENT VARIABLES ===")
-print(f"REDIS_HOST: {os.getenv('REDIS_HOST', 'NOT SET')}")
-print(f"REDIS_PORT: {os.getenv('REDIS_PORT', 'NOT SET')}")
-print(f"REDIS_PASSWORD: {'SET' if os.getenv('REDIS_PASSWORD') else 'NOT SET'}")
-print(f"REDIS_SSL: {os.getenv('REDIS_SSL', 'NOT SET')}")
+print("REDIS_HOST: {os.getenv('REDIS_HOST', 'NOT SET')}")
+print("REDIS_PORT: {os.getenv('REDIS_PORT', 'NOT SET')}")
+print("REDIS_PASSWORD: {'SET' if os.getenv('REDIS_PASSWORD') else 'NOT SET'}")
+print("REDIS_SSL: {os.getenv('REDIS_SSL', 'NOT SET')}")
 
 print("\n=== ALL ENVIRONMENT VARIABLES ===")
 for key, value in os.environ.items():
     if key.startswith('REDIS'):
-        print(f"{key}: {'SET' if value else 'NOT SET'}")
+        print("{key}: {'SET' if value else 'NOT SET'}")
 
 print("\n=== REDIS CONNECTION TEST ===")
 try:
@@ -27,9 +27,9 @@ try:
     redis_password = os.getenv('REDIS_PASSWORD', '')
     redis_ssl_str = os.getenv('REDIS_SSL', 'False')
     redis_ssl = redis_ssl_str.lower() == 'true'
-    
-    print(f"Attempting connection to: {redis_host}:{redis_port} (SSL: {redis_ssl})")
-    
+
+    print("Attempting connection to: {redis_host}:{redis_port} (SSL: {redis_ssl})")
+
     client = redis.Redis(
         host=redis_host,
         port=redis_port,
@@ -40,6 +40,6 @@ try:
         socket_connect_timeout=5.0
     )
     print("Redis client created successfully")
-    
+
 except Exception as e:
-    print(f"Redis connection error: {e}") 
+    print("Redis connection error: {e}")
