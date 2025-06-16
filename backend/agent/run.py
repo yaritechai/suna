@@ -17,6 +17,7 @@ from agentpress.response_processor import ProcessorConfig
 from agent.tools.sb_shell_tool import SandboxShellTool
 from agent.tools.sb_files_tool import SandboxFilesTool
 from agent.tools.sb_browser_tool import SandboxBrowserTool
+from agent.tools.fast_browser_tool import FastBrowserTool
 from agent.tools.data_providers_tool import DataProvidersTool
 from agent.tools.expand_msg_tool import ExpandMessageTool
 from agent.prompt import get_system_prompt
@@ -107,6 +108,9 @@ async def run_agent(
         logger.info("No agent specified - registering all tools for full Suna capabilities")
         thread_manager.add_tool(SandboxShellTool, project_id=project_id, thread_manager=thread_manager)
         thread_manager.add_tool(SandboxFilesTool, project_id=project_id, thread_manager=thread_manager)
+        # Use lightning-fast browser tool instead of slow 30+ second container approach
+        thread_manager.add_tool(FastBrowserTool)
+        # Keep container-based tool as fallback for complex scenarios
         thread_manager.add_tool(SandboxBrowserTool, project_id=project_id, thread_id=thread_id, thread_manager=thread_manager)
         thread_manager.add_tool(SandboxDeployTool, project_id=project_id, thread_manager=thread_manager)
         thread_manager.add_tool(SandboxExposeTool, project_id=project_id, thread_manager=thread_manager)

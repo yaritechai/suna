@@ -40,3 +40,6 @@ sentry-sdk[fastapi]>=2.29.1
 mcp>=1.0.0
 mcp_use>=1.0.0
 aiohttp>=3.9.0
+# Fast Browser Automation (replaces slow Daytona containers)
+playwright==1.40.0
+playwright[chromium]==1.40.0
