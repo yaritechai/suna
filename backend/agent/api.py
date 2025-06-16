@@ -2,13 +2,10 @@ from fastapi import APIRouter, HTTPException, Depends, Request, Body, File, Uplo
 from fastapi.responses import StreamingResponse
 import asyncio
 import json
-import traceback
 from datetime import datetime, timezone
 import uuid
 from typing import Optional, List, Dict, Any
-import jwt
 from pydantic import BaseModel
-import tempfile
 import os
 
 from agentpress.thread_manager import ThreadManager
@@ -125,7 +122,7 @@ def initialize(
         # Generate instance ID
         instance_id = str(uuid.uuid4())[:8]
 
-    logger.info(f"Initialized agent API with instance ID: {instance_id}")
+    logger.info("Initialized agent API with instance ID: {instance_id}")
 
     # Note: Redis will be initialized in the lifespan function in api.py
 
@@ -136,7 +133,7 @@ async def cleanup():
     # Use the instance_id to find and clean up this instance's keys
     try:
         if instance_id: # Ensure instance_id is set
-            running_keys = await redis.keys(f"active_run:{instance_id}:*")
+            running_keys = await redis.keys("active_run:{instance_id}:*")
             logger.info(f"Found {len(running_keys)} running agent runs for instance {instance_id} to clean up")
 
             for key in running_keys:
@@ -144,14 +141,14 @@ async def cleanup():
                 parts = key.split(":")
                 if len(parts) == 3:
                     agent_run_id = parts[2]
-                    await stop_agent_run(agent_run_id, error_message=f"Instance {instance_id} shutting down")
+                    await stop_agent_run(agent_run_id, error_message="Instance {instance_id} shutting down")
                 else:
-                    logger.warning(f"Unexpected key format found: {key}")
+                    logger.warning("Unexpected key format found: {key}")
         else:
             logger.warning("Instance ID not set, cannot clean up instance-specific agent runs.")
 
     except Exception as e:
-        logger.error(f"Failed to clean up running agent runs: {str(e)}")
+        logger.error("Failed to clean up running agent runs: {str(e)}")
 
     # Close Redis connection
     await redis.close()
@@ -159,19 +156,19 @@ async def cleanup():
 
 async def stop_agent_run(agent_run_id: str, error_message: Optional[str] = None):
     """Update database and publish stop signal to Redis."""
-    logger.info(f"Stopping agent run: {agent_run_id}")
+    logger.info("Stopping agent run: {agent_run_id}")
     client = await db.client
     final_status = "failed" if error_message else "stopped"
 
     # Attempt to fetch final responses from Redis (with size limit)
-    response_list_key = f"agent_run:{agent_run_id}:responses"
+    response_list_key = "agent_run:{agent_run_id}:responses"
     all_responses = []
     try:
         all_responses_json = await redis.lrange_chunked(response_list_key, 0, -1, max_size_mb=8.0)
         all_responses = [json.loads(r) for r in all_responses_json]
-        logger.info(f"Fetched {len(all_responses)} responses from Redis for DB update on stop/fail: {agent_run_id}")
+        logger.info("Fetched {len(all_responses)} responses from Redis for DB update on stop/fail: {agent_run_id}")
     except Exception as e:
-        logger.error(f"Failed to fetch responses from Redis for {agent_run_id} during stop/fail: {e}")
+        logger.error("Failed to fetch responses from Redis for {agent_run_id} during stop/fail: {e}")
         # Try fetching from DB as a fallback? Or proceed without responses? Proceeding without for now.
 
     # Update the agent run status in the database
@@ -180,19 +177,19 @@ async def stop_agent_run(agent_run_id: str, error_message: Optional[str] = None)
     )
 
     if not update_success:
-        logger.error(f"Failed to update database status for stopped/failed run {agent_run_id}")
+        logger.error("Failed to update database status for stopped/failed run {agent_run_id}")
 
     # Send STOP signal to the global control channel
-    global_control_channel = f"agent_run:{agent_run_id}:control"
+    global_control_channel = "agent_run:{agent_run_id}:control"
     try:
         await redis.publish(global_control_channel, "STOP")
-        logger.debug(f"Published STOP signal to global channel {global_control_channel}")
+        logger.debug("Published STOP signal to global channel {global_control_channel}")
     except Exception as e:
-        logger.error(f"Failed to publish STOP signal to global channel {global_control_channel}: {str(e)}")
+        logger.error("Failed to publish STOP signal to global channel {global_control_channel}: {str(e)}")
 
     # Find all instances handling this agent run and send STOP to instance-specific channels
     try:
-        instance_keys = await redis.keys(f"active_run:*:{agent_run_id}")
+        instance_keys = await redis.keys("active_run:*:{agent_run_id}")
         logger.debug(f"Found {len(instance_keys)} active instance keys for agent run {agent_run_id}")
 
         for key in instance_keys:
@@ -200,22 +197,22 @@ async def stop_agent_run(agent_run_id: str, error_message: Optional[str] = None)
             parts = key.split(":")
             if len(parts) == 3:
                 instance_id_from_key = parts[1]
-                instance_control_channel = f"agent_run:{agent_run_id}:control:{instance_id_from_key}"
+                instance_control_channel = "agent_run:{agent_run_id}:control:{instance_id_from_key}"
                 try:
                     await redis.publish(instance_control_channel, "STOP")
-                    logger.debug(f"Published STOP signal to instance channel {instance_control_channel}")
+                    logger.debug("Published STOP signal to instance channel {instance_control_channel}")
                 except Exception as e:
-                    logger.warning(f"Failed to publish STOP signal to instance channel {instance_control_channel}: {str(e)}")
+                    logger.warning("Failed to publish STOP signal to instance channel {instance_control_channel}: {str(e)}")
             else:
-                 logger.warning(f"Unexpected key format found: {key}")
+                 logger.warning("Unexpected key format found: {key}")
 
         # Clean up the response list immediately on stop/fail
         await _cleanup_redis_response_list(agent_run_id)
 
     except Exception as e:
-        logger.error(f"Failed to find or signal active instances for {agent_run_id}: {str(e)}")
+        logger.error("Failed to find or signal active instances for {agent_run_id}: {str(e)}")
 
-    logger.info(f"Successfully initiated stop process for agent run: {agent_run_id}")
+    logger.info("Successfully initiated stop process for agent run: {agent_run_id}")
 
 # async def restore_running_agent_runs():
 #     """Mark agent runs that were still 'running' in the database as failed and clean up Redis resources."""
@@ -225,27 +222,27 @@ async def stop_agent_run(agent_run_id: str, error_message: Optional[str] = None)
 
 #     for run in running_agent_runs.data:
 #         agent_run_id = run['id']
-#         logger.warning(f"Found running agent run {agent_run_id} from before server restart")
+#         logger.warning("Found running agent run {agent_run_id} from before server restart")
 
 #         # Clean up Redis resources for this run
 #         try:
 #             # Clean up active run key
-#             active_run_key = f"active_run:{instance_id}:{agent_run_id}"
+#             active_run_key = "active_run:{instance_id}:{agent_run_id}"
 #             await redis.delete(active_run_key)
 
 #             # Clean up response list
-#             response_list_key = f"agent_run:{agent_run_id}:responses"
+#             response_list_key = "agent_run:{agent_run_id}:responses"
 #             await redis.delete(response_list_key)
 
 #             # Clean up control channels
-#             control_channel = f"agent_run:{agent_run_id}:control"
-#             instance_control_channel = f"agent_run:{agent_run_id}:control:{instance_id}"
+#             control_channel = "agent_run:{agent_run_id}:control"
+#             instance_control_channel = "agent_run:{agent_run_id}:control:{instance_id}"
 #             await redis.delete(control_channel)
 #             await redis.delete(instance_control_channel)
 
-#             logger.info(f"Cleaned up Redis resources for agent run {agent_run_id}")
+#             logger.info("Cleaned up Redis resources for agent run {agent_run_id}")
 #         except Exception as e:
-#             logger.error(f"Error cleaning up Redis resources for agent run {agent_run_id}: {e}")
+#             logger.error("Error cleaning up Redis resources for agent run {agent_run_id}: {e}")
 
 #         # Call stop_agent_run to handle status update and cleanup
 #         await stop_agent_run(agent_run_id, error_message="Server restarted while agent was running")
@@ -278,12 +275,12 @@ async def get_agent_run_with_access_check(client, agent_run_id: str, user_id: st
 async def enhance_system_prompt(agent_name: str, description: str, user_system_prompt: str) -> str:
     """
     Enhance a basic system prompt using GPT-4o to create a more comprehensive and effective system prompt.
-    
+
     Args:
         agent_name: Name of the agent
         description: Description of the agent
         user_system_prompt: User's basic system prompt/instructions
-        
+
     Returns:
         Enhanced system prompt generated by GPT-4o
     """
@@ -302,7 +299,7 @@ Guidelines for creating system prompts:
 
 The enhanced prompt should be professional, clear, and actionable."""
 
-        user_message = f"""Please create an enhanced system prompt for an AI agent with the following details:
+        user_message = """Please create an enhanced system prompt for an AI agent with the following details:
 
 Agent Name: {agent_name}
 Agent Description: {description}
@@ -315,7 +312,7 @@ Transform this basic information into a comprehensive, effective system prompt t
             {"role": "user", "content": user_message}
         ]
 
-        logger.info(f"Enhancing system prompt for agent: {agent_name}")
+        logger.info("Enhancing system prompt for agent: {agent_name}")
         response = await make_llm_api_call(
             messages=messages,
             model_name="openai/gpt-4o",
@@ -326,17 +323,17 @@ Transform this basic information into a comprehensive, effective system prompt t
         if response and response.get('choices') and response['choices'][0].get('message'):
             enhanced_prompt = response['choices'][0]['message'].get('content', '').strip()
             if enhanced_prompt:
-                logger.info(f"Successfully enhanced system prompt for agent: {agent_name}")
+                logger.info("Successfully enhanced system prompt for agent: {agent_name}")
                 return enhanced_prompt
             else:
-                logger.warning(f"GPT-4o returned empty enhanced prompt for agent: {agent_name}")
+                logger.warning("GPT-4o returned empty enhanced prompt for agent: {agent_name}")
                 return user_system_prompt
         else:
-            logger.warning(f"Failed to get valid response from GPT-4o for agent: {agent_name}")
+            logger.warning("Failed to get valid response from GPT-4o for agent: {agent_name}")
             return user_system_prompt
 
     except Exception as e:
-        logger.error(f"Error enhancing system prompt for agent {agent_name}: {str(e)}")
+        logger.error("Error enhancing system prompt for agent {agent_name}: {str(e)}")
         # Return the original prompt if enhancement fails
         return user_system_prompt
 
@@ -353,20 +350,20 @@ async def start_agent(
 
     # Use model from config if not specified in the request
     model_name = body.model_name
-    logger.info(f"Original model_name from request: {model_name}")
+    logger.info("Original model_name from request: {model_name}")
 
     if model_name is None:
         model_name = config.MODEL_TO_USE
-        logger.info(f"Using model from config: {model_name}")
+        logger.info("Using model from config: {model_name}")
 
     # Log the model name after alias resolution
     resolved_model = MODEL_NAME_ALIASES.get(model_name, model_name)
-    logger.info(f"Resolved model name: {resolved_model}")
+    logger.info("Resolved model name: {resolved_model}")
 
     # Update model_name to use the resolved version
     model_name = resolved_model
 
-    logger.info(f"Starting new agent for thread: {thread_id} with config: model={model_name}, thinking={body.enable_thinking}, effort={body.reasoning_effort}, stream={body.stream}, context_manager={body.enable_context_manager} (Instance: {instance_id})")
+    logger.info("Starting new agent for thread: {thread_id} with config: model={model_name}, thinking={body.enable_thinking}, effort={body.reasoning_effort}, stream={body.stream}, context_manager={body.enable_context_manager} (Instance: {instance_id})")
     client = await db.client
 
     await verify_thread_access(client, thread_id, user_id)
@@ -378,43 +375,43 @@ async def start_agent(
     account_id = thread_data.get('account_id')
     thread_agent_id = thread_data.get('agent_id')
     thread_metadata = thread_data.get('metadata', {})
-    
+
     # Check if this is an agent builder thread
     is_agent_builder = thread_metadata.get('is_agent_builder', False)
     target_agent_id = thread_metadata.get('target_agent_id')
-    
+
     if is_agent_builder:
-        logger.info(f"Thread {thread_id} is in agent builder mode, target_agent_id: {target_agent_id}")
-    
+        logger.info("Thread {thread_id} is in agent builder mode, target_agent_id: {target_agent_id}")
+
     # Load agent configuration
     agent_config = None
     effective_agent_id = body.agent_id or thread_agent_id  # Use provided agent_id or the one stored in thread
-    
+
     if effective_agent_id:
         agent_result = await client.table('agents').select('*').eq('agent_id', effective_agent_id).eq('account_id', account_id).execute()
         if not agent_result.data:
             if body.agent_id:
                 raise HTTPException(status_code=404, detail="Agent not found or access denied")
             else:
-                logger.warning(f"Stored agent_id {effective_agent_id} not found, falling back to default")
+                logger.warning("Stored agent_id {effective_agent_id} not found, falling back to default")
                 effective_agent_id = None
         else:
             agent_config = agent_result.data[0]
             source = "request" if body.agent_id else "thread"
-            logger.info(f"Using agent from {source}: {agent_config['name']} ({effective_agent_id})")
-    
+            logger.info("Using agent from {source}: {agent_config['name']} ({effective_agent_id})")
+
     # If no agent found yet, try to get default agent for the account
     if not agent_config:
         default_agent_result = await client.table('agents').select('*').eq('account_id', account_id).eq('is_default', True).execute()
         if default_agent_result.data:
             agent_config = default_agent_result.data[0]
             logger.info(f"Using default agent: {agent_config['name']} ({agent_config['agent_id']})")
-    
+
     # Update thread's agent_id if a different agent was explicitly requested
     if body.agent_id and body.agent_id != thread_agent_id and agent_config:
         try:
             await client.table('threads').update({"agent_id": agent_config['agent_id']}).eq('thread_id', thread_id).execute()
-            logger.info(f"Updated thread {thread_id} to use agent {agent_config['agent_id']}")
+            logger.info("Updated thread {thread_id} to use agent {agent_config['agent_id']}")
         except Exception as e:
             logger.warning(f"Failed to update thread agent_id: {e}")
 
@@ -428,7 +425,7 @@ async def start_agent(
 
     active_run_id = await check_for_active_project_agent_run(client, project_id)
     if active_run_id:
-        logger.info(f"Stopping existing agent run {active_run_id} for project {project_id}")
+        logger.info("Stopping existing agent run {active_run_id} for project {project_id}")
         await stop_agent_run(active_run_id)
 
     try:
@@ -436,17 +433,17 @@ async def start_agent(
         project_result = await client.table('projects').select('*').eq('project_id', project_id).execute()
         if not project_result.data:
             raise HTTPException(status_code=404, detail="Project not found")
-        
+
         project_data = project_result.data[0]
         sandbox_info = project_data.get('sandbox', {})
         if not sandbox_info.get('id'):
             raise HTTPException(status_code=404, detail="No sandbox found for this project")
-            
+
         sandbox_id = sandbox_info['id']
         sandbox = await get_or_start_sandbox(sandbox_id)
-        logger.info(f"Successfully started sandbox {sandbox_id} for project {project_id}")
+        logger.info("Successfully started sandbox {sandbox_id} for project {project_id}")
     except Exception as e:
-        logger.error(f"Failed to start sandbox for project {project_id}: {str(e)}")
+        logger.error("Failed to start sandbox for project {project_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to initialize sandbox: {str(e)}")
 
     agent_run = await client.table('agent_runs').insert({
@@ -454,10 +451,10 @@ async def start_agent(
         "started_at": datetime.now(timezone.utc).isoformat()
     }).execute()
     agent_run_id = agent_run.data[0]['id']
-    logger.info(f"Created new agent run: {agent_run_id}")
+    logger.info("Created new agent run: {agent_run_id}")
 
     # Register this run in Redis with TTL using instance ID
-    instance_key = f"active_run:{instance_id}:{agent_run_id}"
+    instance_key = "active_run:{instance_id}:{agent_run_id}"
     try:
         await redis.set(instance_key, "running", ex=redis.REDIS_KEY_TTL)
     except Exception as e:
@@ -489,7 +486,7 @@ async def stop_agent(agent_run_id: str, user_id: str = Depends(get_current_user_
 @router.get("/thread/{thread_id}/agent-runs")
 async def get_agent_runs(thread_id: str, user_id: str = Depends(get_current_user_id_from_jwt)):
     """Get all agent runs for a thread."""
-    logger.info(f"Fetching agent runs for thread: {thread_id}")
+    logger.info("Fetching agent runs for thread: {thread_id}")
     client = await db.client
     await verify_thread_access(client, thread_id, user_id)
     agent_runs = await client.table('agent_runs').select('*').eq("thread_id", thread_id).order('created_at', desc=True).execute()
@@ -515,25 +512,25 @@ async def get_agent_run(agent_run_id: str, user_id: str = Depends(get_current_us
 @router.get("/thread/{thread_id}/agent", response_model=ThreadAgentResponse)
 async def get_thread_agent(thread_id: str, user_id: str = Depends(get_current_user_id_from_jwt)):
     """Get the agent details for a specific thread."""
-    logger.info(f"Fetching agent details for thread: {thread_id}")
+    logger.info("Fetching agent details for thread: {thread_id}")
     client = await db.client
-    
+
     try:
         # Verify thread access and get thread data including agent_id
         await verify_thread_access(client, thread_id, user_id)
         thread_result = await client.table('threads').select('agent_id', 'account_id').eq('thread_id', thread_id).execute()
-        
+
         if not thread_result.data:
             raise HTTPException(status_code=404, detail="Thread not found")
-        
+
         thread_data = thread_result.data[0]
         thread_agent_id = thread_data.get('agent_id')
         account_id = thread_data.get('account_id')
-        
+
         # If no agent_id is set in the thread, try to get the default agent
         effective_agent_id = thread_agent_id
         agent_source = "thread"
-        
+
         if not effective_agent_id:
             # No agent set in thread, get default agent for the account
             default_agent_result = await client.table('agents').select('agent_id').eq('account_id', account_id).eq('is_default', True).execute()
@@ -547,10 +544,10 @@ async def get_thread_agent(thread_id: str, user_id: str = Depends(get_current_us
                     "source": "none",
                     "message": "No agent configured for this thread"
                 }
-        
+
         # Fetch the agent details
         agent_result = await client.table('agents').select('*').eq('agent_id', effective_agent_id).eq('account_id', account_id).execute()
-        
+
         if not agent_result.data:
             # Agent was deleted or doesn't exist
             return {
@@ -558,9 +555,9 @@ async def get_thread_agent(thread_id: str, user_id: str = Depends(get_current_us
                 "source": "missing",
                 "message": f"Agent {effective_agent_id} not found or was deleted"
             }
-        
+
         agent_data = agent_result.data[0]
-        
+
         return {
             "agent": AgentResponse(
                 agent_id=agent_data['agent_id'],
@@ -582,14 +579,14 @@ async def get_thread_agent(thread_id: str, user_id: str = Depends(get_current_us
                 updated_at=agent_data['updated_at']
             ),
             "source": agent_source,
-            "message": f"Using {agent_source} agent: {agent_data['name']}"
+            "message": "Using {agent_source} agent: {agent_data['name']}"
         }
-        
+
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching agent for thread {thread_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch thread agent: {str(e)}")
+        logger.error("Error fetching agent for thread {thread_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch thread agent: {str(e)}")
 
 @router.get("/agent-run/{agent_run_id}/stream")
 async def stream_agent_run(
@@ -598,18 +595,18 @@ async def stream_agent_run(
     request: Request = None
 ):
     """Stream the responses of an agent run using Redis Lists and Pub/Sub."""
-    logger.info(f"Starting stream for agent run: {agent_run_id}")
+    logger.info("Starting stream for agent run: {agent_run_id}")
     client = await db.client
 
     user_id = await get_user_id_from_stream_auth(request, token)
     agent_run_data = await get_agent_run_with_access_check(client, agent_run_id, user_id)
 
-    response_list_key = f"agent_run:{agent_run_id}:responses"
-    response_channel = f"agent_run:{agent_run_id}:new_response"
-    control_channel = f"agent_run:{agent_run_id}:control" # Global control channel
+    response_list_key = "agent_run:{agent_run_id}:responses"
+    response_channel = "agent_run:{agent_run_id}:new_response"
+    control_channel = "agent_run:{agent_run_id}:control" # Global control channel
 
     async def stream_generator():
-        logger.debug(f"Streaming responses for {agent_run_id} using Redis list {response_list_key} and channel {response_channel}")
+        logger.debug("Streaming responses for {agent_run_id} using Redis list {response_list_key} and channel {response_channel}")
         last_processed_index = -1
         pubsub_response = None
         pubsub_control = None
@@ -623,9 +620,9 @@ async def stream_agent_run(
             initial_responses = []
             if initial_responses_json:
                 initial_responses = [json.loads(r) for r in initial_responses_json]
-                logger.debug(f"Sending {len(initial_responses)} initial responses for {agent_run_id}")
+                logger.debug("Sending {len(initial_responses)} initial responses for {agent_run_id}")
                 for response in initial_responses:
-                    yield f"data: {json.dumps(response)}\n\n"
+                    yield "data: {json.dumps(response)}\n\n"
                 last_processed_index = len(initial_responses) - 1
             initial_yield_complete = True
 
@@ -634,18 +631,18 @@ async def stream_agent_run(
             current_status = run_status.data.get('status') if run_status.data else None
 
             if current_status != 'running':
-                logger.info(f"Agent run {agent_run_id} is not running (status: {current_status}). Ending stream.")
-                yield f"data: {json.dumps({'type': 'status', 'status': 'completed'})}\n\n"
+                logger.info("Agent run {agent_run_id} is not running (status: {current_status}). Ending stream.")
+                yield "data: {json.dumps({'type': 'status', 'status': 'completed'})}\n\n"
                 return
 
             # 3. Set up Pub/Sub listeners for new responses and control signals
             pubsub_response = await redis.create_pubsub()
             await pubsub_response.subscribe(response_channel)
-            logger.debug(f"Subscribed to response channel: {response_channel}")
+            logger.debug("Subscribed to response channel: {response_channel}")
 
             pubsub_control = await redis.create_pubsub()
             await pubsub_control.subscribe(control_channel)
-            logger.debug(f"Subscribed to control channel: {control_channel}")
+            logger.debug("Subscribed to control channel: {control_channel}")
 
             # Queue to communicate between listeners and the main generator loop
             message_queue = asyncio.Queue()
@@ -659,9 +656,9 @@ async def stream_agent_run(
 
                 while not terminate_stream:
                     if not tasks:
-                        logger.warning(f"No active listener tasks for {agent_run_id}, stopping listener")
+                        logger.warning("No active listener tasks for {agent_run_id}, stopping listener")
                         break
-                        
+
                     try:
                         done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
                         for task in done:
@@ -693,17 +690,17 @@ async def stream_agent_run(
                                     response_task = asyncio.create_task(response_reader.__anext__())
                                 elif task == control_task:
                                     control_task = asyncio.create_task(control_reader.__anext__())
-                        
+
                         # Rebuild tasks list to prevent it from becoming empty
                         tasks = [response_task, control_task]
-                        
+
                         # Cancel pending tasks from the wait operation
-                        for p_task in pending: 
+                        for p_task in pending:
                             p_task.cancel()
-                            
+
                     except Exception as wait_error:
                         logger.error(f"Error in asyncio.wait for {agent_run_id}: {wait_error}")
-                        await message_queue.put({"type": "error", "data": f"Wait operation failed: {wait_error}"})
+                        await message_queue.put({"type": "error", "data": "Wait operation failed: {wait_error}"})
                         break
 
                 # Cancel remaining listener tasks on exit
@@ -726,12 +723,12 @@ async def stream_agent_run(
                         if new_responses_json:
                             new_responses = [json.loads(r) for r in new_responses_json]
                             num_new = len(new_responses)
-                            # logger.debug(f"Received {num_new} new responses for {agent_run_id} (index {new_start_index} onwards)")
+                            # logger.debug("Received {num_new} new responses for {agent_run_id} (index {new_start_index} onwards)")
                             for response in new_responses:
-                                yield f"data: {json.dumps(response)}\n\n"
+                                yield "data: {json.dumps(response)}\n\n"
                                 # Check if this response signals completion
                                 if response.get('type') == 'status' and response.get('status') in ['completed', 'failed', 'stopped']:
-                                    logger.info(f"Detected run completion via status message in stream: {response.get('status')}")
+                                    logger.info("Detected run completion via status message in stream: {response.get('status')}")
                                     terminate_stream = True
                                     break # Stop processing further new responses
                             last_processed_index += num_new
@@ -740,30 +737,30 @@ async def stream_agent_run(
                     elif queue_item["type"] == "control":
                         control_signal = queue_item["data"]
                         terminate_stream = True # Stop the stream on any control signal
-                        yield f"data: {json.dumps({'type': 'status', 'status': control_signal})}\n\n"
+                        yield "data: {json.dumps({'type': 'status', 'status': control_signal})}\n\n"
                         break
 
                     elif queue_item["type"] == "error":
-                        logger.error(f"Listener error for {agent_run_id}: {queue_item['data']}")
+                        logger.error("Listener error for {agent_run_id}: {queue_item['data']}")
                         terminate_stream = True
-                        yield f"data: {json.dumps({'type': 'status', 'status': 'error'})}\n\n"
+                        yield "data: {json.dumps({'type': 'status', 'status': 'error'})}\n\n"
                         break
 
                 except asyncio.CancelledError:
-                     logger.info(f"Stream generator main loop cancelled for {agent_run_id}")
+                     logger.info("Stream generator main loop cancelled for {agent_run_id}")
                      terminate_stream = True
                      break
                 except Exception as loop_err:
-                    logger.error(f"Error in stream generator main loop for {agent_run_id}: {loop_err}", exc_info=True)
+                    logger.error("Error in stream generator main loop for {agent_run_id}: {loop_err}", exc_info=True)
                     terminate_stream = True
-                    yield f"data: {json.dumps({'type': 'status', 'status': 'error', 'message': f'Stream failed: {loop_err}'})}\n\n"
+                    yield "data: {json.dumps({'type': 'status', 'status': 'error', 'message': f'Stream failed: {loop_err}'})}\n\n"
                     break
 
         except Exception as e:
-            logger.error(f"Error setting up stream for agent run {agent_run_id}: {e}", exc_info=True)
+            logger.error("Error setting up stream for agent run {agent_run_id}: {e}", exc_info=True)
             # Only yield error if initial yield didn't happen
             if not initial_yield_complete:
-                 yield f"data: {json.dumps({'type': 'status', 'status': 'error', 'message': f'Failed to start stream: {e}'})}\n\n"
+                 yield "data: {json.dumps({'type': 'status', 'status': 'error', 'message': f'Failed to start stream: {e}'})}\n\n"
         finally:
             terminate_stream = True
             # Graceful shutdown order: unsubscribe → close → cancel
@@ -779,10 +776,10 @@ async def stream_agent_run(
                 except asyncio.CancelledError:
                     pass
                 except Exception as e:
-                    logger.debug(f"listener_task ended with: {e}")
+                    logger.debug("listener_task ended with: {e}")
             # Wait briefly for tasks to cancel
             await asyncio.sleep(0.1)
-            logger.debug(f"Streaming cleanup complete for agent run: {agent_run_id}")
+            logger.debug("Streaming cleanup complete for agent run: {agent_run_id}")
 
     return StreamingResponse(stream_generator(), media_type="text/event-stream", headers={
         "Cache-Control": "no-cache, no-transform", "Connection": "keep-alive",
@@ -792,7 +789,7 @@ async def stream_agent_run(
 
 async def generate_and_update_project_name(project_id: str, prompt: str):
     """Generates a project name using an LLM and updates the database."""
-    logger.info(f"Starting background task to generate name for project: {project_id}")
+    logger.info("Starting background task to generate name for project: {project_id}")
     try:
         db_conn = DBConnection()
         client = await db_conn.client
@@ -802,7 +799,7 @@ async def generate_and_update_project_name(project_id: str, prompt: str):
         user_message = f"Generate an extremely brief title (2-4 words only) for a chat thread that starts with this message: \"{prompt}\""
         messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_message}]
 
-        logger.debug(f"Calling LLM ({model_name}) for project {project_id} naming.")
+        logger.debug("Calling LLM ({model_name}) for project {project_id} naming.")
         response = await make_llm_api_call(messages=messages, model_name=model_name, max_tokens=20, temperature=0.7)
 
         generated_name = None
@@ -811,26 +808,26 @@ async def generate_and_update_project_name(project_id: str, prompt: str):
             cleaned_name = raw_name.strip('\'" \n\t')
             if cleaned_name:
                 generated_name = cleaned_name
-                logger.info(f"LLM generated name for project {project_id}: '{generated_name}'")
+                logger.info("LLM generated name for project {project_id}: '{generated_name}'")
             else:
-                logger.warning(f"LLM returned an empty name for project {project_id}.")
+                logger.warning("LLM returned an empty name for project {project_id}.")
         else:
             logger.warning(f"Failed to get valid response from LLM for project {project_id} naming. Response: {response}")
 
         if generated_name:
             update_result = await client.table('projects').update({"name": generated_name}).eq("project_id", project_id).execute()
             if hasattr(update_result, 'data') and update_result.data:
-                logger.info(f"Successfully updated project {project_id} name to '{generated_name}'")
+                logger.info("Successfully updated project {project_id} name to '{generated_name}'")
             else:
-                logger.error(f"Failed to update project {project_id} name in database. Update result: {update_result}")
+                logger.error("Failed to update project {project_id} name in database. Update result: {update_result}")
         else:
-            logger.warning(f"No generated name, skipping database update for project {project_id}.")
+            logger.warning("No generated name, skipping database update for project {project_id}.")
 
     except Exception as e:
-        logger.error(f"Error in background naming task for project {project_id}: {str(e)}\n{traceback.format_exc()}")
+        logger.error("Error in background naming task for project {project_id}: {str(e)}\n{traceback.format_exc()}")
     finally:
         # No need to disconnect DBConnection singleton instance here
-        logger.info(f"Finished background naming task for project: {project_id}")
+        logger.info("Finished background naming task for project: {project_id}")
 
 @router.post("/agent/initiate", response_model=InitiateAgentResponse)
 async def initiate_agent_with_files(
@@ -852,26 +849,26 @@ async def initiate_agent_with_files(
         raise HTTPException(status_code=500, detail="Agent API not initialized with instance ID")
 
     # Use model from config if not specified in the request
-    logger.info(f"Original model_name from request: {model_name}")
-    
+    logger.info("Original model_name from request: {model_name}")
+
 
     if model_name is None:
         model_name = config.MODEL_TO_USE
-        logger.info(f"Using model from config: {model_name}")
+        logger.info("Using model from config: {model_name}")
 
     # Log the model name after alias resolution
     resolved_model = MODEL_NAME_ALIASES.get(model_name, model_name)
-    logger.info(f"Resolved model name: {resolved_model}")
+    logger.info("Resolved model name: {resolved_model}")
 
     # Update model_name to use the resolved version
     model_name = resolved_model
 
-    logger.info(f"Starting new agent in agent builder mode: {is_agent_builder}, target_agent_id: {target_agent_id}")
+    logger.info("Starting new agent in agent builder mode: {is_agent_builder}, target_agent_id: {target_agent_id}")
 
-    logger.info(f"[\033[91mDEBUG\033[0m] Initiating new agent with prompt and {len(files)} files (Instance: {instance_id}), model: {model_name}, enable_thinking: {enable_thinking}")
+    logger.info("[\033[91mDEBUG\033[0m] Initiating new agent with prompt and {len(files)} files (Instance: {instance_id}), model: {model_name}, enable_thinking: {enable_thinking}")
     client = await db.client
     account_id = user_id # In Basejump, personal account_id is the same as user_id
-    
+
     # Load agent configuration if agent_id is provided
     agent_config = None
     if agent_id:
@@ -879,14 +876,14 @@ async def initiate_agent_with_files(
         if not agent_result.data:
             raise HTTPException(status_code=404, detail="Agent not found or access denied")
         agent_config = agent_result.data[0]
-        logger.info(f"Using custom agent: {agent_config['name']} ({agent_id})")
+        logger.info("Using custom agent: {agent_config['name']} ({agent_id})")
     else:
         # Try to get default agent for the account
         default_agent_result = await client.table('agents').select('*').eq('account_id', account_id).eq('is_default', True).execute()
         if default_agent_result.data:
             agent_config = default_agent_result.data[0]
             logger.info(f"Using default agent: {agent_config['name']} ({agent_config['agent_id']})")
-    
+
     # can_use, model_message, allowed_models = await can_use_model(client, account_id, model_name)
     # if not can_use:
     #     raise HTTPException(status_code=403, detail={"message": model_message, "allowed_models": allowed_models})
@@ -907,28 +904,28 @@ async def initiate_agent_with_files(
 
         # 2. Create Thread
         thread_data = {
-            "thread_id": str(uuid.uuid4()), 
-            "project_id": project_id, 
+            "thread_id": str(uuid.uuid4()),
+            "project_id": project_id,
             "account_id": account_id,
             "created_at": datetime.now(timezone.utc).isoformat()
         }
-        
+
         # Store the agent_id in the thread if we have one
         if agent_config:
             thread_data["agent_id"] = agent_config['agent_id']
-            logger.info(f"Storing agent_id {agent_config['agent_id']} in thread")
-        
+            logger.info("Storing agent_id {agent_config['agent_id']} in thread")
+
         # Store agent builder metadata if this is an agent builder session
         if is_agent_builder:
             thread_data["metadata"] = {
                 "is_agent_builder": True,
                 "target_agent_id": target_agent_id
             }
-            logger.info(f"Storing agent builder metadata in thread: target_agent_id={target_agent_id}")
-        
+            logger.info("Storing agent builder metadata in thread: target_agent_id={target_agent_id}")
+
         thread = await client.table('threads').insert(thread_data).execute()
         thread_id = thread.data[0]['thread_id']
-        logger.info(f"Created new thread: {thread_id}")
+        logger.info("Created new thread: {thread_id}")
 
         # Trigger Background Naming Task
         asyncio.create_task(generate_and_update_project_name(project_id=project_id, prompt=prompt))
@@ -937,7 +934,7 @@ async def initiate_agent_with_files(
         sandbox_pass = str(uuid.uuid4())
         sandbox = create_sandbox(sandbox_pass, project_id)
         sandbox_id = sandbox.id
-        logger.info(f"Created new sandbox {sandbox_id} for project {project_id}")
+        logger.info("Created new sandbox {sandbox_id} for project {project_id}")
 
         # Get preview links
         vnc_link = sandbox.get_preview_link(6080)
@@ -959,7 +956,7 @@ async def initiate_agent_with_files(
         }).eq('project_id', project_id).execute()
 
         if not update_result.data:
-            logger.error(f"Failed to update project {project_id} with new sandbox {sandbox_id}")
+            logger.error("Failed to update project {project_id} with new sandbox {sandbox_id}")
             raise Exception("Database update failed")
 
         # 4. Upload Files to Sandbox (if any)
@@ -971,8 +968,8 @@ async def initiate_agent_with_files(
                 if file.filename:
                     try:
                         safe_filename = file.filename.replace('/', '_').replace('\\', '_')
-                        target_path = f"/workspace/{safe_filename}"
-                        logger.info(f"Attempting to upload {safe_filename} to {target_path} in sandbox {sandbox_id}")
+                        target_path = "/workspace/{safe_filename}"
+                        logger.info("Attempting to upload {safe_filename} to {target_path} in sandbox {sandbox_id}")
                         content = await file.read()
                         upload_successful = False
                         try:
@@ -982,12 +979,12 @@ async def initiate_agent_with_files(
                                     await sandbox.fs.upload_file(target_path, content)
                                 else:
                                     sandbox.fs.upload_file(target_path, content)
-                                logger.debug(f"Called sandbox.fs.upload_file for {target_path}")
+                                logger.debug("Called sandbox.fs.upload_file for {target_path}")
                                 upload_successful = True
                             else:
                                 raise NotImplementedError("Suitable upload method not found on sandbox object.")
                         except Exception as upload_error:
-                            logger.error(f"Error during sandbox upload call for {safe_filename}: {str(upload_error)}", exc_info=True)
+                            logger.error("Error during sandbox upload call for {safe_filename}: {str(upload_error)}", exc_info=True)
 
                         if upload_successful:
                             try:
@@ -997,24 +994,24 @@ async def initiate_agent_with_files(
                                 file_names_in_dir = [f.name for f in files_in_dir]
                                 if safe_filename in file_names_in_dir:
                                     successful_uploads.append(target_path)
-                                    logger.info(f"Successfully uploaded and verified file {safe_filename} to sandbox path {target_path}")
+                                    logger.info("Successfully uploaded and verified file {safe_filename} to sandbox path {target_path}")
                                 else:
-                                    logger.error(f"Verification failed for {safe_filename}: File not found in {parent_dir} after upload attempt.")
+                                    logger.error("Verification failed for {safe_filename}: File not found in {parent_dir} after upload attempt.")
                                     failed_uploads.append(safe_filename)
                             except Exception as verify_error:
-                                logger.error(f"Error verifying file {safe_filename} after upload: {str(verify_error)}", exc_info=True)
+                                logger.error("Error verifying file {safe_filename} after upload: {str(verify_error)}", exc_info=True)
                                 failed_uploads.append(safe_filename)
                         else:
                             failed_uploads.append(safe_filename)
                     except Exception as file_error:
-                        logger.error(f"Error processing file {file.filename}: {str(file_error)}", exc_info=True)
+                        logger.error("Error processing file {file.filename}: {str(file_error)}", exc_info=True)
                         failed_uploads.append(file.filename)
                     finally:
                         await file.close()
 
             if successful_uploads:
                 message_content += "\n\n" if message_content else ""
-                for file_path in successful_uploads: message_content += f"[Uploaded File: {file_path}]\n"
+                for file_path in successful_uploads: message_content += "[Uploaded File: {file_path}]\n"
             if failed_uploads:
                 message_content += "\n\nThe following files failed to upload:\n"
                 for failed_file in failed_uploads: message_content += f"- {failed_file}\n"
@@ -1034,28 +1031,28 @@ async def initiate_agent_with_files(
             "started_at": datetime.now(timezone.utc).isoformat()
         }).execute()
         agent_run_id = agent_run.data[0]['id']
-        logger.info(f"Created new agent run: {agent_run_id}")
+        logger.info("Created new agent run: {agent_run_id}")
 
         # Register run in Redis
-        instance_key = f"active_run:{instance_id}:{agent_run_id}"
+        instance_key = "active_run:{instance_id}:{agent_run_id}"
         try:
             await redis.set(instance_key, "running", ex=redis.REDIS_KEY_TTL)
         except Exception as e:
-            logger.warning(f"Failed to register agent run in Redis ({instance_key}): {str(e)}")
+            logger.warning("Failed to register agent run in Redis ({instance_key}): {str(e)}")
 
         # Run agent in background with retry logic
         max_retries = 3
         retry_delay = 1
-        
+
         # Health check Redis before attempting to queue tasks
         try:
             redis_client = await redis.get_client()
             await redis_client.ping()
             logger.debug("Redis health check passed")
         except Exception as redis_health_error:
-            logger.warning(f"Redis health check failed: {str(redis_health_error)}")
+            logger.warning("Redis health check failed: {str(redis_health_error)}")
             # Continue anyway - the retry logic will handle connection issues
-        
+
         for attempt in range(max_retries):
             try:
                 run_agent_background.send(
@@ -1068,12 +1065,12 @@ async def initiate_agent_with_files(
                     is_agent_builder=is_agent_builder,
                     target_agent_id=target_agent_id
                 )
-                logger.info(f"Successfully queued background task for agent run {agent_run_id}")
+                logger.info("Successfully queued background task for agent run {agent_run_id}")
                 break
-                
+
             except Exception as send_error:
-                logger.warning(f"Attempt {attempt + 1}/{max_retries} failed to queue background task: {str(send_error)}")
-                
+                logger.warning("Attempt {attempt + 1}/{max_retries} failed to queue background task: {str(send_error)}")
+
                 if attempt == max_retries - 1:
                     # Last attempt failed, raise the error
                     logger.error(f"Failed to queue background task after {max_retries} attempts: {str(send_error)}")
@@ -1086,9 +1083,9 @@ async def initiate_agent_with_files(
         return {"thread_id": thread_id, "agent_run_id": agent_run_id}
 
     except Exception as e:
-        logger.error(f"Error in agent initiation: {str(e)}\n{traceback.format_exc()}")
+        logger.error("Error in agent initiation: {str(e)}\n{traceback.format_exc()}")
         # TODO: Clean up created project/thread if initiation fails mid-way
-        raise HTTPException(status_code=500, detail=f"Failed to initiate agent session: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to initiate agent session: {str(e)}")
 
 @router.get("/agents", response_model=AgentsResponse)
 async def get_agents(
@@ -1104,28 +1101,28 @@ async def get_agents(
     tools: Optional[str] = Query(None, description="Comma-separated list of tools to filter by")
 ):
     """Get agents for the current user with pagination, search, sort, and filter support."""
-    logger.info(f"Fetching agents for user: {user_id} with page={page}, limit={limit}, search='{search}', sort_by={sort_by}, sort_order={sort_order}")
+    logger.info("Fetching agents for user: {user_id} with page={page}, limit={limit}, search='{search}', sort_by={sort_by}, sort_order={sort_order}")
     client = await db.client
-    
+
     try:
         # Calculate offset
         offset = (page - 1) * limit
-        
+
         # Start building the query
         query = client.table('agents').select('*', count='exact').eq("account_id", user_id)
-        
+
         # Apply search filter
         if search:
-            search_term = f"%{search}%"
-            query = query.or_(f"name.ilike.{search_term},description.ilike.{search_term}")
-        
+            search_term = "%{search}%"
+            query = query.or_("name.ilike.{search_term},description.ilike.{search_term}")
+
         # Apply filters
         if has_default is not None:
             query = query.eq("is_default", has_default)
-        
+
         # For MCP and AgentPress tools filtering, we'll need to do post-processing
         # since Supabase doesn't have great JSON array/object filtering
-        
+
         # Apply sorting
         if sort_by == "name":
             query = query.order("name", desc=(sort_order == "desc"))
@@ -1136,15 +1133,15 @@ async def get_agents(
         else:
             # Default to created_at
             query = query.order("created_at", desc=(sort_order == "desc"))
-        
+
         # Execute query to get total count first
         count_result = await query.execute()
         total_count = count_result.count
-        
+
         # Now get the actual data with pagination
         query = query.range(offset, offset + limit - 1)
         agents_result = await query.execute()
-        
+
         if not agents_result.data:
             logger.info(f"No agents found for user: {user_id}")
             return {
@@ -1156,24 +1153,24 @@ async def get_agents(
                     "pages": 0
                 }
             }
-        
+
         # Post-process for tool filtering and tools_count sorting
         agents_data = agents_result.data
-        
+
         # Apply tool-based filters
         if has_mcp_tools is not None or has_agentpress_tools is not None or tools:
             filtered_agents = []
             tools_filter = []
             if tools:
                 tools_filter = [tool.strip() for tool in tools.split(',') if tool.strip()]
-            
+
             for agent in agents_data:
                 # Check MCP tools filter
                 if has_mcp_tools is not None:
                     has_mcp = bool(agent.get('configured_mcps') and len(agent.get('configured_mcps', [])) > 0)
                     if has_mcp_tools != has_mcp:
                         continue
-                
+
                 # Check AgentPress tools filter
                 if has_agentpress_tools is not None:
                     agentpress_tools = agent.get('agentpress_tools', {})
@@ -1183,7 +1180,7 @@ async def get_agents(
                     )
                     if has_agentpress_tools != has_enabled_tools:
                         continue
-                
+
                 # Check specific tools filter
                 if tools_filter:
                     agent_tools = set()
@@ -1191,20 +1188,20 @@ async def get_agents(
                     for mcp in agent.get('configured_mcps', []):
                         if isinstance(mcp, dict) and 'name' in mcp:
                             agent_tools.add(f"mcp:{mcp['name']}")
-                    
+
                     # Add enabled AgentPress tools
                     for tool_name, tool_data in agent.get('agentpress_tools', {}).items():
                         if tool_data and isinstance(tool_data, dict) and tool_data.get('enabled', False):
-                            agent_tools.add(f"agentpress:{tool_name}")
-                    
+                            agent_tools.add("agentpress:{tool_name}")
+
                     # Check if any of the requested tools are present
                     if not any(tool in agent_tools for tool in tools_filter):
                         continue
-                
+
                 filtered_agents.append(agent)
-            
+
             agents_data = filtered_agents
-        
+
         # Handle tools_count sorting (post-processing required)
         if sort_by == "tools_count":
             def get_tools_count(agent):
@@ -1214,14 +1211,14 @@ async def get_agents(
                     if tool_data and isinstance(tool_data, dict) and tool_data.get('enabled', False)
                 )
                 return mcp_count + agentpress_count
-            
+
             agents_data.sort(key=get_tools_count, reverse=(sort_order == "desc"))
-        
+
         # Apply pagination to filtered results if we did post-processing
         if has_mcp_tools is not None or has_agentpress_tools is not None or tools or sort_by == "tools_count":
             total_count = len(agents_data)
             agents_data = agents_data[offset:offset + limit]
-        
+
         # Format the response
         agent_list = []
         for agent in agents_data:
@@ -1244,9 +1241,9 @@ async def get_agents(
                 created_at=agent['created_at'],
                 updated_at=agent['updated_at']
             ))
-        
+
         total_pages = (total_count + limit - 1) // limit
-        
+
         logger.info(f"Found {len(agent_list)} agents for user: {user_id} (page {page}/{total_pages})")
         return {
             "agents": agent_list,
@@ -1257,30 +1254,30 @@ async def get_agents(
                 "pages": total_pages
             }
         }
-        
+
     except Exception as e:
-        logger.error(f"Error fetching agents for user {user_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch agents: {str(e)}")
+        logger.error("Error fetching agents for user {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch agents: {str(e)}")
 
 @router.get("/agents/{agent_id}", response_model=AgentResponse)
 async def get_agent(agent_id: str, user_id: str = Depends(get_current_user_id_from_jwt)):
     """Get a specific agent by ID. Only the owner can access non-public agents."""
-    logger.info(f"Fetching agent {agent_id} for user: {user_id}")
+    logger.info("Fetching agent {agent_id} for user: {user_id}")
     client = await db.client
-    
+
     try:
         # Get agent with access check - only owner or public agents
         agent = await client.table('agents').select('*').eq("agent_id", agent_id).execute()
-        
+
         if not agent.data:
             raise HTTPException(status_code=404, detail="Agent not found")
-        
+
         agent_data = agent.data[0]
-        
+
         # Check ownership - only owner can access non-public agents
         if agent_data['account_id'] != user_id and not agent_data.get('is_public', False):
             raise HTTPException(status_code=403, detail="Access denied")
-        
+
         return AgentResponse(
             agent_id=agent_data['agent_id'],
             account_id=agent_data['account_id'],
@@ -1300,12 +1297,12 @@ async def get_agent(agent_id: str, user_id: str = Depends(get_current_user_id_fr
             created_at=agent_data['created_at'],
             updated_at=agent_data['updated_at']
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching agent {agent_id} for user {user_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch agent: {str(e)}")
+        logger.error("Error fetching agent {agent_id} for user {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch agent: {str(e)}")
 
 @router.post("/agents", response_model=AgentResponse)
 async def create_agent(
@@ -1315,23 +1312,23 @@ async def create_agent(
     """Create a new agent."""
     logger.info(f"Creating new agent for user: {user_id}")
     client = await db.client
-    
+
     try:
         # If this is set as default, we need to unset other defaults first
         if agent_data.is_default:
             await client.table('agents').update({"is_default": False}).eq("account_id", user_id).eq("is_default", True).execute()
-        
+
         # enhanced_system_prompt = await enhance_system_prompt(
         #     agent_name=agent_data.name,
         #     description=agent_data.description or "",
         #     user_system_prompt=agent_data.system_prompt
         # )
-        
+
         insert_data = {
             "account_id": user_id,
             "name": agent_data.name,
             "description": agent_data.description,
-            "system_prompt": agent_data.system_prompt, 
+            "system_prompt": agent_data.system_prompt,
             "configured_mcps": agent_data.configured_mcps or [],
             "custom_mcps": agent_data.custom_mcps or [],
             "agentpress_tools": agent_data.agentpress_tools or {},
@@ -1339,15 +1336,15 @@ async def create_agent(
             "avatar": agent_data.avatar,
             "avatar_color": agent_data.avatar_color
         }
-        
+
         new_agent = await client.table('agents').insert(insert_data).execute()
-        
+
         if not new_agent.data:
             raise HTTPException(status_code=500, detail="Failed to create agent")
-        
+
         agent = new_agent.data[0]
         logger.info(f"Created agent {agent['agent_id']} for user: {user_id}")
-        
+
         return AgentResponse(
             agent_id=agent['agent_id'],
             account_id=agent['account_id'],
@@ -1367,12 +1364,12 @@ async def create_agent(
             created_at=agent['created_at'],
             updated_at=agent['updated_at']
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error creating agent for user {user_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to create agent: {str(e)}")
+        logger.error("Error creating agent for user {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create agent: {str(e)}")
 
 @router.put("/agents/{agent_id}", response_model=AgentResponse)
 async def update_agent(
@@ -1381,18 +1378,18 @@ async def update_agent(
     user_id: str = Depends(get_current_user_id_from_jwt)
 ):
     """Update an existing agent."""
-    logger.info(f"Updating agent {agent_id} for user: {user_id}")
+    logger.info("Updating agent {agent_id} for user: {user_id}")
     client = await db.client
-    
+
     try:
         # First verify the agent exists and belongs to the user
         existing_agent = await client.table('agents').select('*').eq("agent_id", agent_id).eq("account_id", user_id).maybe_single().execute()
-        
+
         if not existing_agent.data:
             raise HTTPException(status_code=404, detail="Agent not found")
-        
+
         existing_data = existing_agent.data
-        
+
         # Prepare update data (only include fields that are not None)
         update_data = {}
         if agent_data.name is not None:
@@ -1422,27 +1419,27 @@ async def update_agent(
             update_data["avatar"] = agent_data.avatar
         if agent_data.avatar_color is not None:
             update_data["avatar_color"] = agent_data.avatar_color
-        
+
         if not update_data:
             # No fields to update, return existing agent
             agent = existing_agent.data
         else:
             # Update the agent
             update_result = await client.table('agents').update(update_data).eq("agent_id", agent_id).eq("account_id", user_id).execute()
-            
+
             if not update_result.data:
                 raise HTTPException(status_code=500, detail="Failed to update agent")
-            
+
             # Fetch the updated agent data
             updated_agent = await client.table('agents').select('*').eq("agent_id", agent_id).eq("account_id", user_id).maybe_single().execute()
-            
+
             if not updated_agent.data:
                 raise HTTPException(status_code=500, detail="Failed to fetch updated agent")
-            
+
             agent = updated_agent.data
-        
+
         logger.info(f"Updated agent {agent_id} for user: {user_id}")
-        
+
         return AgentResponse(
             agent_id=agent['agent_id'],
             account_id=agent['account_id'],
@@ -1462,43 +1459,43 @@ async def update_agent(
             created_at=agent['created_at'],
             updated_at=agent['updated_at']
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error updating agent {agent_id} for user {user_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to update agent: {str(e)}")
+        logger.error("Error updating agent {agent_id} for user {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update agent: {str(e)}")
 
 @router.delete("/agents/{agent_id}")
 async def delete_agent(agent_id: str, user_id: str = Depends(get_current_user_id_from_jwt)):
     """Delete an agent."""
-    logger.info(f"Deleting agent: {agent_id}")
+    logger.info("Deleting agent: {agent_id}")
     client = await db.client
-    
+
     try:
         # Verify agent ownership
         agent_result = await client.table('agents').select('*').eq('agent_id', agent_id).execute()
         if not agent_result.data:
             raise HTTPException(status_code=404, detail="Agent not found")
-        
+
         agent = agent_result.data[0]
         if agent['account_id'] != user_id:
             raise HTTPException(status_code=403, detail="Access denied")
-        
+
         # Check if agent is default
         if agent['is_default']:
             raise HTTPException(status_code=400, detail="Cannot delete default agent")
-        
+
         # Delete the agent
         await client.table('agents').delete().eq('agent_id', agent_id).execute()
-        
+
         logger.info(f"Successfully deleted agent: {agent_id}")
         return {"message": "Agent deleted successfully"}
-        
+
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error deleting agent {agent_id}: {str(e)}")
+        logger.error("Error deleting agent {agent_id}: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 # Marketplace Models
@@ -1536,28 +1533,28 @@ async def get_marketplace_agents(
     """Get public agents from the marketplace with pagination, search, sort, and filter support."""
     logger.info(f"Fetching marketplace agents with page={page}, limit={limit}, search='{search}', tags='{tags}', sort_by={sort_by}")
     client = await db.client
-    
+
     try:
         offset = (page - 1) * limit
         tags_array = None
         if tags:
             tags_array = [tag.strip() for tag in tags.split(',') if tag.strip()]
-        
+
         result = await client.rpc('get_marketplace_agents', {
             'p_search': search,
             'p_tags': tags_array,
             'p_limit': limit + 1,
             'p_offset': offset
         }).execute()
-        
+
         if result.data is None:
             result.data = []
-        
+
         has_more = len(result.data) > limit
-        agents_data = result.data[:limit] 
+        agents_data = result.data[:limit]
         if creator:
             agents_data = [
-                agent for agent in agents_data 
+                agent for agent in agents_data
                 if creator.lower() in agent.get('creator_name', '').lower()
             ]
 
@@ -1569,15 +1566,15 @@ async def get_marketplace_agents(
             agents_data = sorted(agents_data, key=lambda x: x.get('name', '').lower())
         else:
             agents_data = sorted(agents_data, key=lambda x: x.get('marketplace_published_at', ''), reverse=True)
-        
+
         estimated_total = (page - 1) * limit + len(agents_data)
         if has_more:
             estimated_total += 1
-        
+
         total_pages = max(page, (estimated_total + limit - 1) // limit)
         if has_more:
             total_pages = page + 1
-        
+
         logger.info(f"Found {len(agents_data)} marketplace agents (page {page}, estimated {total_pages} pages)")
         return {
             "agents": agents_data,
@@ -1588,9 +1585,9 @@ async def get_marketplace_agents(
                 "pages": total_pages
             }
         }
-        
+
     except Exception as e:
-        logger.error(f"Error fetching marketplace agents: {str(e)}")
+        logger.error("Error fetching marketplace agents: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.post("/agents/{agent_id}/publish")
@@ -1600,37 +1597,37 @@ async def publish_agent_to_marketplace(
     user_id: str = Depends(get_current_user_id_from_jwt)
 ):
     """Publish an agent to the marketplace."""
-    logger.info(f"Publishing agent {agent_id} to marketplace")
+    logger.info("Publishing agent {agent_id} to marketplace")
     client = await db.client
-    
+
     try:
         # Verify agent ownership
         agent_result = await client.table('agents').select('*').eq('agent_id', agent_id).execute()
         if not agent_result.data:
             raise HTTPException(status_code=404, detail="Agent not found")
-        
+
         agent = agent_result.data[0]
         if agent['account_id'] != user_id:
             raise HTTPException(status_code=403, detail="Access denied")
-        
+
         # Update agent with marketplace data
         update_data = {
             'is_public': True,
             'marketplace_published_at': datetime.now(timezone.utc).isoformat()
         }
-        
+
         if publish_data.tags:
             update_data['tags'] = publish_data.tags
-        
+
         await client.table('agents').update(update_data).eq('agent_id', agent_id).execute()
-        
+
         logger.info(f"Successfully published agent {agent_id} to marketplace")
         return {"message": "Agent published to marketplace successfully"}
-        
+
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error publishing agent {agent_id}: {str(e)}")
+        logger.error("Error publishing agent {agent_id}: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.post("/agents/{agent_id}/unpublish")
@@ -1639,32 +1636,32 @@ async def unpublish_agent_from_marketplace(
     user_id: str = Depends(get_current_user_id_from_jwt)
 ):
     """Unpublish an agent from the marketplace."""
-    logger.info(f"Unpublishing agent {agent_id} from marketplace")
+    logger.info("Unpublishing agent {agent_id} from marketplace")
     client = await db.client
-    
+
     try:
         # Verify agent ownership
         agent_result = await client.table('agents').select('*').eq('agent_id', agent_id).execute()
         if not agent_result.data:
             raise HTTPException(status_code=404, detail="Agent not found")
-        
+
         agent = agent_result.data[0]
         if agent['account_id'] != user_id:
             raise HTTPException(status_code=403, detail="Access denied")
-        
+
         # Update agent to remove from marketplace
         await client.table('agents').update({
             'is_public': False,
             'marketplace_published_at': None
         }).eq('agent_id', agent_id).execute()
-        
+
         logger.info(f"Successfully unpublished agent {agent_id} from marketplace")
         return {"message": "Agent removed from marketplace successfully"}
-        
+
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error unpublishing agent {agent_id}: {str(e)}")
+        logger.error("Error unpublishing agent {agent_id}: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.post("/marketplace/agents/{agent_id}/add-to-library")
@@ -1675,25 +1672,25 @@ async def add_agent_to_library(
     """Add an agent from the marketplace to user's library."""
     logger.info(f"Adding marketplace agent {agent_id} to user {user_id} library")
     client = await db.client
-    
+
     try:
         # Call the database function with user_id
         result = await client.rpc('add_agent_to_library', {
             'p_original_agent_id': agent_id,
             'p_user_account_id': user_id
         }).execute()
-        
+
         if result.data:
             new_agent_id = result.data
             logger.info(f"Successfully added agent {agent_id} to library as {new_agent_id}")
             return {"message": "Agent added to library successfully", "new_agent_id": new_agent_id}
         else:
             raise HTTPException(status_code=400, detail="Failed to add agent to library")
-        
+
     except Exception as e:
         error_msg = str(e)
-        logger.error(f"Error adding agent {agent_id} to library: {error_msg}")
-        
+        logger.error("Error adding agent {agent_id} to library: {error_msg}")
+
         if "Agent not found or not public" in error_msg:
             raise HTTPException(status_code=404, detail="Agent not found or not public")
         elif "Agent already in your library" in error_msg:
@@ -1704,9 +1701,9 @@ async def add_agent_to_library(
 @router.get("/user/agent-library")
 async def get_user_agent_library(user_id: str = Depends(get_current_user_id_from_jwt)):
     """Get user's agent library (agents added from marketplace)."""
-    logger.info(f"Fetching agent library for user {user_id}")
+    logger.info("Fetching agent library for user {user_id}")
     client = await db.client
-    
+
     try:
         result = await client.table('user_agent_library').select("""
             *,
@@ -1723,12 +1720,12 @@ async def get_user_agent_library(user_id: str = Depends(get_current_user_id_from
                 system_prompt
             )
         """).eq('user_account_id', user_id).order('added_at', desc=True).execute()
-        
+
         logger.info(f"Found {len(result.data or [])} agents in user library")
         return {"library": result.data or []}
-        
+
     except Exception as e:
-        logger.error(f"Error fetching user agent library: {str(e)}")
+        logger.error("Error fetching user agent library: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.get("/agents/{agent_id}/builder-chat-history")
@@ -1737,51 +1734,51 @@ async def get_agent_builder_chat_history(
     user_id: str = Depends(get_current_user_id_from_jwt)
 ):
     """Get chat history for agent builder sessions for a specific agent."""
-    logger.info(f"Fetching agent builder chat history for agent: {agent_id}")
+    logger.info("Fetching agent builder chat history for agent: {agent_id}")
     client = await db.client
-    
+
     try:
         # First verify the agent exists and belongs to the user
         agent_result = await client.table('agents').select('*').eq('agent_id', agent_id).eq('account_id', user_id).execute()
         if not agent_result.data:
             raise HTTPException(status_code=404, detail="Agent not found or access denied")
-        
+
         # Get all threads for this user with metadata field included
         threads_result = await client.table('threads').select('thread_id, created_at, metadata').eq('account_id', user_id).order('created_at', desc=True).execute()
-        
+
         agent_builder_threads = []
         for thread in threads_result.data:
             metadata = thread.get('metadata', {})
             # Check if this is an agent builder thread for the specific agent
-            if (metadata.get('is_agent_builder') and 
+            if (metadata.get('is_agent_builder') and
                 metadata.get('target_agent_id') == agent_id):
                 agent_builder_threads.append({
                     'thread_id': thread['thread_id'],
                     'created_at': thread['created_at']
                 })
-        
+
         if not agent_builder_threads:
             logger.info(f"No agent builder threads found for agent {agent_id}")
             return {"messages": [], "thread_id": None}
-        
+
         # Get the most recent thread (already ordered by created_at desc)
         latest_thread_id = agent_builder_threads[0]['thread_id']
-        logger.info(f"Found {len(agent_builder_threads)} agent builder threads, using latest: {latest_thread_id}")
-        
+        logger.info("Found {len(agent_builder_threads)} agent builder threads, using latest: {latest_thread_id}")
+
         # Get messages from the latest thread, excluding status and summary messages
         messages_result = await client.table('messages').select('*').eq('thread_id', latest_thread_id).neq('type', 'status').neq('type', 'summary').order('created_at', desc=False).execute()
-        
+
         logger.info(f"Found {len(messages_result.data)} messages for agent builder chat history")
         return {
             "messages": messages_result.data,
             "thread_id": latest_thread_id
         }
-        
+
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching agent builder chat history for agent {agent_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch chat history: {str(e)}")
+        logger.error("Error fetching agent builder chat history for agent {agent_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch chat history: {str(e)}")
 
 @router.get("/debug/env")
 async def debug_env():
@@ -1789,7 +1786,7 @@ async def debug_env():
     import os
     return {
         "redis_host": os.getenv('REDIS_HOST', 'NOT SET'),
-        "redis_port": os.getenv('REDIS_PORT', 'NOT SET'), 
+        "redis_port": os.getenv('REDIS_PORT', 'NOT SET'),
         "redis_password_set": bool(os.getenv('REDIS_PASSWORD')),
         "redis_ssl": os.getenv('REDIS_SSL', 'NOT SET'),
         "all_redis_vars": {k: v for k, v in os.environ.items() if k.startswith('REDIS')}
@@ -1800,17 +1797,17 @@ async def debug_redis_size(agent_run_id: str):
     """Debug endpoint to check Redis list size for an agent run"""
     try:
         response_list_key = f"agent_run:{agent_run_id}:responses"
-        
+
         # Get list length
         list_length = await redis.llen(response_list_key)
-        
+
         if list_length == 0:
             return {"agent_run_id": agent_run_id, "list_length": 0, "estimated_size_mb": 0}
-        
+
         # Sample a few responses to estimate size
         sample_size = min(10, list_length)
         sample_responses = await redis.lrange(response_list_key, 0, sample_size - 1)
-        
+
         if sample_responses:
             total_sample_size = sum(len(item.encode('utf-8')) for item in sample_responses)
             avg_response_size = total_sample_size / len(sample_responses)
@@ -1819,7 +1816,7 @@ async def debug_redis_size(agent_run_id: str):
         else:
             estimated_size_mb = 0
             avg_response_size = 0
-        
+
         return {
             "agent_run_id": agent_run_id,
             "list_length": list_length,
