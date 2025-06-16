@@ -18,14 +18,14 @@ else:
         def trace(self, *args, **kwargs):
             class DummyTrace:
                 def update(self, *args, **kwargs): pass
-                def span(self, *args, **kwargs): 
+                def span(self, *args, **kwargs):
                     return DummyTrace()
-                def generation(self, *args, **kwargs): 
+                def generation(self, *args, **kwargs):
                     return DummyTrace()
                 def event(self, *args, **kwargs): pass
                 def score(self, *args, **kwargs): pass
             return DummyTrace()
-        
+
         def flush(self): pass
-    
+
     langfuse = DummyLangfuse()

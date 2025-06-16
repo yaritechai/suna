@@ -1,9 +1,6 @@
-from fastapi import FastAPI, Request, HTTPException, Response, Depends
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
-import sentry
 from contextlib import asynccontextmanager
-from agentpress.thread_manager import ThreadManager
 from services.supabase import DBConnection
 from datetime import datetime, timezone
 from dotenv import load_dotenv
@@ -41,14 +38,14 @@ async def lifespan(app: FastAPI):
     logger.info(f"Starting up FastAPI application with instance ID: {instance_id} in {config.ENV_MODE.value} mode")
     try:
         await db.initialize()
-        
+
         agent_api.initialize(
             db,
             instance_id
         )
-        
+
         sandbox_api.initialize(db)
-        
+
         # Initialize Redis connection
         from services import redis
         try:
@@ -57,16 +54,16 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.error(f"Failed to initialize Redis connection: {e}")
             # Continue without Redis - the application will handle Redis failures gracefully
-        
+
         # Start background tasks
         # asyncio.create_task(agent_api.restore_running_agent_runs())
-        
+
         yield
-        
+
         # Clean up agent resources
         logger.info("Cleaning up agent resources")
         await agent_api.cleanup()
-        
+
         # Clean up Redis connection
         try:
             logger.info("Closing Redis connection")
@@ -74,7 +71,7 @@ async def lifespan(app: FastAPI):
             logger.info("Redis connection closed successfully")
         except Exception as e:
             logger.error(f"Error closing Redis connection: {e}")
-        
+
         # Clean up database connection
         logger.info("Disconnecting from database")
         await db.disconnect()
@@ -92,10 +89,10 @@ async def log_requests_middleware(request: Request, call_next):
     url = str(request.url)
     path = request.url.path
     query_params = str(request.query_params)
-    
+
     # Log the incoming request
     logger.info(f"Request started: {method} {path} from {client_ip} | Query: {query_params}")
-    
+
     try:
         response = await call_next(request)
         process_time = time.time() - start_time
@@ -144,7 +141,7 @@ async def health_check():
     """Health check endpoint to verify API is working."""
     logger.info("Health check endpoint called")
     return {
-        "status": "ok", 
+        "status": "ok",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "instance_id": instance_id
     }
@@ -166,16 +163,16 @@ async def discover_custom_mcp_tools(request: CustomMCPDiscoverRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    
+
     if sys.platform == "win32":
         asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
-    
+
     workers = 1
-    
+
     logger.info(f"Starting server on 0.0.0.0:8000 with {workers} workers")
     uvicorn.run(
-        "api:app", 
-        host="0.0.0.0", 
+        "api:app",
+        host="0.0.0.0",
         port=8000,
         workers=workers,
         loop="asyncio"

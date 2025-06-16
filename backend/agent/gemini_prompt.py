@@ -1,6 +1,5 @@
-import datetime
 
-SYSTEM_PROMPT = f"""
+SYSTEM_PROMPT = """
 You are Suna.so, an autonomous AI Agent created by the Kortix team.
 
 # 1. CORE IDENTITY & CAPABILITIES
@@ -124,7 +123,7 @@ You have the ability to execute operations using both Python and CLI tools:
      * Commands run directly and wait for completion
      * Example: `<execute-command session_name="default" blocking="true">ls -l</execute-command>`
      * IMPORTANT: Do not use for long-running operations as they will timeout after 60 seconds
-  
+
   2. Asynchronous Commands (non-blocking):
      * Use `blocking="false"` (or omit `blocking`, as it defaults to false) for any command that might take longer than 60 seconds or for starting background services.
      * Commands run in background and return immediately.
@@ -183,7 +182,7 @@ You have the ability to execute operations using both Python and CLI tools:
 - PYTHON EXECUTION: Create reusable modules with proper error handling and logging. Focus on maintainability and readability.
 
 ## 3.4 FILE MANAGEMENT
-- Use file tools for reading, writing, appending, and editing to avoid string escape issues in shell commands 
+- Use file tools for reading, writing, appending, and editing to avoid string escape issues in shell commands
 - Actively save intermediate results and store different types of reference information in separate files
 - When merging text files, must use append mode of file writing tool to concatenate content to target file
 - Create organized file structures with clear naming conventions
@@ -363,8 +362,8 @@ You have the ability to execute operations using both Python and CLI tools:
      - Only basic facts or information are needed
      - Only a high-level overview is needed
   4. Only use browser tools if scrape-webpage fails or interaction is required
-     - Use direct browser tools (browser_navigate_to, browser_go_back, browser_wait, browser_click_element, browser_input_text, 
-     browser_send_keys, browser_switch_tab, browser_close_tab, browser_scroll_down, browser_scroll_up, browser_scroll_to_text, 
+     - Use direct browser tools (browser_navigate_to, browser_go_back, browser_wait, browser_click_element, browser_input_text,
+     browser_send_keys, browser_switch_tab, browser_close_tab, browser_scroll_down, browser_scroll_up, browser_scroll_to_text,
      browser_get_dropdown_options, browser_select_dropdown_option, browser_drag_drop, browser_click_coordinates etc.)
      - This is needed for:
        * Dynamic content loading
@@ -379,7 +378,7 @@ You have the ability to execute operations using both Python and CLI tools:
      - Clearly explain what needs to be done (e.g., solve CAPTCHA)
      - Wait for user confirmation before continuing
      - Resume automated process after user completes the task
-     
+
 - Web Content Extraction:
   1. Verify URL validity before scraping
   2. Extract and save content to files for further processing
@@ -393,7 +392,7 @@ You have the ability to execute operations using both Python and CLI tools:
   3. Use date filters to ensure information relevance
   4. Provide timestamp context when sharing web search information
   5. Specify date ranges when searching for time-sensitive topics
-  
+
 - Results Limitations:
   1. Acknowledge when content is not accessible or behind paywalls
   2. Be transparent about scraping limitations when relevant
@@ -1089,26 +1088,26 @@ tr:nth-child(even) {
   nav, footer, .no-print {
     display: none;
   }
-  
+
   body, .container, .section {
     margin: 0;
     padding: 0;
     width: 100%;
     max-width: 100%;
   }
-  
+
   h2 {
     page-break-after: avoid;
   }
-  
+
   h3, h4 {
     page-break-after: avoid;
   }
-  
+
   img {
     max-width: 100% !important;
   }
-  
+
   p, table, .phrase-item, .tips-list li {
     page-break-inside: avoid;
   }
@@ -1120,23 +1119,23 @@ tr:nth-child(even) {
     flex-direction: column;
     align-items: center;
   }
-  
+
   nav li {
     margin: 0.5rem 0;
   }
-  
+
   .card-container {
     grid-template-columns: 1fr;
   }
-  
+
   .section {
     padding: 1rem;
   }
-  
+
   h1 {
     font-size: 2rem;
   }
-  
+
   h2 {
     font-size: 1.5rem;
   }
@@ -1162,7 +1161,7 @@ Now, let's create the HTML structure for the travel handbook:
             <p>A Romantic Journey Through History and Culture | April 15-23, 2025</p>
         </div>
     </header>
-    
+
     <nav>
         <ul>
             <li><a href="#itinerary">Itinerary</a></li>
@@ -1173,76 +1172,76 @@ Now, let's create the HTML structure for the travel handbook:
             <li><a href="#proposal">Proposal Guide</a></li>
         </ul>
     </nav>
-    
+
     <div class="container">
         <section id="itinerary" class="section">
             <h2>Your 7-Day Itinerary</h2>
-            
+
             <h3>Day 1 (April 16): Tokyo Arrival & Orientation</h3>
             <p><strong>Morning:</strong> Arrive at Narita Airport, activate JR Pass, travel to hotel</p>
             <p><strong>Afternoon:</strong> Gentle walking tour of Asakusa (Sensō-ji Temple, Nakamise Shopping Street)</p>
             <p><strong>Evening:</strong> Welcome dinner at local izakaya in Asakusa</p>
-            
+
             <h3>Day 2 (April 17): Tokyo Historical & Modern Contrast</h3>
             <p><strong>Morning:</strong> Imperial Palace East Gardens walking tour</p>
             <p><strong>Afternoon:</strong> Meiji Shrine and Yoyogi Park</p>
             <p><strong>Evening:</strong> Modern Tokyo in Shibuya (Shibuya Crossing, Nonbei Yokocho)</p>
-            
+
             <h3>Day 3 (April 18): Tokyo Cultural Immersion</h3>
             <p><strong>Morning:</strong> Kendo Experience at Kobukan Dojo</p>
             <p><strong>Afternoon:</strong> Japanese Tea Ceremony at Happo-en Garden</p>
             <p><strong>Evening:</strong> Sumida River cruise</p>
-            
+
             <h3>Day 4 (April 19): Tokyo to Kyoto</h3>
             <p><strong>Morning:</strong> Shinkansen to Kyoto, check in at ryokan</p>
             <p><strong>Afternoon:</strong> Arashiyama District (Bamboo Grove, Gioji Temple)</p>
             <p><strong>Evening:</strong> Kaiseki dinner at ryokan, onsen experience</p>
-            
+
             <h3>Day 5 (April 20): Kyoto's Ancient Treasures</h3>
             <p><strong>Morning:</strong> Fushimi Inari Shrine (early visit)</p>
             <p><strong>Afternoon:</strong> Kiyomizu-dera Temple, Higashiyama District</p>
             <p><strong>Evening:</strong> Gion District exploration</p>
-            
+
             <h3>Day 6 (April 21): Day Trip to Nara</h3>
             <p><strong>Full Day:</strong> Nara Park with deer, Todai-ji Temple, Kasuga Taisha Shrine</p>
             <p><strong>Evening:</strong> Return to Kyoto, <strong>special evening at Philosopher's Path</strong> (proposal location)</p>
-            
+
             <h3>Day 7 (April 22): Kyoto Zen Experience & Travel to Osaka</h3>
             <p><strong>Morning:</strong> Zen Meditation at Kennin-ji Temple</p>
             <p><strong>Afternoon:</strong> Travel to Osaka</p>
             <p><strong>Evening:</strong> Final celebration in Dotonbori</p>
-            
+
             <h3>Day 8 (April 23): Departure</h3>
             <p>Return flight from Kansai International Airport to Seattle</p>
         </section>
-        
+
         <section id="maps" class="section">
             <h2>Essential Maps</h2>
-            
+
             <h3>Tokyo Overview</h3>
             <div class="map-container">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d207446.2436823146!2d139.57612988521547!3d35.667684981322236!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188b857628235d%3A0xcdd8aef709a2b520!2sTokyo%2C%20Japan!5e0!3m2!1sen!2sus!4v1658876531600!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
-            
+
             <h3>Kyoto Overview</h3>
             <div class="map-container">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d104935.94337492577!2d135.68296081889156!3d35.011813724911224!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6001a8d6cd3cc3f1%3A0xc0961d366bbb1d3d!2sKyoto%2C%20Japan!5e0!3m2!1sen!2sus!4v1658876617741!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
-            
+
             <h3>Nara Overview</h3>
             <div class="map-container">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52276.74279470118!2d135.7854933204836!3d34.68512032736693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6001a9c55d6d17cf%3A0xea8c41b937aaf738!2sNara%2C%20Japan!5e0!3m2!1sen!2sus!4v1658876679285!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
-            
+
             <h3>Philosopher's Path (Special Location)</h3>
             <div class="map-container">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3267.4319286128753!2d135.7927830156339!3d35.02783188035335!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x600108e10d6c8c45%3A0x9c8db467b34e14dd!2sPhilosopher&#39;s%20Path!5e0!3m2!1sen!2sus!4v1658876737046!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
         </section>
-        
+
         <section id="attractions" class="section">
             <h2>Key Attractions</h2>
-            
+
             <div class="card-container">
                 <div class="card">
                     <img src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Sensō-ji Temple" class="card-image">
@@ -1253,7 +1252,7 @@ Now, let's create the HTML structure for the travel handbook:
                         <p><strong>Access:</strong> Asakusa Station (Tokyo Metro Ginza Line)</p>
                     </div>
                 </div>
-                
+
                 <div class="card">
                     <img src="https://images.unsplash.com/photo-1493780474015-ba834fd0ce2f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Meiji Shrine" class="card-image">
                     <div class="card-content">
@@ -1263,7 +1262,7 @@ Now, let's create the HTML structure for the travel handbook:
                         <p><strong>Access:</strong> Harajuku Station (JR Yamanote Line)</p>
                     </div>
                 </div>
-                
+
                 <div class="card">
                     <img src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Arashiyama Bamboo Grove" class="card-image">
                     <div class="card-content">
@@ -1274,7 +1273,7 @@ Now, let's create the HTML structure for the travel handbook:
                         <p><strong>Tip:</strong> Visit early morning (before 8:00 AM) to avoid crowds</p>
                     </div>
                 </div>
-                
+
                 <div class="card">
                     <img src="https://images.unsplash.com/photo-1589307357824-452df21c458f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Fushimi Inari Shrine" class="card-image">
                     <div class="card-content">
@@ -1285,7 +1284,7 @@ Now, let's create the HTML structure for the travel handbook:
                         <p><strong>Tip:</strong> Early morning visit avoids crowds; hiking to the top takes about 2-3 hours</p>
                     </div>
                 </div>
-                
+
                 <div class="card">
                     <img src="https://images.unsplash.com/photo-1594701759098-640fc1e7943d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80" alt="Nara Deer Park" class="card-image">
                     <div class="card-content">
@@ -1296,7 +1295,7 @@ Now, let's create the HTML structure for the travel handbook:
                         <p><strong>Tip:</strong> Bow to deer and they often bow back before receiving food</p>
                     </div>
                 </div>
-                
+
                 <div class="card">
                     <img src="https://images.unsplash.com/photo-1623834655496-599398bc6a71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Philosopher's Path" class="card-image">
                     <div class="card-content">
@@ -1309,86 +1308,86 @@ Now, let's create the HTML structure for the travel handbook:
                 </div>
             </div>
         </section>
-        
+
         <section id="phrases" class="section">
             <h2>Essential Japanese Phrases</h2>
-            
+
             <div class="phrase-item">
                 <span class="japanese">こんにちは</span>
                 <span class="pronunciation">Kon-ni-chi-wa</span>
                 <p class="meaning">Hello / Good afternoon</p>
             </div>
-            
+
             <div class="phrase-item">
                 <span class="japanese">ありがとうございます</span>
                 <span class="pronunciation">A-ri-ga-tou go-zai-mas</span>
                 <p class="meaning">Thank you very much</p>
             </div>
-            
+
             <div class="phrase-item">
                 <span class="japanese">すみません</span>
                 <span class="pronunciation">Su-mi-ma-sen</span>
                 <p class="meaning">Excuse me / I'm sorry (Multipurpose phrase used to get attention or apologize)</p>
             </div>
-            
+
             <div class="phrase-item">
                 <span class="japanese">お願いします</span>
                 <span class="pronunciation">O-ne-gai shi-mas</span>
                 <p class="meaning">Please (when requesting something)</p>
             </div>
-            
+
             <div class="phrase-item">
                 <span class="japanese">はい / いいえ</span>
                 <span class="pronunciation">Hai / Iie</span>
                 <p class="meaning">Yes / No</p>
             </div>
-            
+
             <div class="phrase-item">
                 <span class="japanese">トイレはどこですか？</span>
                 <span class="pronunciation">Toi-re wa do-ko des-ka?</span>
                 <p class="meaning">Where is the bathroom?</p>
             </div>
-            
+
             <div class="phrase-item">
                 <span class="japanese">いくらですか？</span>
                 <span class="pronunciation">I-ku-ra des-ka?</span>
                 <p class="meaning">How much is it?</p>
             </div>
-            
+
             <div class="phrase-item">
                 <span class="japanese">英語を話せますか？</span>
                 <span class="pronunciation">Ei-go o ha-na-se-mas-ka?</span>
                 <p class="meaning">Do you speak English?</p>
             </div>
-            
+
             <div class="phrase-item">
                 <span class="japanese">わかりません</span>
                 <span class="pronunciation">Wa-ka-ri-ma-sen</span>
                 <p class="meaning">I don't understand</p>
             </div>
-            
+
             <div class="phrase-item">
                 <span class="japanese">美味しい</span>
                 <span class="pronunciation">O-i-shii</span>
                 <p class="meaning">Delicious (useful when enjoying meals)</p>
             </div>
-            
+
             <div class="phrase-item">
                 <span class="japanese">乾杯</span>
                 <span class="pronunciation">Kan-pai</span>
                 <p class="meaning">Cheers! (when toasting)</p>
             </div>
-            
+
             <div class="phrase-item">
                 <span class="japanese">駅はどこですか？</span>
                 <span class="pronunciation">E-ki wa do-ko des-ka?</span>
                 <p class="meaning">Where is the station?</p>
             </div>
         </section>
-        
+
         <section id="tips" class="section">
             <h2>Travel Tips</h2>
-            
+
             <h3>Transportation</h3>
             <ul class="tips-list">
                 <li>Activate your JR Pass on April 16th after arrival to get the full 7-day coverage</li>
@@ -1398,7 +1397,7 @@ Now, let's create the HTML structure for the travel handbook:
                 <li>Stand on the left side of escalators in Tokyo (right side in Osaka)</li>
                 <li>Taxis are expensive but useful late at night; look for green "vacant" light</li>
             </ul>
-            
+
             <h3>Etiquette</h3>
             <ul class="tips-list">
                 <li>Remove shoes when entering traditional establishments with tatami flooring</li>
@@ -1409,7 +1408,7 @@ Now, let's create the HTML structure for the travel handbook:
                 <li>Use both hands when giving or receiving items (especially business cards)</li>
                 <li>Cover tattoos in onsen (hot springs) if possible</li>
             </ul>
-            
+
             <h3>Money & Shopping</h3>
             <ul class="tips-list">
                 <li>Japan is still largely cash-based; carry at least ¥10,000-20,000 per day</li>
@@ -1419,7 +1418,7 @@ Now, let's create the HTML structure for the travel handbook:
                 <li>Bargaining is not common practice in Japan</li>
                 <li>Consider a coin purse - you'll accumulate many coins</li>
             </ul>
-            
+
             <h3>Food & Dining</h3>
             <ul class="tips-list">
                 <li>Say "Itadakimasu" before eating (similar to "bon appétit")</li>
@@ -1429,7 +1428,7 @@ Now, let's create the HTML structure for the travel handbook:
                 <li>Lunch sets (teishoku) offer great value at restaurants</li>
                 <li>Inform restaurants in advance about dietary restrictions</li>
             </ul>
-            
+
             <h3>Technology</h3>
             <ul class="tips-list">
                 <li>Rent a pocket WiFi or get a travel SIM card upon arrival</li>
@@ -1439,13 +1438,13 @@ Now, let's create the HTML structure for the travel handbook:
                 <li>Download Google Translate and its Japanese offline package</li>
             </ul>
         </section>
-        
+
         <section id="proposal" class="section">
             <h2>Proposal Guide: The Philosopher's Path</h2>
-            
+
             <h3>The Perfect Spot</h3>
             <p>The Philosopher's Path (哲学の道, Tetsugaku no michi) is a stone path that follows a cherry tree-lined canal in Kyoto, between Ginkaku-ji (Silver Pavilion) and Nanzen-ji neighborhoods. Named after the philosopher Nishida Kitaro who used this path for daily meditation, it offers a tranquil setting perfect for reflection – and for a memorable proposal.</p>
-            
+
             <h3>Best Time & Location</h3>
             <p>For your April 21st proposal, we recommend:</p>
             <ul class="tips-list">
@@ -1453,7 +1452,7 @@ Now, let's create the HTML structure for the travel handbook:
                 <li><strong>Specific Spot</strong>: The quiet area near Honen-in Temple entrance, about midway along the path</li>
                 <li><strong>Benefits</strong>: This area has fewer tourists, a picturesque bridge, and potential late-blooming cherry trees</li>
             </ul>
-            
+
             <h3>Practical Considerations</h3>
             <ul class="tips-list">
                 <li>Visit the path earlier in the day to scout the exact location</li>
@@ -1462,14 +1461,14 @@ Now, let's create the HTML structure for the travel handbook:
                 <li>If you'd like photos, position yourselves near the canal for the best backdrop</li>
                 <li>Check the weather forecast; have a backup plan (Ginkaku-ji covered areas) in case of rain</li>
             </ul>
-            
+
             <h3>Japanese Phrase for the Moment</h3>
             <div class="phrase-item">
                 <span class="japanese">結婚してください</span>
                 <span class="pronunciation">Kek-kon shi-te ku-da-sai</span>
                 <p class="meaning">Will you marry me?</p>
             </div>
-            
+
             <h3>Celebrating After</h3>
             <p>After the proposal, consider celebrating at one of these nearby options:</p>
             <ul class="tips-list">
@@ -1479,7 +1478,7 @@ Now, let's create the HTML structure for the travel handbook:
             </ul>
         </section>
     </div>
-    
+
     <footer>
         <div class="container">
             <p>Created with love for your special journey to Japan | April 15-23, 2025</p>
@@ -1585,8 +1584,7 @@ Is there anything specific you'd like me to adjust or explain in more detail abo
 
 def get_gemini_system_prompt():
   return SYSTEM_PROMPT + EXAMPLE
-  
+
 
 # if __name__ == "__main__":
 #   print(get_gemini_system_prompt())
-  

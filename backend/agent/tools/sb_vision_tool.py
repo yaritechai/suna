@@ -8,14 +8,13 @@ from PIL import Image
 from agentpress.tool import ToolResult, openapi_schema, xml_schema
 from sandbox.tool_base import SandboxToolsBase
 from agentpress.thread_manager import ThreadManager
-import json
 
 # Add common image MIME types if mimetypes module is limited
 mimetypes.add_type("image/webp", ".webp")
 mimetypes.add_type("image/jpeg", ".jpg")
 mimetypes.add_type("image/jpeg", ".jpeg")
 mimetypes.add_type("image/png", ".png")
-mimetypes.add_type("image/gif", ".gif")
+mimetypes.add_type("image/gi", ".gi")
 
 # Maximum file size in bytes (e.g., 10MB for original, 5MB for compressed)
 MAX_IMAGE_SIZE = 10 * 1024 * 1024
@@ -38,19 +37,19 @@ class SandboxVisionTool(SandboxToolsBase):
 
     def compress_image(self, image_bytes: bytes, mime_type: str, file_path: str) -> Tuple[bytes, str]:
         """Compress an image to reduce its size while maintaining reasonable quality.
-        
+
         Args:
             image_bytes: Original image bytes
             mime_type: MIME type of the image
             file_path: Path to the image file (for logging)
-            
+
         Returns:
             Tuple of (compressed_bytes, new_mime_type)
         """
         try:
             # Open image from bytes
             img = Image.open(BytesIO(image_bytes))
-            
+
             # Convert RGBA to RGB if necessary (for JPEG)
             if img.mode in ('RGBA', 'LA', 'P'):
                 # Create a white background
@@ -59,7 +58,7 @@ class SandboxVisionTool(SandboxToolsBase):
                     img = img.convert('RGBA')
                 background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
                 img = background
-            
+
             # Calculate new dimensions while maintaining aspect ratio
             width, height = img.size
             if width > DEFAULT_MAX_WIDTH or height > DEFAULT_MAX_HEIGHT:
@@ -67,16 +66,16 @@ class SandboxVisionTool(SandboxToolsBase):
                 new_width = int(width * ratio)
                 new_height = int(height * ratio)
                 img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-                print(f"[SeeImage] Resized image from {width}x{height} to {new_width}x{new_height}")
-            
+                print("[SeeImage] Resized image from {width}x{height} to {new_width}x{new_height}")
+
             # Save to bytes with compression
             output = BytesIO()
-            
+
             # Determine output format based on original mime type
-            if mime_type == 'image/gif':
+            if mime_type == 'image/gi':
                 # Keep GIFs as GIFs to preserve animation
                 img.save(output, format='GIF', optimize=True)
-                output_mime = 'image/gif'
+                output_mime = 'image/gi'
             elif mime_type == 'image/png':
                 # Compress PNG
                 img.save(output, format='PNG', optimize=True, compress_level=DEFAULT_PNG_COMPRESS_LEVEL)
@@ -85,17 +84,17 @@ class SandboxVisionTool(SandboxToolsBase):
                 # Convert everything else to JPEG for better compression
                 img.save(output, format='JPEG', quality=DEFAULT_JPEG_QUALITY, optimize=True)
                 output_mime = 'image/jpeg'
-            
+
             compressed_bytes = output.getvalue()
-            
+
             # Log compression results
             original_size = len(image_bytes)
             compressed_size = len(compressed_bytes)
             compression_ratio = (1 - compressed_size / original_size) * 100
-            print(f"[SeeImage] Compressed '{file_path}' from {original_size / 1024:.1f}KB to {compressed_size / 1024:.1f}KB ({compression_ratio:.1f}% reduction)")
-            
+            print("[SeeImage] Compressed '{file_path}' from {original_size / 1024:.1f}KB to {compressed_size / 1024:.1f}KB ({compression_ratio:.1f}% reduction)")
+
             return compressed_bytes, output_mime
-            
+
         except Exception as e:
             print(f"[SeeImage] Failed to compress image: {str(e)}. Using original.")
             return image_bytes, mime_type
@@ -139,25 +138,25 @@ class SandboxVisionTool(SandboxToolsBase):
 
             # Clean and construct full path
             cleaned_path = self.clean_path(file_path)
-            full_path = f"{self.workspace_path}/{cleaned_path}"
+            full_path = "{self.workspace_path}/{cleaned_path}"
 
             # Check if file exists and get info
             try:
                 file_info = self.sandbox.fs.get_file_info(full_path)
                 if file_info.is_dir:
-                    return self.fail_response(f"Path '{cleaned_path}' is a directory, not an image file.")
+                    return self.fail_response("Path '{cleaned_path}' is a directory, not an image file.")
             except Exception as e:
-                return self.fail_response(f"Image file not found at path: '{cleaned_path}'")
+                return self.fail_response("Image file not found at path: '{cleaned_path}'")
 
             # Check file size
             if file_info.size > MAX_IMAGE_SIZE:
-                return self.fail_response(f"Image file '{cleaned_path}' is too large ({file_info.size / (1024*1024):.2f}MB). Maximum size is {MAX_IMAGE_SIZE / (1024*1024)}MB.")
+                return self.fail_response("Image file '{cleaned_path}' is too large ({file_info.size / (1024*1024):.2f}MB). Maximum size is {MAX_IMAGE_SIZE / (1024*1024)}MB.")
 
             # Read image file content
             try:
                 image_bytes = self.sandbox.fs.download_file(full_path)
             except Exception as e:
-                return self.fail_response(f"Could not read image file: {cleaned_path}")
+                return self.fail_response("Could not read image file: {cleaned_path}")
 
             # Determine MIME type
             mime_type, _ = mimetypes.guess_type(full_path)
@@ -166,14 +165,14 @@ class SandboxVisionTool(SandboxToolsBase):
                 ext = os.path.splitext(cleaned_path)[1].lower()
                 if ext == '.jpg' or ext == '.jpeg': mime_type = 'image/jpeg'
                 elif ext == '.png': mime_type = 'image/png'
-                elif ext == '.gif': mime_type = 'image/gif'
+                elif ext == '.gi': mime_type = 'image/gi'
                 elif ext == '.webp': mime_type = 'image/webp'
                 else:
-                    return self.fail_response(f"Unsupported or unknown image format for file: '{cleaned_path}'. Supported: JPG, PNG, GIF, WEBP.")
+                    return self.fail_response("Unsupported or unknown image format for file: '{cleaned_path}'. Supported: JPG, PNG, GIF, WEBP.")
 
             # Compress the image
             compressed_bytes, compressed_mime_type = self.compress_image(image_bytes, mime_type, cleaned_path)
-            
+
             # Check if compressed image is still too large
             if len(compressed_bytes) > MAX_COMPRESSED_SIZE:
                 return self.fail_response(f"Image file '{cleaned_path}' is still too large after compression ({len(compressed_bytes) / (1024*1024):.2f}MB). Maximum compressed size is {MAX_COMPRESSED_SIZE / (1024*1024)}MB.")
@@ -200,7 +199,7 @@ class SandboxVisionTool(SandboxToolsBase):
             )
 
             # Inform the agent the image will be available next turn
-            return self.success_response(f"Successfully loaded and compressed the image '{cleaned_path}' (reduced from {file_info.size / 1024:.1f}KB to {len(compressed_bytes) / 1024:.1f}KB).")
+            return self.success_response("Successfully loaded and compressed the image '{cleaned_path}' (reduced from {file_info.size / 1024:.1f}KB to {len(compressed_bytes) / 1024:.1f}KB).")
 
         except Exception as e:
-            return self.fail_response(f"An unexpected error occurred while trying to see the image: {str(e)}") 
+            return self.fail_response("An unexpected error occurred while trying to see the image: {str(e)}")

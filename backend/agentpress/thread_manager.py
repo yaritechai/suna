@@ -45,7 +45,7 @@ class ThreadManager:
     XML-based tool execution patterns.
     """
 
-    def __init__(self, trace: Optional[StatefulTraceClient] = None, is_agent_builder: bool = False, target_agent_id: Optional[str] = None):
+    def __init__(self, trace: Optional["StatefulTraceClient"] = None, is_agent_builder: bool = False, target_agent_id: Optional[str] = None):
         """Initialize ThreadManager.
 
         Args:
@@ -59,7 +59,7 @@ class ThreadManager:
         self.is_agent_builder = is_agent_builder
         self.target_agent_id = target_agent_id
         if not self.trace:
-            self.trace = langfuse.trace(name="anonymous:thread_manager")
+            self.trace = None  # Temporarily disable Langfuse to fix worker crash
         self.response_processor = ResponseProcessor(
             tool_registry=self.tool_registry,
             add_message_callback=self.add_message,
@@ -108,15 +108,15 @@ class ThreadManager:
         try:
             # Add returning='representation' to get the inserted row data including the id
             result = await client.table('messages').insert(data_to_insert, returning='representation').execute()
-            logger.info(f"Successfully added message to thread {thread_id}")
+            logger.info("Successfully added message to thread {thread_id}")
 
             if result.data and len(result.data) > 0 and isinstance(result.data[0], dict) and 'message_id' in result.data[0]:
                 return result.data[0]
             else:
-                logger.error(f"Insert operation failed or did not return expected data structure for thread {thread_id}. Result data: {result.data}")
+                logger.error("Insert operation failed or did not return expected data structure for thread {thread_id}. Result data: {result.data}")
                 return None
         except Exception as e:
-            logger.error(f"Failed to add message to thread {thread_id}: {str(e)}", exc_info=True)
+            logger.error("Failed to add message to thread {thread_id}: {str(e)}", exc_info=True)
             raise
 
     async def get_llm_messages(self, thread_id: str) -> List[Dict[str, Any]]:
@@ -151,7 +151,7 @@ class ThreadManager:
                         parsed_item['message_id'] = item['message_id']
                         messages.append(parsed_item)
                     except json.JSONDecodeError:
-                        logger.error(f"Failed to parse message: {item['content']}")
+                        logger.error("Failed to parse message: {item['content']}")
                 else:
                     content = item['content']
                     content['message_id'] = item['message_id']
@@ -160,7 +160,7 @@ class ThreadManager:
             return messages
 
         except Exception as e:
-            logger.error(f"Failed to get messages for thread {thread_id}: {str(e)}", exc_info=True)
+            logger.error("Failed to get messages for thread {thread_id}: {str(e)}", exc_info=True)
             return []
 
     async def run_thread(
@@ -180,7 +180,7 @@ class ThreadManager:
         enable_thinking: Optional[bool] = False,
         reasoning_effort: Optional[str] = 'low',
         enable_context_manager: bool = True,
-        generation: Optional[StatefulGenerationClient] = None,
+        generation: Optional["StatefulGenerationClient"] = None,
     ) -> Union[Dict[str, Any], AsyncGenerator]:
         """Run a conversation thread with LLM integration and tool execution.
 
@@ -206,14 +206,14 @@ class ThreadManager:
             An async generator yielding response chunks or error dict
         """
 
-        logger.info(f"Starting thread execution for thread {thread_id}")
-        logger.info(f"Using model: {llm_model}")
+        logger.info("Starting thread execution for thread {thread_id}")
+        logger.info("Using model: {llm_model}")
         # Log parameters
-        logger.info(f"Parameters: model={llm_model}, temperature={llm_temperature}, max_tokens={llm_max_tokens}")
-        logger.info(f"Auto-continue: max={native_max_auto_continues}, XML tool limit={max_xml_tool_calls}")
+        logger.info("Parameters: model={llm_model}, temperature={llm_temperature}, max_tokens={llm_max_tokens}")
+        logger.info("Auto-continue: max={native_max_auto_continues}, XML tool limit={max_xml_tool_calls}")
 
         # Log model info
-        logger.info(f"🤖 Thread {thread_id}: Using model {llm_model}")
+        logger.info("🤖 Thread {thread_id}: Using model {llm_model}")
 
         # Apply max_xml_tool_calls if specified and not already set in config
         if max_xml_tool_calls > 0 and not processor_config.max_xml_tool_calls:
@@ -237,7 +237,7 @@ Note that spaces for string values are not stripped. The output is parsed with r
 Here are the XML tools available with examples:
 """
                 for tag_name, example in xml_examples.items():
-                    examples_content += f"<{tag_name}> Example: {example}\\n"
+                    examples_content += "<{tag_name}> Example: {example}\\n"
 
                 # # Save examples content to a file
                 # try:
@@ -245,7 +245,7 @@ Here are the XML tools available with examples:
                 #         f.write(examples_content)
                 #     logger.debug("Saved XML examples to xml_examples.txt")
                 # except Exception as e:
-                #     logger.error(f"Failed to save XML examples to file: {e}")
+                #     logger.error("Failed to save XML examples to file: {e}")
 
                 system_content = working_system_prompt.get('content')
 
@@ -263,7 +263,7 @@ Here are the XML tools available with examples:
                     if not appended:
                         logger.warning("System prompt content is a list but no text block found to append XML examples.")
                 else:
-                    logger.warning(f"System prompt content is of unexpected type ({type(system_content)}), cannot add XML examples.")
+                    logger.warning("System prompt content is of unexpected type ({type(system_content)}), cannot add XML examples.")
         # Control whether we need to auto-continue due to tool_calls finish reason
         auto_continue = True
         auto_continue_count = 0
@@ -285,10 +285,10 @@ Here are the XML tools available with examples:
                     # Use the potentially modified working_system_prompt for token counting
                     token_count = token_counter(model=llm_model, messages=[working_system_prompt] + messages)
                     token_threshold = self.context_manager.token_threshold
-                    logger.info(f"Thread {thread_id} token count: {token_count}/{token_threshold} ({(token_count/token_threshold)*100:.1f}%)")
+                    logger.info("Thread {thread_id} token count: {token_count}/{token_threshold} ({(token_count/token_threshold)*100:.1f}%)")
 
                     # if token_count >= token_threshold and enable_context_manager:
-                    #     logger.info(f"Thread token count ({token_count}) exceeds threshold ({token_threshold}), summarizing...")
+                    #     logger.info("Thread token count ({token_count}) exceeds threshold ({token_threshold}), summarizing...")
                     #     summarized = await self.context_manager.check_and_summarize_if_needed(
                     #         thread_id=thread_id,
                     #         add_message_callback=self.add_message,
@@ -300,14 +300,14 @@ Here are the XML tools available with examples:
                     #         messages = await self.get_llm_messages(thread_id)
                     #         # Recount tokens after summarization, using the modified prompt
                     #         new_token_count = token_counter(model=llm_model, messages=[working_system_prompt] + messages)
-                    #         logger.info(f"After summarization: token count reduced from {token_count} to {new_token_count}")
+                    #         logger.info("After summarization: token count reduced from {token_count} to {new_token_count}")
                     #     else:
                     #         logger.warning("Summarization failed or wasn't needed - proceeding with original messages")
                     # elif not enable_context_manager:
                     #     logger.info("Automatic summarization disabled. Skipping token count check and summarization.")
 
                 except Exception as e:
-                    logger.error(f"Error counting tokens or summarizing: {str(e)}")
+                    logger.error("Error counting tokens or summarizing: {str(e)}")
 
                 # 3. Prepare messages for LLM call + add temporary message if it exists
                 # Use the working_system_prompt which may contain the XML examples
@@ -336,7 +336,7 @@ Here are the XML tools available with examples:
                 openapi_tool_schemas = None
                 if processor_config.native_tool_calling:
                     openapi_tool_schemas = self.tool_registry.get_openapi_schemas()
-                    logger.debug(f"Retrieved {len(openapi_tool_schemas) if openapi_tool_schemas else 0} OpenAPI tool schemas")
+                    logger.debug("Retrieved {len(openapi_tool_schemas) if openapi_tool_schemas else 0} OpenAPI tool schemas")
 
 
                 uncompressed_total_token_count = token_counter(model=llm_model, messages=prepared_messages)
@@ -353,10 +353,10 @@ Here are the XML tools available with examples:
                                     if message_id:
                                         msg["content"] = msg["content"][:10000] + "... (truncated)" + f"\n\nThis message is too long, use the expand-message tool with message_id \"{message_id}\" to see the full message" # Truncate the message
                                 else:
-                                    msg["content"] = msg["content"][:200000] + f"\n\nThis message is too long, repeat relevant information in your response to remember it" # Truncate to 300k characters to avoid overloading the context at once, but don't truncate otherwise
+                                    msg["content"] = msg["content"][:200000] + "\n\nThis message is too long, repeat relevant information in your response to remember it" # Truncate to 300k characters to avoid overloading the context at once, but don't truncate otherwise
 
                 compressed_total_token_count = token_counter(model=llm_model, messages=prepared_messages)
-                logger.info(f"token_compression: {uncompressed_total_token_count} -> {compressed_total_token_count}") # Log the token compression for debugging later
+                logger.info("token_compression: {uncompressed_total_token_count} -> {compressed_total_token_count}") # Log the token compression for debugging later
 
                 # 5. Make LLM API call
                 logger.debug("Making LLM API call")
@@ -389,7 +389,7 @@ Here are the XML tools available with examples:
                     logger.debug("Successfully received raw LLM API response stream/object")
 
                 except Exception as e:
-                    logger.error(f"Failed to make LLM API call: {str(e)}", exc_info=True)
+                    logger.error("Failed to make LLM API call: {str(e)}", exc_info=True)
                     raise
 
                 # 6. Process LLM response using the ResponseProcessor
@@ -439,7 +439,7 @@ Here are the XML tools available with examples:
 
                     # Handle error responses
                     if isinstance(response_gen, dict) and "status" in response_gen and response_gen["status"] == "error":
-                        logger.error(f"Error in auto_continue_wrapper: {response_gen.get('message', 'Unknown error')}")
+                        logger.error("Error in auto_continue_wrapper: {response_gen.get('message', 'Unknown error')}")
                         yield response_gen
                         return  # Exit the generator on error
 
@@ -451,14 +451,14 @@ Here are the XML tools available with examples:
                                 if chunk.get('finish_reason') == 'tool_calls':
                                     # Only auto-continue if enabled (max > 0)
                                     if native_max_auto_continues > 0:
-                                        logger.info(f"Detected finish_reason='tool_calls', auto-continuing ({auto_continue_count + 1}/{native_max_auto_continues})")
+                                        logger.info("Detected finish_reason='tool_calls', auto-continuing ({auto_continue_count + 1}/{native_max_auto_continues})")
                                         auto_continue = True
                                         auto_continue_count += 1
                                         # Don't yield the finish chunk to avoid confusing the client
                                         continue
                                 elif chunk.get('finish_reason') == 'xml_tool_limit_reached':
                                     # Don't auto-continue if XML tool limit was reached
-                                    logger.info(f"Detected finish_reason='xml_tool_limit_reached', stopping auto-continue")
+                                    logger.info("Detected finish_reason='xml_tool_limit_reached', stopping auto-continue")
                                     auto_continue = False
                                     # Still yield the chunk to inform the client
 
@@ -474,7 +474,7 @@ Here are the XML tools available with examples:
                         yield {
                             "type": "status",
                             "status": "error",
-                            "message": f"Error in thread processing: {str(e)}"
+                            "message": "Error in thread processing: {str(e)}"
                         }
                         return  # Exit the generator on any error
                 except Exception as outer_e:
@@ -483,7 +483,7 @@ Here are the XML tools available with examples:
                     yield {
                         "type": "status",
                         "status": "error",
-                        "message": f"Error executing thread: {str(outer_e)}"
+                        "message": "Error executing thread: {str(outer_e)}"
                     }
                     return  # Exit immediately on exception from _run_once
 
@@ -492,7 +492,7 @@ Here are the XML tools available with examples:
                 logger.warning(f"Reached maximum auto-continue limit ({native_max_auto_continues}), stopping.")
                 yield {
                     "type": "content",
-                    "content": f"\n[Agent reached maximum auto-continue limit of {native_max_auto_continues}]"
+                    "content": "\n[Agent reached maximum auto-continue limit of {native_max_auto_continues}]"
                 }
 
         # If auto-continue is disabled (max=0), just run once

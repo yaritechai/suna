@@ -86,7 +86,7 @@ class ExpandMessageTool(Tool):
 
             return self.success_response({"status": "Message expanded successfully.", "message": final_content})
         except Exception as e:
-            return self.fail_response(f"Error expanding message: {str(e)}")
+            return self.fail_response("Error expanding message: {str(e)}")
 
 if __name__ == "__main__":
     import asyncio

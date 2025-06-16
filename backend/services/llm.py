@@ -41,18 +41,18 @@ def setup_api_keys() -> None:
     for provider in providers:
         key = getattr(config, f'{provider}_API_KEY')
         if key:
-            logger.debug(f"API key set for provider: {provider}")
+            logger.debug("API key set for provider: {provider}")
         else:
             # Only warn for required providers, debug for optional ones
             if provider in ['OPENAI', 'ANTHROPIC']:
-                logger.warning(f"No API key found for provider: {provider}")
+                logger.warning("No API key found for provider: {provider}")
             else:
-                logger.debug(f"No API key found for optional provider: {provider}")
+                logger.debug("No API key found for optional provider: {provider}")
 
     # Set up OpenRouter API base if not already set
     if config.OPENROUTER_API_KEY and config.OPENROUTER_API_BASE:
         os.environ['OPENROUTER_API_BASE'] = config.OPENROUTER_API_BASE
-        logger.debug(f"Set OPENROUTER_API_BASE to {config.OPENROUTER_API_BASE}")
+        logger.debug("Set OPENROUTER_API_BASE to {config.OPENROUTER_API_BASE}")
 
     # Set up AWS Bedrock credentials
     aws_access_key = config.AWS_ACCESS_KEY_ID
@@ -60,20 +60,20 @@ def setup_api_keys() -> None:
     aws_region = config.AWS_REGION_NAME
 
     if aws_access_key and aws_secret_key and aws_region:
-        logger.debug(f"AWS credentials set for Bedrock in region: {aws_region}")
+        logger.debug("AWS credentials set for Bedrock in region: {aws_region}")
         # Configure LiteLLM to use AWS credentials
         os.environ['AWS_ACCESS_KEY_ID'] = aws_access_key
         os.environ['AWS_SECRET_ACCESS_KEY'] = aws_secret_key
         os.environ['AWS_REGION_NAME'] = aws_region
     else:
         # AWS Bedrock is optional, so only log at debug level
-        logger.debug(f"AWS credentials not configured for optional Bedrock integration - access_key: {bool(aws_access_key)}, secret_key: {bool(aws_secret_key)}, region: {aws_region}")
+        logger.debug("AWS credentials not configured for optional Bedrock integration - access_key: {bool(aws_access_key)}, secret_key: {bool(aws_secret_key)}, region: {aws_region}")
 
 async def handle_error(error: Exception, attempt: int, max_attempts: int) -> None:
     """Handle API errors with appropriate delays and logging."""
     delay = RATE_LIMIT_DELAY if isinstance(error, litellm.exceptions.RateLimitError) else RETRY_DELAY
-    logger.warning(f"Error on attempt {attempt + 1}/{max_attempts}: {str(error)}")
-    logger.debug(f"Waiting {delay} seconds before retry...")
+    logger.warning("Error on attempt {attempt + 1}/{max_attempts}: {str(error)}")
+    logger.debug("Waiting {delay} seconds before retry...")
     await asyncio.sleep(delay)
 
 def prepare_params(
@@ -114,7 +114,7 @@ def prepare_params(
         # For Claude 3.7 in Bedrock, do not set max_tokens or max_tokens_to_sample
         # as it causes errors with inference profiles
         if model_name.startswith("bedrock/") and "claude-3-7" in model_name:
-            logger.debug(f"Skipping max_tokens for Claude 3.7 model: {model_name}")
+            logger.debug("Skipping max_tokens for Claude 3.7 model: {model_name}")
             # Do not add any max_tokens parameter for Claude 3.7
         else:
             param_name = "max_completion_tokens" if 'o1' in model_name else "max_tokens"
@@ -126,7 +126,7 @@ def prepare_params(
             "tools": tools,
             "tool_choice": tool_choice
         })
-        logger.debug(f"Added {len(tools)} tools to API parameters")
+        logger.debug("Added {len(tools)} tools to API parameters")
 
     # # Add Claude-specific headers
     if "claude" in model_name.lower() or "anthropic" in model_name.lower():
@@ -138,7 +138,7 @@ def prepare_params(
 
     # Add OpenRouter-specific parameters
     if model_name.startswith("openrouter/"):
-        logger.debug(f"Preparing OpenRouter parameters for model: {model_name}")
+        logger.debug("Preparing OpenRouter parameters for model: {model_name}")
 
         # Add optional site URL and app name from config
         site_url = config.OR_SITE_URL
@@ -150,15 +150,15 @@ def prepare_params(
             if app_name:
                 extra_headers["X-Title"] = app_name
             params["extra_headers"] = extra_headers
-            logger.debug(f"Added OpenRouter site URL and app name to headers")
+            logger.debug("Added OpenRouter site URL and app name to headers")
 
     # Add Bedrock-specific parameters
     if model_name.startswith("bedrock/"):
-        logger.debug(f"Preparing AWS Bedrock parameters for model: {model_name}")
+        logger.debug("Preparing AWS Bedrock parameters for model: {model_name}")
 
         if not model_id and "anthropic.claude-3-7-sonnet" in model_name:
             params["model_id"] = "arn:aws:bedrock:us-west-2:935064898258:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0"
-            logger.debug(f"Auto-set model_id for Claude 3.7 Sonnet: {params['model_id']}")
+            logger.debug("Auto-set model_id for Claude 3.7 Sonnet: {params['model_id']}")
 
     # Apply Anthropic prompt caching (minimal implementation)
     # Check model name *after* potential modifications (like adding bedrock/ prefix)
@@ -237,7 +237,7 @@ def prepare_params(
         effort_level = reasoning_effort if reasoning_effort else 'low'
         params["reasoning_effort"] = effort_level
         params["temperature"] = 1.0 # Required by Anthropic when reasoning_effort is used
-        logger.info(f"Anthropic thinking enabled with reasoning_effort='{effort_level}'")
+        logger.info("Anthropic thinking enabled with reasoning_effort='{effort_level}'")
 
     return params
 
@@ -284,8 +284,8 @@ async def make_llm_api_call(
         LLMError: For other API-related errors
     """
     # debug <timestamp>.json messages
-    logger.info(f"Making LLM API call to model: {model_name} (Thinking: {enable_thinking}, Effort: {reasoning_effort})")
-    logger.info(f"📡 API Call: Using model {model_name}")
+    logger.info("Making LLM API call to model: {model_name} (Thinking: {enable_thinking}, Effort: {reasoning_effort})")
+    logger.info("📡 API Call: Using model {model_name}")
     params = prepare_params(
         messages=messages,
         model_name=model_name,
@@ -305,12 +305,12 @@ async def make_llm_api_call(
     last_error = None
     for attempt in range(MAX_RETRIES):
         try:
-            logger.debug(f"Attempt {attempt + 1}/{MAX_RETRIES}")
-            # logger.debug(f"API request parameters: {json.dumps(params, indent=2)}")
+            logger.debug("Attempt {attempt + 1}/{MAX_RETRIES}")
+            # logger.debug("API request parameters: {json.dumps(params, indent=2)}")
 
             response = await litellm.acompletion(**params)
-            logger.debug(f"Successfully received API response from {model_name}")
-            logger.debug(f"Response: {response}")
+            logger.debug("Successfully received API response from {model_name}")
+            logger.debug("Response: {response}")
             return response
 
         except (litellm.exceptions.RateLimitError, OpenAIError, json.JSONDecodeError) as e:
@@ -318,12 +318,12 @@ async def make_llm_api_call(
             await handle_error(e, attempt, MAX_RETRIES)
 
         except Exception as e:
-            logger.error(f"Unexpected error during API call: {str(e)}", exc_info=True)
-            raise LLMError(f"API call failed: {str(e)}")
+            logger.error("Unexpected error during API call: {str(e)}", exc_info=True)
+            raise LLMError("API call failed: {str(e)}")
 
-    error_msg = f"Failed to make API call after {MAX_RETRIES} attempts"
+    error_msg = "Failed to make API call after {MAX_RETRIES} attempts"
     if last_error:
-        error_msg += f". Last error: {str(last_error)}"
+        error_msg += ". Last error: {str(last_error)}"
     logger.error(error_msg, exc_info=True)
     raise LLMRetryError(error_msg)
 
@@ -346,7 +346,7 @@ async def test_openrouter():
             temperature=0.7,
             max_tokens=100
         )
-        print(f"Response: {response.choices[0].message.content}")
+        print("Response: {response.choices[0].message.content}")
 
         # Test with deepseek model
         print("\n--- Testing deepseek model ---")
@@ -356,8 +356,8 @@ async def test_openrouter():
             temperature=0.7,
             max_tokens=100
         )
-        print(f"Response: {response.choices[0].message.content}")
-        print(f"Model used: {response.model}")
+        print("Response: {response.choices[0].message.content}")
+        print("Model used: {response.model}")
 
         # Test with Mistral model
         print("\n--- Testing Mistral model ---")
@@ -367,12 +367,12 @@ async def test_openrouter():
             temperature=0.7,
             max_tokens=100
         )
-        print(f"Response: {response.choices[0].message.content}")
-        print(f"Model used: {response.model}")
+        print("Response: {response.choices[0].message.content}")
+        print("Model used: {response.model}")
 
         return True
     except Exception as e:
-        print(f"Error testing OpenRouter: {str(e)}")
+        print("Error testing OpenRouter: {str(e)}")
         return False
 
 async def test_bedrock():
@@ -390,12 +390,12 @@ async def test_bedrock():
             # Claude 3.7 has issues with max_tokens, so omit it
             # max_tokens=100
         )
-        print(f"Response: {response.choices[0].message.content}")
-        print(f"Model used: {response.model}")
+        print("Response: {response.choices[0].message.content}")
+        print("Model used: {response.model}")
 
         return True
     except Exception as e:
-        print(f"Error testing Bedrock: {str(e)}")
+        print("Error testing Bedrock: {str(e)}")
         return False
 
 if __name__ == "__main__":

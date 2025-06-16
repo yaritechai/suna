@@ -27,7 +27,7 @@ class MessageTool(Tool):
                         "description": "Question text to present to user - should be specific and clearly indicate what information you need. Include: 1) Clear question or request, 2) Context about why the input is needed, 3) Available options if applicable, 4) Impact of different choices, 5) Any relevant constraints or considerations."
                     },
                     "attachments": {
-                        "anyOf": [
+                        "anyO": [
                             {"type": "string"},
                             {"items": {"type": "string"}, "type": "array"}
                         ],
@@ -69,11 +69,11 @@ This information will help me make sure the cake meets your expectations for the
         Returns:
             ToolResult indicating the question was successfully sent
         """
-        try:            
+        try:
             # Convert single attachment to list for consistent handling
             if attachments and isinstance(attachments, str):
                 attachments = [attachments]
-          
+
             return self.success_response({"status": "Awaiting user response..."})
         except Exception as e:
             return self.fail_response(f"Error asking user: {str(e)}")
@@ -91,7 +91,7 @@ This information will help me make sure the cake meets your expectations for the
                         "description": "Instructions for the user about what actions to take in the browser. Include: 1) Clear explanation of why takeover is needed, 2) Specific steps the user should take, 3) What information to look for or extract, 4) How to indicate when they're done, 5) Any important context about the current page state."
                     },
                     "attachments": {
-                        "anyOf": [
+                        "anyO": [
                             {"type": "string"},
                             {"items": {"type": "string"}, "type": "array"}
                         ],
@@ -153,7 +153,7 @@ If you encounter any issues or need to take additional steps, please let me know
 #                         "description": "Information to present to the user. Include: 1) Clear statement of what has been accomplished or what is happening, 2) Relevant context or impact, 3) Brief indication of next steps if applicable."
 #                     },
 #                     "attachments": {
-#                         "anyOf": [
+#                         "anyO": [
 #                             {"type": "string"},
 #                             {"items": {"type": "string"}, "type": "array"}
 #                         ],
@@ -244,7 +244,7 @@ If you encounter any issues or need to take additional steps, please let me know
         try:
             return self.success_response({"status": "complete"})
         except Exception as e:
-            return self.fail_response(f"Error entering complete state: {str(e)}")
+            return self.fail_response("Error entering complete state: {str(e)}")
 
 
 if __name__ == "__main__":
@@ -256,14 +256,14 @@ if __name__ == "__main__":
         # Test question
         ask_result = await message_tool.ask(
             text="Would you like to proceed with the next phase?",
-            attachments="summary.pdf"
+            attachments="summary.pd"
         )
         print("Question result:", ask_result)
 
         # Test inform
         inform_result = await message_tool.inform(
             text="Completed analysis of data. Processing results now.",
-            attachments="analysis.pdf"
+            attachments="analysis.pd"
         )
         print("Inform result:", inform_result)
 

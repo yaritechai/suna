@@ -10,51 +10,51 @@ from utils.s3_upload_utils import upload_base64_image
 
 class SandboxBrowserTool(SandboxToolsBase):
     """Tool for executing tasks in a Daytona sandbox with browser-use capabilities."""
-    
+
     def __init__(self, project_id: str, thread_id: str, thread_manager: ThreadManager):
         super().__init__(project_id, thread_manager)
         self.thread_id = thread_id
 
     async def _execute_browser_action(self, endpoint: str, params: dict = None, method: str = "POST") -> ToolResult:
         """Execute a browser automation action through the API
-        
+
         Args:
             endpoint (str): The API endpoint to call
             params (dict, optional): Parameters to send. Defaults to None.
             method (str, optional): HTTP method to use. Defaults to "POST".
-            
+
         Returns:
             ToolResult: Result of the execution
         """
         try:
             # Ensure sandbox is initialized
             await self._ensure_sandbox()
-            
+
             # Build the curl command
-            url = f"http://localhost:8003/api/automation/{endpoint}"
-            
+            url = "http://localhost:8003/api/automation/{endpoint}"
+
             if method == "GET" and params:
-                query_params = "&".join([f"{k}={v}" for k, v in params.items()])
-                url = f"{url}?{query_params}"
-                curl_cmd = f"curl -s -X {method} '{url}' -H 'Content-Type: application/json'"
+                query_params = "&".join(["{k}={v}" for k, v in params.items()])
+                url = "{url}?{query_params}"
+                curl_cmd = "curl -s -X {method} '{url}' -H 'Content-Type: application/json'"
             else:
-                curl_cmd = f"curl -s -X {method} '{url}' -H 'Content-Type: application/json'"
+                curl_cmd = "curl -s -X {method} '{url}' -H 'Content-Type: application/json'"
                 if params:
                     json_data = json.dumps(params)
-                    curl_cmd += f" -d '{json_data}'"
-            
+                    curl_cmd += " -d '{json_data}'"
+
             logger.debug("\033[95mExecuting curl command:\033[0m")
-            logger.debug(f"{curl_cmd}")
-            
+            logger.debug("{curl_cmd}")
+
             response = self.sandbox.process.exec(curl_cmd, timeout=30)
-            
+
             if response.exit_code == 0:
                 try:
                     result = json.loads(response.result)
 
                     if not "content" in result:
                         result["content"] = ""
-                    
+
                     if not "role" in result:
                         result["role"] = "assistant"
 
@@ -66,9 +66,9 @@ class SandboxBrowserTool(SandboxToolsBase):
                             result["image_url"] = image_url
                             # Remove base64 data from result to keep it clean
                             del result["screenshot_base64"]
-                            logger.debug(f"Uploaded screenshot to {image_url}")
+                            logger.debug("Uploaded screenshot to {image_url}")
                         except Exception as e:
-                            logger.error(f"Failed to upload screenshot: {e}")
+                            logger.error("Failed to upload screenshot: {e}")
                             result["image_upload_error"] = str(e)
 
                     added_message = await self.thread_manager.add_message(
@@ -101,14 +101,14 @@ class SandboxBrowserTool(SandboxToolsBase):
                     return self.success_response(success_response)
 
                 except json.JSONDecodeError as e:
-                    logger.error(f"Failed to parse response JSON: {response.result} {e}")
-                    return self.fail_response(f"Failed to parse response JSON: {response.result} {e}")
+                    logger.error("Failed to parse response JSON: {response.result} {e}")
+                    return self.fail_response("Failed to parse response JSON: {response.result} {e}")
             else:
-                logger.error(f"Browser automation request failed 2: {response}")
-                return self.fail_response(f"Browser automation request failed 2: {response}")
+                logger.error("Browser automation request failed 2: {response}")
+                return self.fail_response("Browser automation request failed 2: {response}")
 
         except Exception as e:
-            logger.error(f"Error executing browser action: {e}")
+            logger.error("Error executing browser action: {e}")
             logger.debug(traceback.format_exc())
             return self.fail_response(f"Error executing browser action: {e}")
 
@@ -145,10 +145,10 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_navigate_to(self, url: str) -> ToolResult:
         """Navigate to a specific url
-        
+
         Args:
             url (str): The url to navigate to
-            
+
         Returns:
             dict: Result of the execution
         """
@@ -184,14 +184,14 @@ class SandboxBrowserTool(SandboxToolsBase):
     # )
     # async def browser_search_google(self, query: str) -> ToolResult:
     #     """Search Google with the provided query
-        
+
     #     Args:
     #         query (str): The search query to use
-            
+
     #     Returns:
     #         dict: Result of the execution
     #     """
-    #     logger.debug(f"\033[95mSearching Google for: {query}\033[0m")
+    #     logger.debug("\033[95mSearching Google for: {query}\033[0m")
     #     return await self._execute_browser_action("search_google", {"query": query})
 
     @openapi_schema({
@@ -217,11 +217,11 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_go_back(self) -> ToolResult:
         """Navigate back in browser history
-        
+
         Returns:
             dict: Result of the execution
         """
-        logger.debug(f"\033[95mNavigating back in browser history\033[0m")
+        logger.debug("\033[95mNavigating back in browser history\033[0m")
         return await self._execute_browser_action("go_back", {})
 
     @openapi_schema({
@@ -255,14 +255,14 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_wait(self, seconds: int = 3) -> ToolResult:
         """Wait for the specified number of seconds
-        
+
         Args:
             seconds (int, optional): Number of seconds to wait. Defaults to 3.
-            
+
         Returns:
             dict: Result of the execution
         """
-        logger.debug(f"\033[95mWaiting for {seconds} seconds\033[0m")
+        logger.debug("\033[95mWaiting for {seconds} seconds\033[0m")
         return await self._execute_browser_action("wait", {"seconds": seconds})
 
     @openapi_schema({
@@ -297,14 +297,14 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_click_element(self, index: int) -> ToolResult:
         """Click on an element by index
-        
+
         Args:
             index (int): The index of the element to click
-            
+
         Returns:
             dict: Result of the execution
         """
-        logger.debug(f"\033[95mClicking element with index: {index}\033[0m")
+        logger.debug("\033[95mClicking element with index: {index}\033[0m")
         return await self._execute_browser_action("click_element", {"index": index})
 
     @openapi_schema({
@@ -345,15 +345,15 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_input_text(self, index: int, text: str) -> ToolResult:
         """Input text into an element
-        
+
         Args:
             index (int): The index of the element to input text into
             text (str): The text to input
-            
+
         Returns:
             dict: Result of the execution
         """
-        logger.debug(f"\033[95mInputting text into element {index}: {text}\033[0m")
+        logger.debug("\033[95mInputting text into element {index}: {text}\033[0m")
         return await self._execute_browser_action("input_text", {"index": index, "text": text})
 
     @openapi_schema({
@@ -388,14 +388,14 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_send_keys(self, keys: str) -> ToolResult:
         """Send keyboard keys
-        
+
         Args:
             keys (str): The keys to send (e.g., 'Enter', 'Escape', 'Control+a')
-            
+
         Returns:
             dict: Result of the execution
         """
-        logger.debug(f"\033[95mSending keys: {keys}\033[0m")
+        logger.debug("\033[95mSending keys: {keys}\033[0m")
         return await self._execute_browser_action("send_keys", {"keys": keys})
 
     @openapi_schema({
@@ -430,14 +430,14 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_switch_tab(self, page_id: int) -> ToolResult:
         """Switch to a different browser tab
-        
+
         Args:
             page_id (int): The ID of the tab to switch to
-            
+
         Returns:
             dict: Result of the execution
         """
-        logger.debug(f"\033[95mSwitching to tab: {page_id}\033[0m")
+        logger.debug("\033[95mSwitching to tab: {page_id}\033[0m")
         return await self._execute_browser_action("switch_tab", {"page_id": page_id})
 
     # @openapi_schema({
@@ -470,14 +470,14 @@ class SandboxBrowserTool(SandboxToolsBase):
     # )
     # async def browser_open_tab(self, url: str) -> ToolResult:
     #     """Open a new browser tab with the specified URL
-        
+
     #     Args:
     #         url (str): The URL to open in the new tab
-            
+
     #     Returns:
     #         dict: Result of the execution
     #     """
-    #     logger.debug(f"\033[95mOpening new tab with URL: {url}\033[0m")
+    #     logger.debug("\033[95mOpening new tab with URL: {url}\033[0m")
     #     return await self._execute_browser_action("open_tab", {"url": url})
 
     @openapi_schema({
@@ -512,14 +512,14 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_close_tab(self, page_id: int) -> ToolResult:
         """Close a browser tab
-        
+
         Args:
             page_id (int): The ID of the tab to close
-            
+
         Returns:
             dict: Result of the execution
         """
-        logger.debug(f"\033[95mClosing tab: {page_id}\033[0m")
+        logger.debug("\033[95mClosing tab: {page_id}\033[0m")
         return await self._execute_browser_action("close_tab", {"page_id": page_id})
 
     # @openapi_schema({
@@ -552,33 +552,33 @@ class SandboxBrowserTool(SandboxToolsBase):
     # )
     # async def browser_extract_content(self, goal: str) -> ToolResult:
     #     """Extract content from the current page based on the provided goal
-        
+
     #     Args:
     #         goal (str): The extraction goal
-            
+
     #     Returns:
     #         dict: Result of the execution
     #     """
-    #     logger.debug(f"\033[95mExtracting content with goal: {goal}\033[0m")
+    #     logger.debug("\033[95mExtracting content with goal: {goal}\033[0m")
     #     result = await self._execute_browser_action("extract_content", {"goal": goal})
-        
+
     #     # Format content for better readability
     #     if result.get("success"):
-    #         logger.debug(f"\033[92mContent extraction successful\033[0m")
+    #         logger.debug("\033[92mContent extraction successful\033[0m")
     #         content = result.data.get("content", "")
     #         url = result.data.get("url", "")
     #         title = result.data.get("title", "")
-            
+
     #         if content:
     #             content_preview = content[:200] + "..." if len(content) > 200 else content
-    #             logger.debug(f"\033[95mExtracted content from {title} ({url}):\033[0m")
-    #             logger.debug(f"\033[96m{content_preview}\033[0m")
-    #             logger.debug(f"\033[95mTotal content length: {len(content)} characters\033[0m")
+    #             logger.debug("\033[95mExtracted content from {title} ({url}):\033[0m")
+    #             logger.debug("\033[96m{content_preview}\033[0m")
+    #             logger.debug("\033[95mTotal content length: {len(content)} characters\033[0m")
     #         else:
-    #             logger.debug(f"\033[93mNo content extracted from {url}\033[0m")
+    #             logger.debug("\033[93mNo content extracted from {url}\033[0m")
     #     else:
     #         logger.debug(f"\033[91mFailed to extract content: {result.data.get('error', 'Unknown error')}\033[0m")
-        
+
     #     return result
 
     @openapi_schema({
@@ -612,20 +612,20 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_scroll_down(self, amount: int = None) -> ToolResult:
         """Scroll down the page
-        
+
         Args:
             amount (int, optional): Pixel amount to scroll. If None, scrolls one page.
-            
+
         Returns:
             dict: Result of the execution
         """
         params = {}
         if amount is not None:
             params["amount"] = amount
-            logger.debug(f"\033[95mScrolling down by {amount} pixels\033[0m")
+            logger.debug("\033[95mScrolling down by {amount} pixels\033[0m")
         else:
-            logger.debug(f"\033[95mScrolling down one page\033[0m")
-        
+            logger.debug("\033[95mScrolling down one page\033[0m")
+
         return await self._execute_browser_action("scroll_down", params)
 
     @openapi_schema({
@@ -659,20 +659,20 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_scroll_up(self, amount: int = None) -> ToolResult:
         """Scroll up the page
-        
+
         Args:
             amount (int, optional): Pixel amount to scroll. If None, scrolls one page.
-            
+
         Returns:
             dict: Result of the execution
         """
         params = {}
         if amount is not None:
             params["amount"] = amount
-            logger.debug(f"\033[95mScrolling up by {amount} pixels\033[0m")
+            logger.debug("\033[95mScrolling up by {amount} pixels\033[0m")
         else:
-            logger.debug(f"\033[95mScrolling up one page\033[0m")
-        
+            logger.debug("\033[95mScrolling up one page\033[0m")
+
         return await self._execute_browser_action("scroll_up", params)
 
     @openapi_schema({
@@ -707,14 +707,14 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_scroll_to_text(self, text: str) -> ToolResult:
         """Scroll to specific text on the page
-        
+
         Args:
             text (str): The text to scroll to
-            
+
         Returns:
             dict: Result of the execution
         """
-        logger.debug(f"\033[95mScrolling to text: {text}\033[0m")
+        logger.debug("\033[95mScrolling to text: {text}\033[0m")
         return await self._execute_browser_action("scroll_to_text", {"text": text})
 
     @openapi_schema({
@@ -749,14 +749,14 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_get_dropdown_options(self, index: int) -> ToolResult:
         """Get all options from a dropdown element
-        
+
         Args:
             index (int): The index of the dropdown element
-            
+
         Returns:
             dict: Result of the execution with the dropdown options
         """
-        logger.debug(f"\033[95mGetting options from dropdown with index: {index}\033[0m")
+        logger.debug("\033[95mGetting options from dropdown with index: {index}\033[0m")
         return await self._execute_browser_action("get_dropdown_options", {"index": index})
 
     @openapi_schema({
@@ -797,15 +797,15 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_select_dropdown_option(self, index: int, text: str) -> ToolResult:
         """Select an option from a dropdown by text
-        
+
         Args:
             index (int): The index of the dropdown element
             text (str): The text of the option to select
-            
+
         Returns:
             dict: Result of the execution
         """
-        logger.debug(f"\033[95mSelecting option '{text}' from dropdown with index: {index}\033[0m")
+        logger.debug("\033[95mSelecting option '{text}' from dropdown with index: {index}\033[0m")
         return await self._execute_browser_action("select_dropdown_option", {"index": index, "text": text})
 
     @openapi_schema({
@@ -863,11 +863,11 @@ class SandboxBrowserTool(SandboxToolsBase):
         </function_calls>
         '''
     )
-    async def browser_drag_drop(self, element_source: str = None, element_target: str = None, 
+    async def browser_drag_drop(self, element_source: str = None, element_target: str = None,
                                coord_source_x: int = None, coord_source_y: int = None,
                                coord_target_x: int = None, coord_target_y: int = None) -> ToolResult:
         """Perform drag and drop operation between elements or coordinates
-        
+
         Args:
             element_source (str, optional): The source element selector
             element_target (str, optional): The target element selector
@@ -875,25 +875,25 @@ class SandboxBrowserTool(SandboxToolsBase):
             coord_source_y (int, optional): The source Y coordinate
             coord_target_x (int, optional): The target X coordinate
             coord_target_y (int, optional): The target Y coordinate
-            
+
         Returns:
             dict: Result of the execution
         """
         params = {}
-        
+
         if element_source and element_target:
             params["element_source"] = element_source
             params["element_target"] = element_target
-            logger.debug(f"\033[95mDragging from element '{element_source}' to '{element_target}'\033[0m")
+            logger.debug("\033[95mDragging from element '{element_source}' to '{element_target}'\033[0m")
         elif all(coord is not None for coord in [coord_source_x, coord_source_y, coord_target_x, coord_target_y]):
             params["coord_source_x"] = coord_source_x
             params["coord_source_y"] = coord_source_y
             params["coord_target_x"] = coord_target_x
             params["coord_target_y"] = coord_target_y
-            logger.debug(f"\033[95mDragging from coordinates ({coord_source_x}, {coord_source_y}) to ({coord_target_x}, {coord_target_y})\033[0m")
+            logger.debug("\033[95mDragging from coordinates ({coord_source_x}, {coord_source_y}) to ({coord_target_x}, {coord_target_y})\033[0m")
         else:
             return self.fail_response("Must provide either element selectors or coordinates for drag and drop")
-        
+
         return await self._execute_browser_action("drag_drop", params)
 
     @openapi_schema({
@@ -934,13 +934,13 @@ class SandboxBrowserTool(SandboxToolsBase):
     )
     async def browser_click_coordinates(self, x: int, y: int) -> ToolResult:
         """Click at specific X,Y coordinates on the page
-        
+
         Args:
             x (int): The X coordinate to click
             y (int): The Y coordinate to click
-            
+
         Returns:
             dict: Result of the execution
         """
-        logger.debug(f"\033[95mClicking at coordinates: ({x}, {y})\033[0m")
+        logger.debug("\033[95mClicking at coordinates: ({x}, {y})\033[0m")
         return await self._execute_browser_action("click_coordinates", {"x": x, "y": y})
